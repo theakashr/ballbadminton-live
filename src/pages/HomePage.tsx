@@ -14,6 +14,7 @@ import { HomeLiveMatchesSection } from '../components/home/HomeLiveMatchesSectio
 import { HomeUpcomingFixturesSection } from '../components/home/HomeUpcomingFixturesSection';
 import { HomeFeaturedTournamentsSection } from '../components/home/HomeFeaturedTournamentsSection';
 import { HomeRecentResultsSection } from '../components/home/HomeRecentResultsSection';
+import { HomeActionHeroBanner } from '../components/home/HomeActionHeroBanner';
 import { HomeSupportingFooter } from '../components/home/HomeSupportingFooter';
 
 interface HomePageProps {
@@ -152,9 +153,12 @@ export const HomePage: React.FC<HomePageProps> = ({
           onOpenDetails={onOpenMatchDetails}
         />
 
+        {/* H. Stunning Badminton Action Banner (Final Section of Home Page, above Footer) */}
+        <HomeActionHeroBanner />
+
       </div>
 
-      {/* H. Supporting Broadcast Footer */}
+      {/* I. Supporting Broadcast Footer */}
       <HomeSupportingFooter />
 
     </main>

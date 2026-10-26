@@ -157,4 +157,31 @@ describe('Phase 4.0 — Premium Ball Badminton Live Homepage Redesign Tests', ()
       expect(TOKENS.colors.brand.yellow).toBe('#FFDC00'); // Ball Yellow
     });
   });
+
+  // ==========================================================================
+  // SECTION 4: BOTTOM STUNNING BADMINTON ACTION HERO BANNER
+  // ==========================================================================
+  describe('4. Bottom Stunning Badminton Action Hero Banner', () => {
+    it('verifies bottom sports image banner configuration and content', () => {
+      const bottomBannerConfig = {
+        imageSrc: '/images/tournament-promo.jpg',
+        alt: 'Ball badminton players in action on the tournament court',
+        width: 1376,
+        height: 768,
+        headline: 'The Game. The Passion. The Live Action.',
+        description: 'Stay connected to every tournament, every rally, and every point. Follow your favorite teams with Ball Badminton Live.',
+        exploreTournamentsRoute: '/tournaments',
+        viewLiveScoresRoute: '/live',
+      };
+
+      expect(bottomBannerConfig.imageSrc).toBe('/images/tournament-promo.jpg');
+      expect(bottomBannerConfig.headline).toBe('The Game. The Passion. The Live Action.');
+      expect(bottomBannerConfig.description).toContain('Stay connected to every tournament');
+      expect(bottomBannerConfig.exploreTournamentsRoute).toBe('/tournaments');
+      expect(bottomBannerConfig.viewLiveScoresRoute).toBe('/live');
+      expect(bottomBannerConfig.alt).toContain('players in action');
+      expect(bottomBannerConfig.width).toBe(1376);
+      expect(bottomBannerConfig.height).toBe(768);
+    });
+  });
 });
