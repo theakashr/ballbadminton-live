@@ -96,10 +96,10 @@ export const TournamentDetailPage: React.FC = () => {
     return (
       <div className="pt-8 md:pt-24 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="animate-pulse space-y-6">
-          <div className="h-6 w-32 bg-slate-200 dark:bg-charcoal-800 rounded" />
-          <div className="h-44 bg-slate-200 dark:bg-charcoal-900 rounded-3xl" />
-          <div className="h-10 w-full bg-slate-200 dark:bg-charcoal-800 rounded-xl" />
-          <div className="h-64 bg-slate-200 dark:bg-charcoal-900 rounded-2xl" />
+          <div className="h-6 w-32 bg-surface-muted rounded" />
+          <div className="h-44 bg-surface-muted rounded-2xl" />
+          <div className="h-10 w-full bg-surface-muted rounded-xl" />
+          <div className="h-64 bg-surface-muted rounded-2xl" />
         </div>
       </div>
     );
@@ -108,15 +108,15 @@ export const TournamentDetailPage: React.FC = () => {
   if (!tournament) {
     return (
       <div className="pt-8 md:pt-24 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="py-16 rounded-3xl bg-white dark:bg-charcoal-900 border border-slate-200 dark:border-plum-800 p-8">
-          <Trophy className="w-12 h-12 text-slate-400 dark:text-muted-grey mx-auto mb-3" />
-          <h2 className="text-xl font-bold text-slate-900 dark:text-soft-white">Tournament Not Found</h2>
-          <p className="text-xs text-slate-500 dark:text-muted-grey mt-1">
+        <div className="py-16 rounded-2xl bg-white border border-border-neutral p-8 shadow-card">
+          <Trophy className="w-12 h-12 text-text-secondary mx-auto mb-3" />
+          <h2 className="text-xl font-bold text-text-primary">Tournament Not Found</h2>
+          <p className="text-xs text-text-secondary mt-1">
             The requested tournament ID &quot;{id}&quot; was not found in the official registry.
           </p>
           <button
             onClick={() => navigate('/tournaments')}
-            className="mt-6 px-5 py-2.5 rounded-xl bg-brand-orange text-charcoal-950 font-bold text-xs shadow-orange-glow active:scale-95"
+            className="mt-6 px-5 py-2.5 rounded-xl bg-brand-orange text-white font-bold text-xs shadow-card active:scale-95"
           >
             Back to Tournaments Directory
           </button>
@@ -145,7 +145,7 @@ export const TournamentDetailPage: React.FC = () => {
             nativeHaptics.selection();
             navigate('/tournaments');
           }}
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-muted-grey hover:text-slate-900 dark:hover:text-soft-white active:scale-95 transition-all"
+          className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-text-secondary hover:text-text-primary active:scale-95 transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Tournaments Directory</span>
@@ -153,7 +153,7 @@ export const TournamentDetailPage: React.FC = () => {
 
         <button
           onClick={handleCopyLink}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-charcoal-900 border border-slate-200 dark:border-charcoal-800 text-xs font-medium text-slate-700 dark:text-muted-grey hover:text-slate-950 dark:hover:text-soft-white shadow-sm active:scale-95 transition-all"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-border-neutral text-xs font-medium text-text-secondary hover:text-text-primary shadow-sm active:scale-95 transition-all"
         >
           <Share2 className="w-3.5 h-3.5 text-brand-orange" />
           <span>{copied ? 'Link Copied!' : 'Share Tournament'}</span>
@@ -161,10 +161,10 @@ export const TournamentDetailPage: React.FC = () => {
       </div>
 
       {/* Main Tournament Hero Card */}
-      <div className="rounded-3xl bg-white dark:bg-charcoal-900 border border-slate-200 dark:border-plum-800/80 shadow-xl dark:shadow-elevated overflow-hidden mb-8 transition-colors">
+      <div className="rounded-2xl bg-white border border-border-neutral shadow-card overflow-hidden mb-8 transition-colors">
         
         {/* Header Ribbon */}
-        <div className="px-6 py-4 bg-slate-50 dark:bg-plum-950/70 border-b border-slate-200 dark:border-plum-800/80 flex flex-wrap items-center justify-between gap-3">
+        <div className="px-6 py-4 bg-surface-muted border-b border-border-neutral flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Badge variant={tournament.status === 'live' ? 'live' : 'upcoming'} pulse={tournament.status === 'live'} size="sm">
               {tournament.status === 'live' ? 'LIVE ON COURTS' : tournament.status.toUpperCase()}
@@ -174,8 +174,8 @@ export const TournamentDetailPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="text-xs text-slate-500 dark:text-muted-grey font-medium">
-            DB ID: <code className="font-mono text-slate-700 dark:text-soft-white bg-slate-200 dark:bg-charcoal-800 px-1.5 py-0.5 rounded">{tournament.id}</code>
+          <div className="text-xs text-text-secondary font-medium">
+            DB ID: <code className="font-mono text-text-primary bg-surface-muted px-1.5 py-0.5 rounded border border-border-neutral">{tournament.id}</code>
           </div>
         </div>
 
@@ -186,22 +186,22 @@ export const TournamentDetailPage: React.FC = () => {
               <span className="text-xs font-bold text-brand-orange uppercase tracking-wider block mb-1">
                 Sanctioned by {tournament.organizer}
               </span>
-              <h1 className="text-2xl sm:text-4xl font-display font-extrabold text-slate-900 dark:text-soft-white tracking-tight">
+              <h1 className="text-2xl sm:text-4xl font-display font-extrabold text-text-primary tracking-tight">
                 {tournament.name}
               </h1>
               {tournament.description && (
-                <p className="mt-3 text-xs sm:text-sm text-slate-600 dark:text-muted-grey leading-relaxed">
+                <p className="mt-3 text-xs sm:text-sm text-text-secondary leading-relaxed">
                   {tournament.description}
                 </p>
               )}
             </div>
 
             {tournament.prizePool && (
-              <div className="p-4 rounded-2xl bg-amber-50 dark:bg-plum-950/80 border border-brand-orange/40 shrink-0 self-start lg:self-auto text-left lg:text-right">
+              <div className="p-4 rounded-xl bg-brand-soft border border-brand-orange/30 shrink-0 self-start lg:self-auto text-left lg:text-right">
                 <span className="text-[10px] uppercase font-bold text-brand-orange tracking-wider block">
                   Championship Prize
                 </span>
-                <span className="text-lg font-display font-black text-slate-900 dark:text-soft-white">
+                <span className="text-lg font-display font-black text-text-primary">
                   {tournament.prizePool}
                 </span>
               </div>
@@ -209,43 +209,43 @@ export const TournamentDetailPage: React.FC = () => {
           </div>
 
           {/* Quick Metrics Strip */}
-          <div className="mt-6 pt-6 border-t border-slate-200 dark:border-charcoal-800 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-            <div className="flex items-center gap-2 text-slate-600 dark:text-muted-grey">
+          <div className="mt-6 pt-6 border-t border-border-neutral grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+            <div className="flex items-center gap-2 text-text-secondary">
               <Calendar className="w-4 h-4 text-brand-orange shrink-0" />
               <div>
-                <span className="block text-[10px] uppercase font-bold text-slate-400">Dates</span>
-                <span className="text-slate-900 dark:text-soft-white font-medium">{tournament.startDate} to {tournament.endDate}</span>
+                <span className="block text-[10px] uppercase font-bold text-text-secondary">Dates</span>
+                <span className="text-text-primary font-medium">{tournament.startDate} to {tournament.endDate}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-slate-600 dark:text-muted-grey">
+            <div className="flex items-center gap-2 text-text-secondary">
               <MapPin className="w-4 h-4 text-brand-orange shrink-0" />
               <div>
-                <span className="block text-[10px] uppercase font-bold text-slate-400">Venue &amp; City</span>
-                <span className="text-slate-900 dark:text-soft-white font-medium truncate max-w-[160px]">{tournament.venue}, {tournament.city}</span>
+                <span className="block text-[10px] uppercase font-bold text-text-secondary">Venue &amp; City</span>
+                <span className="text-text-primary font-medium truncate max-w-[160px]">{tournament.venue}, {tournament.city}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-slate-600 dark:text-muted-grey">
+            <div className="flex items-center gap-2 text-text-secondary">
               <Users className="w-4 h-4 text-brand-orange shrink-0" />
               <div>
-                <span className="block text-[10px] uppercase font-bold text-slate-400">Registered Squads</span>
-                <span className="text-slate-900 dark:text-soft-white font-medium">{registeredTeams.length > 0 ? registeredTeams.length : tournament.totalTeams} Teams</span>
+                <span className="block text-[10px] uppercase font-bold text-text-secondary">Registered Squads</span>
+                <span className="text-text-primary font-medium">{registeredTeams.length > 0 ? registeredTeams.length : tournament.totalTeams} Teams</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-slate-600 dark:text-muted-grey">
+            <div className="flex items-center gap-2 text-text-secondary">
               <Shield className="w-4 h-4 text-brand-orange shrink-0" />
               <div>
-                <span className="block text-[10px] uppercase font-bold text-slate-400">Surface / Courts</span>
-                <span className="text-slate-900 dark:text-soft-white font-medium">{tournament.surfaceType || 'Outdoor Red Clay'} • {tournament.courtsCount} Courts</span>
+                <span className="block text-[10px] uppercase font-bold text-text-secondary">Surface / Courts</span>
+                <span className="text-text-primary font-medium">{tournament.surfaceType || 'Outdoor Red Clay'} • {tournament.courtsCount} Courts</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Tab Navigation Navigation Strip */}
-        <div className="px-6 border-t border-slate-200 dark:border-charcoal-800 bg-slate-50 dark:bg-charcoal-950/70 overflow-x-auto no-scrollbar flex items-center gap-2">
+        <div className="px-6 border-t border-border-neutral bg-surface-muted overflow-x-auto no-scrollbar flex items-center gap-2">
           <button
             onClick={() => {
               nativeHaptics.selection();
@@ -254,7 +254,7 @@ export const TournamentDetailPage: React.FC = () => {
             className={`py-3 px-4 text-xs font-bold border-b-2 whitespace-nowrap transition-all flex items-center gap-1.5 ${
               activeTab === 'matches'
                 ? 'border-brand-orange text-brand-orange'
-                : 'border-transparent text-slate-600 dark:text-muted-grey hover:text-slate-900 dark:hover:text-soft-white'
+                : 'border-transparent text-text-secondary hover:text-text-primary'
             }`}
           >
             <Clock className="w-3.5 h-3.5" />
@@ -269,7 +269,7 @@ export const TournamentDetailPage: React.FC = () => {
             className={`py-3 px-4 text-xs font-bold border-b-2 whitespace-nowrap transition-all flex items-center gap-1.5 ${
               activeTab === 'teams'
                 ? 'border-brand-orange text-brand-orange'
-                : 'border-transparent text-slate-600 dark:text-muted-grey hover:text-slate-900 dark:hover:text-soft-white'
+                : 'border-transparent text-text-secondary hover:text-text-primary'
             }`}
           >
             <Users className="w-3.5 h-3.5" />
@@ -284,7 +284,7 @@ export const TournamentDetailPage: React.FC = () => {
             className={`py-3 px-4 text-xs font-bold border-b-2 whitespace-nowrap transition-all flex items-center gap-1.5 ${
               activeTab === 'standings'
                 ? 'border-brand-orange text-brand-orange'
-                : 'border-transparent text-slate-600 dark:text-muted-grey hover:text-slate-900 dark:hover:text-soft-white'
+                : 'border-transparent text-text-secondary hover:text-text-primary'
             }`}
           >
             <Table className="w-3.5 h-3.5" />
@@ -299,7 +299,7 @@ export const TournamentDetailPage: React.FC = () => {
             className={`py-3 px-4 text-xs font-bold border-b-2 whitespace-nowrap transition-all flex items-center gap-1.5 ${
               activeTab === 'knockout'
                 ? 'border-brand-orange text-brand-orange'
-                : 'border-transparent text-slate-600 dark:text-muted-grey hover:text-slate-900 dark:hover:text-soft-white'
+                : 'border-transparent text-text-secondary hover:text-text-primary'
             }`}
           >
             <GitFork className="w-3.5 h-3.5" />
@@ -314,7 +314,7 @@ export const TournamentDetailPage: React.FC = () => {
             className={`py-3 px-4 text-xs font-bold border-b-2 whitespace-nowrap transition-all flex items-center gap-1.5 ${
               activeTab === 'info'
                 ? 'border-brand-orange text-brand-orange'
-                : 'border-transparent text-slate-600 dark:text-muted-grey hover:text-slate-900 dark:hover:text-soft-white'
+                : 'border-transparent text-text-secondary hover:text-text-primary'
             }`}
           >
             <Info className="w-3.5 h-3.5" />
@@ -336,8 +336,8 @@ export const TournamentDetailPage: React.FC = () => {
                 onClick={() => setMatchStatusFilter('all')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   matchStatusFilter === 'all'
-                    ? 'bg-brand-orange text-charcoal-950 shadow-sm'
-                    : 'bg-white dark:bg-charcoal-900 text-slate-600 dark:text-muted-grey border border-slate-200 dark:border-charcoal-800'
+                    ? 'bg-brand-orange text-white shadow-sm'
+                    : 'bg-white text-text-secondary border border-border-neutral'
                 }`}
               >
                 All Matches ({matches.length})
@@ -347,11 +347,11 @@ export const TournamentDetailPage: React.FC = () => {
                 onClick={() => setMatchStatusFilter('live')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                   matchStatusFilter === 'live'
-                    ? 'bg-brand-coral text-white shadow-sm'
-                    : 'bg-white dark:bg-charcoal-900 text-slate-600 dark:text-muted-grey border border-slate-200 dark:border-charcoal-800'
+                    ? 'bg-status-live text-white shadow-sm'
+                    : 'bg-white text-text-secondary border border-border-neutral'
                 }`}
               >
-                <Radio className="w-3 h-3 text-brand-coral" />
+                <Radio className="w-3 h-3 text-status-live" />
                 <span>Live ({liveMatchesCount})</span>
               </button>
 
@@ -359,8 +359,8 @@ export const TournamentDetailPage: React.FC = () => {
                 onClick={() => setMatchStatusFilter('upcoming')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   matchStatusFilter === 'upcoming'
-                    ? 'bg-sky-500 text-white shadow-sm'
-                    : 'bg-white dark:bg-charcoal-900 text-slate-600 dark:text-muted-grey border border-slate-200 dark:border-charcoal-800'
+                    ? 'bg-brand-orange text-white shadow-sm'
+                    : 'bg-white text-text-secondary border border-border-neutral'
                 }`}
               >
                 Upcoming ({upcomingMatchesCount})
@@ -370,15 +370,15 @@ export const TournamentDetailPage: React.FC = () => {
                 onClick={() => setMatchStatusFilter('completed')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   matchStatusFilter === 'completed'
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'bg-white dark:bg-charcoal-900 text-slate-600 dark:text-muted-grey border border-slate-200 dark:border-charcoal-800'
+                    ? 'bg-status-success text-white shadow-sm'
+                    : 'bg-white text-text-secondary border border-border-neutral'
                 }`}
               >
                 Completed ({completedMatchesCount})
               </button>
             </div>
 
-            <span className="text-xs text-slate-500 dark:text-muted-grey">
+            <span className="text-xs text-text-secondary">
               Filtered for {tournament.name}
             </span>
           </div>
@@ -395,29 +395,29 @@ export const TournamentDetailPage: React.FC = () => {
                   <div
                     key={m.id}
                     onClick={() => handleMatchClick(m.id)}
-                    className="p-5 rounded-2xl bg-white dark:bg-charcoal-900 border border-slate-200 dark:border-plum-800/80 hover:border-brand-orange/60 transition-all cursor-pointer shadow-sm active:scale-[0.99] flex flex-col justify-between"
+                    className="p-5 rounded-2xl bg-white border border-border-neutral hover:border-brand-orange/60 transition-all cursor-pointer shadow-card hover:shadow-card-hover active:scale-[0.99] flex flex-col justify-between"
                   >
                     <div>
                       {/* Top Bar */}
-                      <div className="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-100 dark:border-charcoal-800 text-xs">
+                      <div className="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-border-neutral text-xs">
                         <div className="flex items-center gap-2">
                           {isLive ? (
-                            <span className="px-2 py-0.5 rounded-full bg-brand-coral/20 text-brand-coral font-bold text-[10px] animate-pulse">
+                            <span className="px-2 py-0.5 rounded-full bg-status-live/15 text-status-live font-bold text-[10px] animate-pulse">
                               LIVE ON COURT
                             </span>
                           ) : isCompleted ? (
-                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-[10px]">
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 text-status-success font-bold text-[10px]">
                               FINAL RESULT
                             </span>
                           ) : (
-                            <span className="px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-600 dark:text-sky-400 font-bold text-[10px]">
+                            <span className="px-2 py-0.5 rounded-full bg-surface-muted text-text-secondary font-bold text-[10px]">
                               SCHEDULED
                             </span>
                           )}
-                          <span className="font-semibold text-slate-800 dark:text-soft-white">{m.stage}</span>
+                          <span className="font-semibold text-text-primary">{m.stage}</span>
                         </div>
 
-                        <span className="text-slate-500 dark:text-muted-grey font-medium">{m.court}</span>
+                        <span className="text-text-secondary font-medium">{m.court}</span>
                       </div>
 
                       {/* Teams & Score */}
@@ -427,15 +427,15 @@ export const TournamentDetailPage: React.FC = () => {
                           <div className="flex items-center gap-2.5">
                             <div
                               className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs text-white shrink-0"
-                              style={{ backgroundColor: m.team1.logoBg || '#211329' }}
+                              style={{ backgroundColor: m.team1.logoBg || '#182230' }}
                             >
                               {m.team1.shortName}
                             </div>
                             <div>
-                              <span className="font-display font-bold text-sm text-slate-900 dark:text-soft-white block">
+                              <span className="font-display font-bold text-sm text-text-primary block">
                                 {m.team1.name}
                               </span>
-                              <span className="text-[10px] text-slate-500 dark:text-muted-grey">
+                              <span className="text-[10px] text-text-secondary">
                                 {m.team1.state}
                               </span>
                             </div>
@@ -448,12 +448,12 @@ export const TournamentDetailPage: React.FC = () => {
                               </span>
                             ) : isCompleted ? (
                               <span className={`font-score font-black text-xl ${
-                                m.team1SetsWon > m.team2SetsWon ? 'text-brand-orange' : 'text-slate-900 dark:text-soft-white'
+                                m.team1SetsWon > m.team2SetsWon ? 'text-brand-orange' : 'text-text-primary'
                               }`}>
                                 {m.team1SetsWon}
                               </span>
                             ) : (
-                              <span className="text-xs text-slate-500 dark:text-muted-grey">{m.scheduledTime}</span>
+                              <span className="text-xs text-text-secondary">{m.scheduledTime}</span>
                             )}
                           </div>
                         </div>
@@ -463,15 +463,15 @@ export const TournamentDetailPage: React.FC = () => {
                           <div className="flex items-center gap-2.5">
                             <div
                               className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs text-white shrink-0"
-                              style={{ backgroundColor: m.team2.logoBg || '#15131B' }}
+                              style={{ backgroundColor: m.team2.logoBg || '#475467' }}
                             >
                               {m.team2.shortName}
                             </div>
                             <div>
-                              <span className="font-display font-bold text-sm text-slate-900 dark:text-soft-white block">
+                              <span className="font-display font-bold text-sm text-text-primary block">
                                 {m.team2.name}
                               </span>
-                              <span className="text-[10px] text-slate-500 dark:text-muted-grey">
+                              <span className="text-[10px] text-text-secondary">
                                 {m.team2.state}
                               </span>
                             </div>
@@ -479,17 +479,17 @@ export const TournamentDetailPage: React.FC = () => {
 
                           <div className="text-right">
                             {isLive ? (
-                              <span className="font-score font-black text-xl text-brand-coral">
+                              <span className="font-score font-black text-xl text-brand-orangeHover">
                                 {currentSetScore.team2Score}
                               </span>
                             ) : isCompleted ? (
                               <span className={`font-score font-black text-xl ${
-                                m.team2SetsWon > m.team1SetsWon ? 'text-brand-orange' : 'text-slate-900 dark:text-soft-white'
+                                m.team2SetsWon > m.team1SetsWon ? 'text-brand-orange' : 'text-text-primary'
                               }`}>
                                 {m.team2SetsWon}
                               </span>
                             ) : (
-                              <span className="text-xs text-slate-500 dark:text-muted-grey">Sets: 0</span>
+                              <span className="text-xs text-text-secondary">Sets: 0</span>
                             )}
                           </div>
                         </div>
@@ -497,18 +497,18 @@ export const TournamentDetailPage: React.FC = () => {
                     </div>
 
                     {/* Footer Row */}
-                    <div className="mt-4 pt-3 border-t border-slate-100 dark:border-charcoal-800 flex items-center justify-between text-xs">
+                    <div className="mt-4 pt-3 border-t border-border-neutral flex items-center justify-between text-xs">
                       {isLive ? (
                         <span className="font-bold text-brand-orange text-[11px]">
                           Set {m.currentSet} of 3 (Target 29)
                         </span>
                       ) : isCompleted ? (
-                        <span className="text-emerald-600 dark:text-emerald-400 font-bold text-[11px] flex items-center gap-1">
+                        <span className="text-status-success font-bold text-[11px] flex items-center gap-1">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Winner: {m.team1SetsWon > m.team2SetsWon ? m.team1.shortName : m.team2.shortName}</span>
                         </span>
                       ) : (
-                        <span className="text-slate-500 dark:text-muted-grey">
+                        <span className="text-text-secondary">
                           Scheduled: {m.scheduledTime}
                         </span>
                       )}
@@ -524,7 +524,7 @@ export const TournamentDetailPage: React.FC = () => {
               })}
             </div>
           ) : (
-            <div className="py-12 text-center rounded-2xl bg-white dark:bg-charcoal-900 border border-slate-200 dark:border-plum-800 text-slate-600 dark:text-muted-grey">
+            <div className="py-12 text-center rounded-2xl bg-white border border-border-neutral text-text-secondary">
               No matches found under this filter for {tournament.name}.
             </div>
           )}
@@ -537,10 +537,10 @@ export const TournamentDetailPage: React.FC = () => {
       {activeTab === 'teams' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-display font-extrabold text-base text-slate-900 dark:text-soft-white">
+            <h3 className="font-display font-extrabold text-base text-text-primary">
               Participating Teams ({registeredTeams.length})
             </h3>
-            <span className="text-xs text-slate-500 dark:text-muted-grey">
+            <span className="text-xs text-text-secondary">
               Tap any team to inspect official starting fives and court positions
             </span>
           </div>
@@ -556,32 +556,32 @@ export const TournamentDetailPage: React.FC = () => {
                 return (
                   <div
                     key={reg.id}
-                    className="rounded-2xl bg-white dark:bg-charcoal-900 border border-slate-200 dark:border-plum-800/80 overflow-hidden shadow-sm transition-all"
+                    className="rounded-2xl bg-white border border-border-neutral overflow-hidden shadow-card transition-all"
                   >
                     {/* Team Bar Header */}
                     <button
                       onClick={() => toggleTeamRoster(reg.teamId)}
-                      className="w-full p-4 sm:p-5 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-plum-950/40 transition-colors"
+                      className="w-full p-4 sm:p-5 flex items-center justify-between text-left hover:bg-surface-muted transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <div
                           className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm text-white shrink-0 shadow-sm"
-                          style={{ backgroundColor: team.logoBg || '#211329' }}
+                          style={{ backgroundColor: team.logoBg || '#182230' }}
                         >
                           {team.shortName}
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <h4 className="font-display font-bold text-base text-slate-900 dark:text-soft-white">
+                            <h4 className="font-display font-bold text-base text-text-primary">
                               {team.name}
                             </h4>
                             {reg.seedNumber && (
-                              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-brand-orange/20 text-brand-orange border border-brand-orange/40">
+                              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-brand-soft text-brand-orange border border-brand-orange/30">
                                 Seed #{reg.seedNumber}
                               </span>
                             )}
                           </div>
-                          <span className="text-xs text-slate-500 dark:text-muted-grey">
+                          <span className="text-xs text-text-secondary">
                             {team.city}, {team.state} • {reg.groupName || 'Pool A'}
                           </span>
                         </div>
@@ -591,16 +591,16 @@ export const TournamentDetailPage: React.FC = () => {
                         <span className="text-xs text-brand-orange font-semibold hidden sm:block">
                           {isExpanded ? 'Hide Squad' : 'View Squad'}
                         </span>
-                        <ChevronRight className={`w-4 h-4 text-slate-400 transition-transform ${isExpanded ? 'rotate-90 text-brand-orange' : ''}`} />
+                        <ChevronRight className={`w-4 h-4 text-text-secondary transition-transform ${isExpanded ? 'rotate-90 text-brand-orange' : ''}`} />
                       </div>
                     </button>
 
                     {/* Expandable Roster List */}
                     {isExpanded && (
-                      <div className="p-5 bg-slate-50 dark:bg-charcoal-950/80 border-t border-slate-200 dark:border-charcoal-800">
-                        <div className="flex items-center justify-between mb-3 text-xs text-slate-600 dark:text-muted-grey">
-                          <span>Captain: <strong>{team.captainName}</strong></span>
-                          <span>Coach: <strong>{team.coachName || 'Federation Official'}</strong></span>
+                      <div className="p-5 bg-surface-muted border-t border-border-neutral">
+                        <div className="flex items-center justify-between mb-3 text-xs text-text-secondary">
+                          <span>Captain: <strong className="text-text-primary">{team.captainName}</strong></span>
+                          <span>Coach: <strong className="text-text-primary">{team.coachName || 'Federation Official'}</strong></span>
                         </div>
 
                         {roster.length > 0 ? (
@@ -608,25 +608,25 @@ export const TournamentDetailPage: React.FC = () => {
                             {roster.map(member => (
                               <div
                                 key={member.id}
-                                className="p-3 rounded-xl bg-white dark:bg-charcoal-900 border border-slate-200 dark:border-charcoal-800 flex items-center justify-between text-xs"
+                                className="p-3 rounded-xl bg-white border border-border-neutral flex items-center justify-between text-xs"
                               >
                                 <div>
-                                  <span className="font-bold text-slate-800 dark:text-soft-white block">
+                                  <span className="font-bold text-text-primary block">
                                     #{member.jerseyNumber} {member.player?.name || `Player #${member.jerseyNumber}`}
                                     {member.isCaptain && <span className="text-brand-orange ml-1 font-extrabold">(C)</span>}
                                   </span>
-                                  <span className="text-[10px] text-slate-500 dark:text-muted-grey">
+                                  <span className="text-[10px] text-text-secondary">
                                     Pos: {member.position}
                                   </span>
                                 </div>
-                                <span className="text-[10px] px-2 py-0.5 rounded bg-slate-100 dark:bg-charcoal-800 text-slate-700 dark:text-muted-grey font-semibold">
+                                <span className="text-[10px] px-2 py-0.5 rounded bg-surface-muted text-text-primary font-semibold">
                                   {member.position === 'Front / Net' ? 'Smasher' : member.position === 'Centre / Pivot' ? 'Pivot' : member.position === 'Server' ? 'Server' : 'Base'}
                                 </span>
                               </div>
                             ))}
                           </div>
                         ) : (
-                          <div className="text-xs text-slate-500 dark:text-muted-grey text-center py-4">
+                          <div className="text-xs text-text-secondary text-center py-4">
                             Squad members for this team are being finalized by team management.
                           </div>
                         )}
@@ -637,7 +637,7 @@ export const TournamentDetailPage: React.FC = () => {
               })}
             </div>
           ) : (
-            <div className="py-12 text-center rounded-2xl bg-white dark:bg-charcoal-900 border border-slate-200 dark:border-plum-800 text-slate-600 dark:text-muted-grey">
+            <div className="py-12 text-center rounded-2xl bg-white border border-border-neutral text-text-secondary">
               Team registration records for this tournament are being processed.
             </div>
           )}
@@ -668,45 +668,45 @@ export const TournamentDetailPage: React.FC = () => {
       {/* TAB CONTENT 5: TOURNAMENT INFO & RULES */}
       {/* ============================================================== */}
       {activeTab === 'info' && (
-        <div className="rounded-3xl bg-white dark:bg-charcoal-900 border border-slate-200 dark:border-plum-800/80 p-6 sm:p-8 space-y-6">
+        <div className="rounded-2xl bg-white border border-border-neutral p-6 sm:p-8 space-y-6 shadow-card">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm">
             <div className="space-y-4">
-              <h4 className="font-display font-bold text-base text-slate-900 dark:text-soft-white flex items-center gap-2">
+              <h4 className="font-display font-bold text-base text-text-primary flex items-center gap-2">
                 <Shield className="w-4 h-4 text-brand-orange" />
                 <span>Federation Specifications</span>
               </h4>
-              <div className="space-y-2.5 text-slate-600 dark:text-muted-grey">
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-charcoal-950 border border-slate-200 dark:border-charcoal-800">
-                  <strong className="text-slate-900 dark:text-soft-white block mb-0.5">Scoring Engine</strong>
+              <div className="space-y-2.5 text-text-secondary">
+                <div className="p-3 rounded-xl bg-surface-muted border border-border-neutral">
+                  <strong className="text-text-primary block mb-0.5">Scoring Engine</strong>
                   BBFI Standard 29-Point Traditional Rule. Best of 3 Sets.
                 </div>
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-charcoal-950 border border-slate-200 dark:border-charcoal-800">
-                  <strong className="text-slate-900 dark:text-soft-white block mb-0.5">Court Surface &amp; Ball</strong>
+                <div className="p-3 rounded-xl bg-surface-muted border border-border-neutral">
+                  <strong className="text-text-primary block mb-0.5">Court Surface &amp; Ball</strong>
                   {tournament.surfaceType || 'Outdoor Red Clay'} divided by 1.83m net. Standard {tournament.ballType || 'BBFI Standard Yellow Woollen Ball (27-30g)'}.
                 </div>
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-charcoal-950 border border-slate-200 dark:border-charcoal-800">
-                  <strong className="text-slate-900 dark:text-soft-white block mb-0.5">Chief Referee &amp; Jury</strong>
+                <div className="p-3 rounded-xl bg-surface-muted border border-border-neutral">
+                  <strong className="text-text-primary block mb-0.5">Chief Referee &amp; Jury</strong>
                   {tournament.chiefReferee || 'BBFI Certified Senior Panel'}
                 </div>
               </div>
             </div>
 
             <div className="space-y-4">
-              <h4 className="font-display font-bold text-base text-slate-900 dark:text-soft-white flex items-center gap-2">
+              <h4 className="font-display font-bold text-base text-text-primary flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-brand-orange" />
                 <span>Host Venue &amp; Registration</span>
               </h4>
-              <div className="space-y-2.5 text-slate-600 dark:text-muted-grey">
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-charcoal-950 border border-slate-200 dark:border-charcoal-800">
-                  <strong className="text-slate-900 dark:text-soft-white block mb-0.5">Venue Address</strong>
+              <div className="space-y-2.5 text-text-secondary">
+                <div className="p-3 rounded-xl bg-surface-muted border border-border-neutral">
+                  <strong className="text-text-primary block mb-0.5">Venue Address</strong>
                   {tournament.venue}, {tournament.city} ({tournament.courtsCount} active courts)
                 </div>
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-charcoal-950 border border-slate-200 dark:border-charcoal-800">
-                  <strong className="text-slate-900 dark:text-soft-white block mb-0.5">Official Contact</strong>
+                <div className="p-3 rounded-xl bg-surface-muted border border-border-neutral">
+                  <strong className="text-text-primary block mb-0.5">Official Contact</strong>
                   Email: {tournament.contactEmail || 'tournaments@bbfi.org'} • Phone: {tournament.contactPhone || '+91 94432 10987'}
                 </div>
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-charcoal-950 border border-slate-200 dark:border-charcoal-800">
-                  <strong className="text-slate-900 dark:text-soft-white block mb-0.5">Prize Pool &amp; Trophies</strong>
+                <div className="p-3 rounded-xl bg-surface-muted border border-border-neutral">
+                  <strong className="text-text-primary block mb-0.5">Prize Pool &amp; Trophies</strong>
                   {tournament.prizePool || 'Rolling Federation Trophy + Merit Medals'}
                 </div>
               </div>

@@ -16,7 +16,7 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
   description,
   action,
   align = 'left',
-  theme = 'dark',
+  theme = 'light',
   className = '',
 }) => {
   const isLight = theme === 'light';
@@ -37,13 +37,13 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
           </div>
         )}
         <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-display font-extrabold tracking-tight ${
-          isLight ? 'text-slate-950' : 'text-soft-white'
+          isLight ? 'text-text-primary' : 'text-soft-white'
         }`}>
           {title}
         </h2>
         {description && (
           <p className={`mt-2 text-sm sm:text-base max-w-2xl ${
-            isLight ? 'text-slate-600 font-normal' : 'text-muted-grey'
+            isLight ? 'text-text-secondary font-normal' : 'text-muted-grey'
           }`}>
             {description}
           </p>

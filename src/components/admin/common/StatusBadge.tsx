@@ -33,79 +33,79 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
 }) => {
   const norm = status.toLowerCase();
 
-  let bg = 'bg-charcoal-800 text-muted-grey border-charcoal-700';
-  let dotColor = 'bg-muted-grey';
+  let bg = 'bg-surface-muted text-text-secondary border-border-neutral';
+  let dotColor = 'bg-text-secondary/60';
   let label = status;
 
   switch (norm) {
     case 'live':
     case 'active_scoring':
-      bg = 'bg-brand-coral/15 text-brand-coral border-brand-coral/30';
-      dotColor = 'bg-brand-coral';
+      bg = 'bg-red-50 text-status-live border-red-200';
+      dotColor = 'bg-status-live';
       label = norm === 'active_scoring' ? 'Scoring Live' : 'LIVE';
       break;
     case 'upcoming':
     case 'assigned':
-      bg = 'bg-brand-orange/15 text-brand-orange border-brand-orange/30';
+      bg = 'bg-brand-soft text-brand-orange border-brand-orange/20';
       dotColor = 'bg-brand-orange';
       label = norm === 'assigned' ? 'Assigned' : 'Upcoming';
       break;
     case 'completed':
     case 'closed':
-      bg = 'bg-plum-800/60 text-soft-white border-plum-700/60';
-      dotColor = 'bg-soft-white/60';
+      bg = 'bg-slate-100 text-slate-700 border-slate-200';
+      dotColor = 'bg-slate-500';
       label = norm === 'closed' ? 'Closed' : 'Completed';
       break;
     case 'open':
     case 'available':
-      bg = 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
-      dotColor = 'bg-emerald-400';
+      bg = 'bg-emerald-50 text-status-success border-emerald-200';
+      dotColor = 'bg-status-success';
       label = norm === 'open' ? 'Reg Open' : 'Available';
       break;
     case 'archived':
     case 'offline':
-      bg = 'bg-charcoal-900 text-muted-grey/80 border-charcoal-800';
-      dotColor = 'bg-muted-grey/50';
+      bg = 'bg-surface-muted text-text-secondary border-border-neutral';
+      dotColor = 'bg-text-secondary/40';
       label = norm === 'archived' ? 'Archived' : 'Offline';
       break;
     case 'super_admin':
-      bg = 'bg-brand-yellow/15 text-brand-yellow border-brand-yellow/30';
-      dotColor = 'bg-brand-yellow';
+      bg = 'bg-amber-50 text-amber-800 border-amber-200';
+      dotColor = 'bg-amber-600';
       label = 'Super Admin';
       break;
     case 'tournament_admin':
-      bg = 'bg-purple-500/20 text-purple-300 border-purple-500/30';
-      dotColor = 'bg-purple-400';
+      bg = 'bg-purple-50 text-purple-700 border-purple-200';
+      dotColor = 'bg-purple-600';
       label = 'Tourn Admin';
       break;
     case 'official_scorer':
-      bg = 'bg-brand-orange/20 text-brand-orange border-brand-orange/30';
+      bg = 'bg-brand-soft text-brand-orange border-brand-orange/30';
       dotColor = 'bg-brand-orange';
       label = 'Official Scorer';
       break;
     case 'viewer':
-      bg = 'bg-charcoal-800 text-muted-grey border-charcoal-700';
-      dotColor = 'bg-muted-grey';
+      bg = 'bg-surface-muted text-text-secondary border-border-neutral';
+      dotColor = 'bg-text-secondary/60';
       label = 'Viewer';
       break;
     case 'invite-only':
-      bg = 'bg-amber-500/15 text-amber-300 border-amber-500/30';
-      dotColor = 'bg-amber-400';
+      bg = 'bg-amber-50 text-amber-700 border-amber-200';
+      dotColor = 'bg-amber-500';
       label = 'Invite Only';
       break;
     case 'public':
-      bg = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-      dotColor = 'bg-emerald-400';
+      bg = 'bg-emerald-50 text-status-success border-emerald-200';
+      dotColor = 'bg-status-success';
       label = 'Public';
       break;
     case 'draft':
-      bg = 'bg-charcoal-800/80 text-muted-grey border-charcoal-700';
-      dotColor = 'bg-muted-grey';
+      bg = 'bg-surface-muted text-text-secondary border-border-neutral';
+      dotColor = 'bg-text-secondary/60';
       label = 'Draft';
       break;
     case 'unlisted':
-      bg = 'bg-plum-900/60 text-purple-300 border-plum-800';
-      dotColor = 'bg-purple-400';
+      bg = 'bg-purple-50 text-purple-700 border-purple-200';
+      dotColor = 'bg-purple-500';
       label = 'Unlisted';
       break;
     default:

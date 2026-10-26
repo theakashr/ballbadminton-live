@@ -46,13 +46,13 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
-            className="w-full pl-9 pr-9 py-2.5 rounded-xl bg-charcoal-900 border border-plum-800 text-sm text-soft-white placeholder-muted-grey/60 focus:outline-none focus:border-brand-orange transition-colors"
+            className="w-full pl-9 pr-9 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary placeholder-text-secondary/60 focus:outline-none focus:border-brand-orange transition-colors"
           />
-          <Search className="w-4 h-4 text-muted-grey absolute left-3 top-3" />
+          <Search className="w-4 h-4 text-text-secondary absolute left-3 top-3" />
           {searchQuery && (
             <button
               onClick={() => onSearchChange('')}
-              className="absolute right-3 top-3 text-muted-grey hover:text-soft-white p-0.5"
+              className="absolute right-3 top-3 text-text-secondary hover:text-text-primary p-0.5"
               aria-label="Clear search"
             >
               <X className="w-4 h-4" />
@@ -68,23 +68,23 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
                 <select
                   value={filter.selectedValue}
                   onChange={(e) => onFilterChange?.(filter.id, e.target.value)}
-                  className="pl-3 pr-8 py-2.5 rounded-xl bg-charcoal-900 border border-plum-800 text-xs text-soft-white font-medium appearance-none focus:outline-none focus:border-brand-orange cursor-pointer transition-colors"
+                  className="pl-3 pr-8 py-2.5 rounded-xl bg-white border border-border-neutral text-xs text-text-primary font-medium appearance-none focus:outline-none focus:border-brand-orange cursor-pointer transition-colors"
                 >
                   <option value="">All {filter.label}</option>
                   {filter.options.map((opt) => (
-                    <option key={opt.value} value={opt.value} className="bg-charcoal-900 text-soft-white">
+                    <option key={opt.value} value={opt.value} className="bg-white text-text-primary">
                       {opt.label}
                     </option>
                   ))}
                 </select>
-                <Filter className="w-3.5 h-3.5 text-muted-grey absolute right-2.5 top-3 pointer-events-none" />
+                <Filter className="w-3.5 h-3.5 text-text-secondary absolute right-2.5 top-3 pointer-events-none" />
               </div>
             ))}
 
             {hasActiveFilters && onResetFilters && (
               <button
                 onClick={onResetFilters}
-                className="px-3 py-2 rounded-xl text-xs text-brand-orange hover:bg-brand-orange/10 border border-brand-orange/30 font-medium transition-colors"
+                className="px-3 py-2 rounded-xl text-xs text-brand-orange hover:bg-brand-soft border border-brand-orange/30 font-medium transition-colors"
               >
                 Reset
               </button>
@@ -94,9 +94,9 @@ export const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
       </div>
 
       {totalResults !== undefined && (
-        <div className="flex items-center justify-between text-xs text-muted-grey px-1">
+        <div className="flex items-center justify-between text-xs text-text-secondary px-1">
           <span>
-            Found <strong className="text-soft-white">{totalResults}</strong> {resultLabel}
+            Found <strong className="text-text-primary">{totalResults}</strong> {resultLabel}
           </span>
           {hasActiveFilters && (
             <span className="text-brand-orange text-[11px] font-medium">

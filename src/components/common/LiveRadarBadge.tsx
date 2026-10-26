@@ -12,28 +12,28 @@ export const LiveRadarBadge: React.FC<LiveRadarBadgeProps> = ({
   pulseColor = 'coral',
 }) => {
   const bgClasses = {
-    coral: 'bg-brand-coral/15 text-brand-coral border-brand-coral/30',
-    orange: 'bg-brand-orange/15 text-brand-orange border-brand-orange/30',
-    emerald: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+    coral: 'bg-[#D92D20]/10 text-[#D92D20] border-[#D92D20]/30',
+    orange: 'bg-[#FFF1E5] text-[#FF851B] border-[#FF851B]/30',
+    emerald: 'bg-[#16803D]/10 text-[#16803D] border-[#16803D]/30',
   }[pulseColor];
 
   const dotClasses = {
-    coral: 'bg-brand-coral',
-    orange: 'bg-brand-orange',
-    emerald: 'bg-emerald-400',
+    coral: 'bg-[#D92D20]',
+    orange: 'bg-[#FF851B]',
+    emerald: 'bg-[#16803D]',
   }[pulseColor];
 
   const radarClasses = {
-    coral: 'bg-brand-coral/40',
-    orange: 'bg-brand-orange/40',
-    emerald: 'bg-emerald-400/40',
+    coral: 'bg-[#D92D20]/40',
+    orange: 'bg-[#FF851B]/40',
+    emerald: 'bg-[#16803D]/40',
   }[pulseColor];
 
   const textClasses = size === 'sm' ? 'text-[10px] px-2 py-0.5' : 'text-xs px-2.5 py-1';
 
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full font-bold uppercase tracking-wider border backdrop-blur-sm ${bgClasses} ${textClasses}`}
+      className={`inline-flex items-center gap-1.5 rounded-full font-bold uppercase tracking-wider border backdrop-blur-sm ${bgClasses} ${textClasses}`}
     >
       <span className="relative flex h-2 w-2 items-center justify-center">
         {/* Animated expanding radar ring */}

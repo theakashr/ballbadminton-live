@@ -208,7 +208,7 @@ const AppContent: React.FC = () => {
   const liveCount = liveMatches.length > 0 ? liveMatches.length : 1;
 
   return (
-    <div className="min-h-screen bg-charcoal-950 text-soft-white font-sans flex flex-col selection:bg-brand-orange selection:text-charcoal-950">
+    <div className="min-h-screen bg-app-bg text-text-primary font-sans flex flex-col selection:bg-brand-orange selection:text-white">
       
       {/* 1. Desktop Global Navigation Bar (hidden on mobile) */}
       {!isAdminRoute && (

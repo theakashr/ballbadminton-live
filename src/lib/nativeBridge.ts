@@ -80,7 +80,7 @@ export const updateNativeStatusBar = async (isDark: boolean) => {
       style: isDark ? Style.Dark : Style.Light,
     });
     await StatusBar.setBackgroundColor({
-      color: isDark ? '#211329' : '#F8F5F2',
+      color: isDark ? '#15131B' : '#F5F7FB',
     });
   } catch (err) {
     console.debug('StatusBar styling not supported or failed:', err);

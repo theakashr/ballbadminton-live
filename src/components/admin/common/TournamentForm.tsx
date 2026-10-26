@@ -176,20 +176,20 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Tab Navigation */}
-      <div className="flex border-b border-charcoal-800">
+      <div className="flex border-b border-border-neutral">
         <button
           type="button"
           onClick={() => setActiveTab('basics')}
           className={`flex items-center gap-2 px-5 py-3 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all ${
             activeTab === 'basics'
-              ? 'border-brand-orange text-brand-orange bg-plum-950/40'
-              : 'border-transparent text-muted-grey hover:text-soft-white'
+              ? 'border-brand-orange text-brand-orange bg-brand-soft'
+              : 'border-transparent text-text-secondary hover:text-text-primary'
           }`}
         >
           <Trophy className="w-4 h-4" />
           <span>1. Basic Info</span>
           {(errors.name || errors.organizer) && (
-            <span className="w-2 h-2 rounded-full bg-brand-coral" />
+            <span className="w-2 h-2 rounded-full bg-status-live" />
           )}
         </button>
 
@@ -198,14 +198,14 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
           onClick={() => setActiveTab('schedule')}
           className={`flex items-center gap-2 px-5 py-3 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all ${
             activeTab === 'schedule'
-              ? 'border-brand-orange text-brand-orange bg-plum-950/40'
-              : 'border-transparent text-muted-grey hover:text-soft-white'
+              ? 'border-brand-orange text-brand-orange bg-brand-soft'
+              : 'border-transparent text-text-secondary hover:text-text-primary'
           }`}
         >
           <Calendar className="w-4 h-4" />
           <span>2. Location & Schedule</span>
           {(errors.venue || errors.city || errors.startDate || errors.endDate || errors.registrationDeadline) && (
-            <span className="w-2 h-2 rounded-full bg-brand-coral" />
+            <span className="w-2 h-2 rounded-full bg-status-live" />
           )}
         </button>
 
@@ -214,14 +214,14 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
           onClick={() => setActiveTab('rules')}
           className={`flex items-center gap-2 px-5 py-3 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all ${
             activeTab === 'rules'
-              ? 'border-brand-orange text-brand-orange bg-plum-950/40'
-              : 'border-transparent text-muted-grey hover:text-soft-white'
+              ? 'border-brand-orange text-brand-orange bg-brand-soft'
+              : 'border-transparent text-text-secondary hover:text-text-primary'
           }`}
         >
           <Sliders className="w-4 h-4" />
           <span>3. Rules & Capacity</span>
           {(errors.maxTeams || errors.courtsCount) && (
-            <span className="w-2 h-2 rounded-full bg-brand-coral" />
+            <span className="w-2 h-2 rounded-full bg-status-live" />
           )}
         </button>
       </div>
@@ -230,18 +230,18 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
       {activeTab === 'basics' && (
         <div className="space-y-4 animate-in fade-in duration-150">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
-              Tournament Name <span className="text-brand-coral">*</span>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
+              Tournament Name <span className="text-status-live">*</span>
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="e.g. 71st Senior National Ball Badminton Championship 2027"
-              className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white placeholder-muted-grey/60 focus:outline-none focus:border-brand-orange transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary placeholder-text-secondary/60 focus:outline-none focus:border-brand-orange transition-colors"
             />
             {errors.name && (
-              <p className="text-xs text-brand-coral mt-1 flex items-center gap-1">
+              <p className="text-xs text-status-live mt-1 flex items-center gap-1">
                 <AlertCircle className="w-3.5 h-3.5" />
                 {errors.name}
               </p>
@@ -249,7 +249,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
               Description / Overview
             </label>
             <textarea
@@ -257,24 +257,24 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Provide tournament context, history, eligibility rules, and broadcast notes..."
-              className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white placeholder-muted-grey/60 focus:outline-none focus:border-brand-orange transition-colors resize-none"
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary placeholder-text-secondary/60 focus:outline-none focus:border-brand-orange transition-colors resize-none"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
-                Organizing Body / Association <span className="text-brand-coral">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
+                Organizing Body / Association <span className="text-status-live">*</span>
               </label>
               <input
                 type="text"
                 value={formData.organizer}
                 onChange={(e) => setFormData({ ...formData, organizer: e.target.value })}
                 placeholder="e.g. Ball Badminton Federation of India (BBFI)"
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white placeholder-muted-grey/60 focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary placeholder-text-secondary/60 focus:outline-none focus:border-brand-orange transition-colors"
               />
               {errors.organizer && (
-                <p className="text-xs text-brand-coral mt-1 flex items-center gap-1">
+                <p className="text-xs text-status-live mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {errors.organizer}
                 </p>
@@ -282,13 +282,13 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                 Visibility Status
               </label>
               <select
                 value={formData.visibility}
                 onChange={(e) => setFormData({ ...formData, visibility: e.target.value as TournamentVisibility })}
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               >
                 <option value="public">Public (Visible on home & tournament pages)</option>
                 <option value="unlisted">Unlisted (Direct link only)</option>
@@ -299,7 +299,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                 Contact Email
               </label>
               <input
@@ -307,10 +307,10 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                 value={formData.contactEmail}
                 onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
                 placeholder="director@tournament.org"
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white placeholder-muted-grey/60 focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary placeholder-text-secondary/60 focus:outline-none focus:border-brand-orange transition-colors"
               />
               {errors.contactEmail && (
-                <p className="text-xs text-brand-coral mt-1 flex items-center gap-1">
+                <p className="text-xs text-status-live mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {errors.contactEmail}
                 </p>
@@ -318,7 +318,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                 Contact Phone / WhatsApp
               </label>
               <input
@@ -326,7 +326,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                 value={formData.contactPhone}
                 onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
                 placeholder="+91 94432 12345"
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white placeholder-muted-grey/60 focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary placeholder-text-secondary/60 focus:outline-none focus:border-brand-orange transition-colors"
               />
             </div>
           </div>
@@ -338,18 +338,18 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
         <div className="space-y-4 animate-in fade-in duration-150">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
-                Venue Name <span className="text-brand-coral">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
+                Venue Name <span className="text-status-live">*</span>
               </label>
               <input
                 type="text"
                 value={formData.venue}
                 onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
                 placeholder="e.g. Jawaharlal Nehru Outdoor Stadium"
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white placeholder-muted-grey/60 focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary placeholder-text-secondary/60 focus:outline-none focus:border-brand-orange transition-colors"
               />
               {errors.venue && (
-                <p className="text-xs text-brand-coral mt-1 flex items-center gap-1">
+                <p className="text-xs text-status-live mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {errors.venue}
                 </p>
@@ -357,18 +357,18 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
-                Host City & State <span className="text-brand-coral">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
+                Host City & State <span className="text-status-live">*</span>
               </label>
               <input
                 type="text"
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                 placeholder="e.g. Coimbatore, Tamil Nadu"
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white placeholder-muted-grey/60 focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary placeholder-text-secondary/60 focus:outline-none focus:border-brand-orange transition-colors"
               />
               {errors.city && (
-                <p className="text-xs text-brand-coral mt-1 flex items-center gap-1">
+                <p className="text-xs text-status-live mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {errors.city}
                 </p>
@@ -378,17 +378,17 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
-                Start Date <span className="text-brand-coral">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
+                Start Date <span className="text-status-live">*</span>
               </label>
               <input
                 type="date"
                 value={formData.startDate}
                 onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               />
               {errors.startDate && (
-                <p className="text-xs text-brand-coral mt-1 flex items-center gap-1">
+                <p className="text-xs text-status-live mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {errors.startDate}
                 </p>
@@ -396,17 +396,17 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
-                End Date <span className="text-brand-coral">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
+                End Date <span className="text-status-live">*</span>
               </label>
               <input
                 type="date"
                 value={formData.endDate}
                 onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               />
               {errors.endDate && (
-                <p className="text-xs text-brand-coral mt-1 flex items-center gap-1">
+                <p className="text-xs text-status-live mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {errors.endDate}
                 </p>
@@ -414,17 +414,17 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                 Registration Deadline
               </label>
               <input
                 type="date"
                 value={formData.registrationDeadline}
                 onChange={(e) => setFormData({ ...formData, registrationDeadline: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               />
               {errors.registrationDeadline && (
-                <p className="text-xs text-brand-coral mt-1 flex items-center gap-1">
+                <p className="text-xs text-status-live mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {errors.registrationDeadline}
                 </p>
@@ -434,13 +434,13 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                 Court Surface Type
               </label>
               <select
                 value={formData.surfaceType}
                 onChange={(e) => setFormData({ ...formData, surfaceType: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               >
                 <option value="Outdoor Red Clay">Outdoor Red Clay (Traditional)</option>
                 <option value="Indoor Synthetic Mat">Indoor Synthetic Mat</option>
@@ -449,7 +449,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                 Chief Referee / Umpire in-Charge
               </label>
               <input
@@ -457,7 +457,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                 value={formData.chiefReferee}
                 onChange={(e) => setFormData({ ...formData, chiefReferee: e.target.value })}
                 placeholder="e.g. B. Ramachandra (BBFI Grade A)"
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white placeholder-muted-grey/60 focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary placeholder-text-secondary/60 focus:outline-none focus:border-brand-orange transition-colors"
               />
             </div>
           </div>
@@ -469,13 +469,13 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
         <div className="space-y-4 animate-in fade-in duration-150">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
-                Tournament Format <span className="text-brand-coral">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
+                Tournament Format <span className="text-status-live">*</span>
               </label>
               <select
                 value={formData.format}
                 onChange={(e) => setFormData({ ...formData, format: e.target.value as '5s' | 'Doubles' | 'Mixed' })}
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               >
                 <option value="5s">5s (Five-a-side - Traditional BBFI)</option>
                 <option value="Doubles">Doubles Open</option>
@@ -484,7 +484,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                 Category
               </label>
               <input
@@ -492,18 +492,18 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 placeholder="e.g. Men's Open 5s"
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white placeholder-muted-grey/60 focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary placeholder-text-secondary/60 focus:outline-none focus:border-brand-orange transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                 Match Format
               </label>
               <select
                 value={formData.matchFormat}
                 onChange={(e) => setFormData({ ...formData, matchFormat: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               >
                 <option value="Best of 3 Sets (29 Points per set)">Best of 3 Sets (29 Points - Standard)</option>
                 <option value="Best of 3 Sets (35 Points per set)">Best of 3 Sets (35 Points - Invitational)</option>
@@ -514,8 +514,8 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
-                Maximum Teams <span className="text-brand-coral">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
+                Maximum Teams <span className="text-status-live">*</span>
               </label>
               <input
                 type="number"
@@ -523,10 +523,10 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                 max={64}
                 value={formData.maxTeams}
                 onChange={(e) => setFormData({ ...formData, maxTeams: parseInt(e.target.value) || 2 })}
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               />
               {errors.maxTeams && (
-                <p className="text-xs text-brand-coral mt-1 flex items-center gap-1">
+                <p className="text-xs text-status-live mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {errors.maxTeams}
                 </p>
@@ -534,8 +534,8 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
-                Courts Available <span className="text-brand-coral">*</span>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
+                Courts Available <span className="text-status-live">*</span>
               </label>
               <input
                 type="number"
@@ -543,10 +543,10 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                 max={24}
                 value={formData.courtsCount}
                 onChange={(e) => setFormData({ ...formData, courtsCount: parseInt(e.target.value) || 1 })}
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               />
               {errors.courtsCount && (
-                <p className="text-xs text-brand-coral mt-1 flex items-center gap-1">
+                <p className="text-xs text-status-live mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {errors.courtsCount}
                 </p>
@@ -554,13 +554,13 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                 Registration Status
               </label>
               <select
                 value={formData.registrationStatus}
                 onChange={(e) => setFormData({ ...formData, registrationStatus: e.target.value as TournamentRegistrationStatus })}
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               >
                 <option value="open">Registration Open</option>
                 <option value="closed">Registration Closed</option>
@@ -572,13 +572,13 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                 Tournament Stage / Status
               </label>
               <select
                 value={formData.status}
                 onChange={(e) => setFormData({ ...formData, status: e.target.value as TournamentFullStatus })}
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               >
                 <option value="upcoming">Upcoming (Not started)</option>
                 <option value="live">LIVE (Matches active)</option>
@@ -588,7 +588,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                 Prize Pool & Awards
               </label>
               <input
@@ -596,7 +596,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                 value={formData.prizePool}
                 onChange={(e) => setFormData({ ...formData, prizePool: e.target.value })}
                 placeholder="e.g. ₹5,00,000 + Rolling Trophy"
-                className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white placeholder-muted-grey/60 focus:outline-none focus:border-brand-orange transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary placeholder-text-secondary/60 focus:outline-none focus:border-brand-orange transition-colors"
               />
             </div>
           </div>
@@ -604,19 +604,19 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
       )}
 
       {/* Storage Limitation Notice */}
-      <div className="p-3 rounded-xl bg-plum-950/70 border border-plum-800/80 flex items-start gap-2.5 text-xs text-muted-grey">
+      <div className="p-3 rounded-xl bg-surface-muted border border-border-neutral flex items-start gap-2.5 text-xs text-text-secondary">
         <Info className="w-4 h-4 text-brand-orange shrink-0 mt-0.5" />
         <span>
-          <strong>Storage & Sync:</strong> Changes are saved to the repository layer with automatic synchronization to Supabase PostgreSQL when connected, or browser localStorage in prototype mode.
+          <strong className="text-text-primary">Storage & Sync:</strong> Changes are saved to the repository layer with automatic synchronization to Supabase PostgreSQL when connected, or browser localStorage in prototype mode.
         </span>
       </div>
 
       {/* Form Actions */}
-      <div className="pt-4 border-t border-charcoal-800 flex items-center justify-between">
+      <div className="pt-4 border-t border-border-neutral flex items-center justify-between">
         <button
           type="button"
           onClick={onCancel}
-          className="px-5 py-2.5 rounded-xl text-xs font-medium text-muted-grey hover:text-soft-white hover:bg-charcoal-800 border border-charcoal-700 transition-colors"
+          className="px-5 py-2.5 rounded-xl text-xs font-medium text-text-secondary hover:text-text-primary hover:bg-surface-muted border border-border-neutral transition-colors"
         >
           Cancel
         </button>
@@ -626,7 +626,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab(activeTab === 'basics' ? 'schedule' : 'rules')}
-              className="px-5 py-2.5 rounded-xl bg-plum-800 hover:bg-plum-700 text-soft-white font-semibold text-xs border border-plum-700 transition-colors"
+              className="px-5 py-2.5 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary font-semibold text-xs border border-border-neutral transition-colors"
             >
               Continue to {activeTab === 'basics' ? 'Schedule' : 'Rules'} →
             </button>
@@ -634,7 +634,7 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all active:scale-95 disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs transition-all active:scale-95 disabled:opacity-50 shadow-sm"
             >
               <Check className="w-4 h-4 stroke-[2.5]" />
               <span>{initialData ? 'Save Tournament Changes' : 'Create & Publish Tournament'}</span>

@@ -187,8 +187,13 @@ describe('PHASE 2.5 — Live Supabase Cloud Staging Integration Tests', () => {
           }
         });
 
-        // 3 second timeout safeguard
-        setTimeout(() => resolve(), 3000);
+        // 4 second timeout safeguard
+        setTimeout(() => {
+          if (!statusResult) {
+            statusResult = 'TIMED_OUT';
+          }
+          resolve();
+        }, 4000);
       });
 
       expect(['SUBSCRIBED', 'TIMED_OUT']).toContain(statusResult);

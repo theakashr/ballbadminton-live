@@ -22,15 +22,15 @@ describe('Theme Context & Background Switcher', () => {
     (globalThis as any).document.documentElement.classList.clear();
   });
 
-  it('defaults to dark mode and sets dark class on html root', () => {
-    const defaultTheme = localStorage.getItem('bbfi_theme_v1') || 'dark';
-    expect(defaultTheme).toBe('dark');
+  it('defaults to light mode and sets light class on html root', () => {
+    const defaultTheme = localStorage.getItem('bbfi_theme_v1') || 'light';
+    expect(defaultTheme).toBe('light');
 
-    // Simulate switching to dark
-    document.documentElement.classList.add('dark');
-    document.documentElement.classList.remove('light');
-    expect(document.documentElement.classList.contains('dark')).toBe(true);
-    expect(document.documentElement.classList.contains('light')).toBe(false);
+    // Simulate switching to light
+    document.documentElement.classList.add('light');
+    document.documentElement.classList.remove('dark');
+    expect(document.documentElement.classList.contains('light')).toBe(true);
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
   });
 
   it('switches to white (light) mode and updates document class', () => {

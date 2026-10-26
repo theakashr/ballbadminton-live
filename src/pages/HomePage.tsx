@@ -91,7 +91,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   };
 
   return (
-    <main className="w-full min-h-screen bg-charcoal-950 text-soft-white overflow-x-hidden">
+    <main className="w-full min-h-screen bg-app-bg text-text-primary overflow-x-hidden">
       
       {/* A. Compact Broadcast Header & Status Banner */}
       <HomeBroadcastBanner

@@ -15,23 +15,23 @@ export const HomeLiveMatchesSection: React.FC<HomeLiveMatchesSectionProps> = ({
   onOpenDetails,
 }) => {
   return (
-    <section id="live-matches-section" className="my-8 sm:my-12">
+    <section id="live-matches-section" className="my-8 sm:my-10">
       {/* Section Header */}
-      <div className="flex items-center justify-between gap-3 mb-4 sm:mb-6">
+      <div className="flex items-center justify-between gap-3 mb-4 sm:mb-5">
         <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded-lg bg-brand-coral/15 border border-brand-coral/30 text-brand-coral">
+          <div className="p-1.5 rounded-lg bg-[#D92D20]/10 border border-[#D92D20]/30 text-[#D92D20]">
             <Radio className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="font-display font-extrabold text-lg sm:text-2xl text-soft-white tracking-tight">
+              <h2 className="font-display font-extrabold text-lg sm:text-2xl text-[#182230] tracking-tight">
                 Live Matches
               </h2>
               {matches.length > 0 && (
                 <LiveRadarBadge label={`${matches.length} IN PLAY`} pulseColor="coral" size="sm" />
               )}
             </div>
-            <p className="text-xs text-muted-grey hidden sm:block">
+            <p className="text-xs text-[#667085] hidden sm:block">
               Real-time court feeds direct from official tournament scorers
             </p>
           </div>
@@ -40,7 +40,7 @@ export const HomeLiveMatchesSection: React.FC<HomeLiveMatchesSectionProps> = ({
         <Link
           to="/live"
           onClick={() => nativeHaptics.selection()}
-          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-brand-orange hover:text-brand-orangeHover transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#FF851B] hover:text-[#E96F0B] transition-colors"
         >
           <span>View All Live</span>
           <ArrowRight className="w-4 h-4" />
@@ -62,16 +62,16 @@ export const HomeLiveMatchesSection: React.FC<HomeLiveMatchesSectionProps> = ({
                   nativeHaptics.impact('light');
                   onOpenDetails(match);
                 }}
-                className="group relative rounded-2xl bg-charcoal-900/90 hover:bg-plum-950/90 border border-plum-800/70 hover:border-brand-orange/60 p-4 sm:p-5 shadow-subtle transition-all duration-200 cursor-pointer active:scale-[0.98] flex flex-col justify-between"
+                className="group relative rounded-2xl bg-white hover:bg-[#F0F2F6] border border-[#E4E7EC] hover:border-[#FF851B]/60 p-4 sm:p-5 shadow-[0_1px_3px_rgba(16,24,40,0.05)] transition-all duration-150 cursor-pointer active:scale-[0.98] flex flex-col justify-between"
               >
                 <div>
                   {/* Top Metadata */}
-                  <div className="flex items-center justify-between gap-2 pb-2.5 mb-3 border-b border-plum-900/60">
-                    <span className="text-xs font-bold text-soft-white truncate max-w-[170px]">
+                  <div className="flex items-center justify-between gap-2 pb-2.5 mb-3 border-b border-[#E4E7EC]">
+                    <span className="text-xs font-bold text-[#182230] truncate max-w-[170px]">
                       {match.tournamentName}
                     </span>
-                    <div className="flex items-center gap-1 text-[11px] text-muted-grey shrink-0">
-                      <MapPin className="w-3 h-3 text-brand-orange" />
+                    <div className="flex items-center gap-1 text-[11px] text-[#667085] shrink-0">
+                      <MapPin className="w-3 h-3 text-[#FF851B]" />
                       <span>{match.court}</span>
                     </div>
                   </div>
@@ -80,32 +80,32 @@ export const HomeLiveMatchesSection: React.FC<HomeLiveMatchesSectionProps> = ({
                   <div className="flex items-center justify-between gap-3 py-1.5">
                     <div className="flex items-center gap-2.5 min-w-0">
                       <div
-                        className="w-8 h-8 rounded-xl flex items-center justify-center font-display font-bold text-xs text-white border border-plum-700 shrink-0"
-                        style={{ backgroundColor: match.team1.logoBg || '#211329' }}
+                        className="w-8 h-8 rounded-xl flex items-center justify-center font-display font-bold text-xs text-white border border-[#E4E7EC] shrink-0"
+                        style={{ backgroundColor: match.team1.logoBg || '#182230' }}
                       >
                         {match.team1.shortName}
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-display font-extrabold text-sm text-soft-white truncate block">
+                          <span className="font-display font-extrabold text-sm text-[#182230] truncate block">
                             {match.team1.name}
                           </span>
                           {isTeam1Serving && (
-                            <span className="px-1.5 py-0.2 rounded bg-brand-yellow/20 border border-brand-yellow/40 text-[9px] font-black text-brand-yellow shrink-0">
+                            <span className="px-1.5 py-0.2 rounded bg-[#FFF1E5] border border-[#FF851B]/40 text-[9px] font-black text-[#FF851B] shrink-0">
                               {match.servingHand === 1 ? '1H' : '2H'}
                             </span>
                           )}
                         </div>
-                        <span className="text-[10px] text-muted-grey">{match.team1.state}</span>
+                        <span className="text-[10px] text-[#667085]">{match.team1.state}</span>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2.5 shrink-0">
-                      <span className="text-xs text-muted-grey font-semibold">
+                      <span className="text-xs text-[#667085] font-semibold">
                         ({match.team1SetsWon})
                       </span>
                       <span className={`font-score font-black text-xl sm:text-2xl min-w-[28px] text-right ${
-                        isTeam1Serving ? 'text-brand-orange' : 'text-soft-white'
+                        isTeam1Serving ? 'text-[#FF851B]' : 'text-[#182230]'
                       }`}>
                         {currentSetScore.team1Score}
                       </span>
@@ -116,32 +116,32 @@ export const HomeLiveMatchesSection: React.FC<HomeLiveMatchesSectionProps> = ({
                   <div className="flex items-center justify-between gap-3 py-1.5 mt-1">
                     <div className="flex items-center gap-2.5 min-w-0">
                       <div
-                        className="w-8 h-8 rounded-xl flex items-center justify-center font-display font-bold text-xs text-white border border-plum-700 shrink-0"
-                        style={{ backgroundColor: match.team2.logoBg || '#15131B' }}
+                        className="w-8 h-8 rounded-xl flex items-center justify-center font-display font-bold text-xs text-white border border-[#E4E7EC] shrink-0"
+                        style={{ backgroundColor: match.team2.logoBg || '#182230' }}
                       >
                         {match.team2.shortName}
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-display font-extrabold text-sm text-soft-white truncate block">
+                          <span className="font-display font-extrabold text-sm text-[#182230] truncate block">
                             {match.team2.name}
                           </span>
                           {isTeam2Serving && (
-                            <span className="px-1.5 py-0.2 rounded bg-brand-yellow/20 border border-brand-yellow/40 text-[9px] font-black text-brand-yellow shrink-0">
+                            <span className="px-1.5 py-0.2 rounded bg-[#FFF1E5] border border-[#FF851B]/40 text-[9px] font-black text-[#FF851B] shrink-0">
                               {match.servingHand === 1 ? '1H' : '2H'}
                             </span>
                           )}
                         </div>
-                        <span className="text-[10px] text-muted-grey">{match.team2.state}</span>
+                        <span className="text-[10px] text-[#667085]">{match.team2.state}</span>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2.5 shrink-0">
-                      <span className="text-xs text-muted-grey font-semibold">
+                      <span className="text-xs text-[#667085] font-semibold">
                         ({match.team2SetsWon})
                       </span>
                       <span className={`font-score font-black text-xl sm:text-2xl min-w-[28px] text-right ${
-                        isTeam2Serving ? 'text-brand-orange' : 'text-soft-white'
+                        isTeam2Serving ? 'text-[#FF851B]' : 'text-[#182230]'
                       }`}>
                         {currentSetScore.team2Score}
                       </span>
@@ -150,11 +150,11 @@ export const HomeLiveMatchesSection: React.FC<HomeLiveMatchesSectionProps> = ({
                 </div>
 
                 {/* Footer status / sets */}
-                <div className="flex items-center justify-between gap-2 pt-3 mt-3 border-t border-plum-900/50 text-[11px] text-muted-grey">
-                  <span className="text-brand-coral font-bold uppercase tracking-wider text-[10px]">
+                <div className="flex items-center justify-between gap-2 pt-3 mt-3 border-t border-[#E4E7EC] text-[11px] text-[#667085]">
+                  <span className="text-[#D92D20] font-bold uppercase tracking-wider text-[10px]">
                     SET {match.currentSet} OF 3
                   </span>
-                  <span className="font-medium text-brand-orange group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
+                  <span className="font-semibold text-[#FF851B] group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
                     <span>Watch Match</span>
                     <ArrowRight className="w-3 h-3" />
                   </span>
@@ -164,16 +164,16 @@ export const HomeLiveMatchesSection: React.FC<HomeLiveMatchesSectionProps> = ({
           })}
         </div>
       ) : (
-        <div className="p-6 sm:p-8 rounded-2xl bg-charcoal-900/70 border border-plum-800/50 text-center">
-          <p className="text-sm font-semibold text-soft-white mb-1">
+        <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#E4E7EC] text-center shadow-sm">
+          <p className="text-sm font-semibold text-[#182230] mb-1">
             No Other Matches Currently On Court
           </p>
-          <p className="text-xs text-muted-grey max-w-sm mx-auto mb-4">
+          <p className="text-xs text-[#667085] max-w-sm mx-auto mb-4">
             All active games in this session are completed or upcoming. Check the fixtures below.
           </p>
           <Link
             to="/live"
-            className="inline-flex items-center gap-1 text-xs font-bold text-brand-orange hover:underline"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#FF851B] hover:underline"
           >
             <span>Explore All Match Schedules</span>
             <ArrowRight className="w-3.5 h-3.5" />

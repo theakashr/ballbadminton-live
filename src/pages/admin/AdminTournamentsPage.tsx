@@ -248,11 +248,11 @@ export const AdminTournamentsPage: React.FC = () => {
         <div className="max-w-xs">
           <button
             onClick={() => setViewingTournament(t)}
-            className="font-bold text-soft-white hover:text-brand-orange text-left transition-colors truncate block max-w-full"
+            className="font-bold text-text-primary hover:text-brand-orange text-left transition-colors truncate block max-w-full"
           >
             {t.name}
           </button>
-          <span className="text-xs text-muted-grey truncate block mt-0.5">
+          <span className="text-xs text-text-secondary truncate block mt-0.5">
             {t.organizer}
           </span>
           <span className="text-[11px] text-brand-orange font-semibold block mt-0.5">
@@ -267,11 +267,11 @@ export const AdminTournamentsPage: React.FC = () => {
       sortable: true,
       render: (t) => (
         <div className="text-xs space-y-0.5 whitespace-nowrap">
-          <div className="flex items-center gap-1.5 text-soft-white font-medium">
+          <div className="flex items-center gap-1.5 text-text-primary font-medium">
             <MapPin className="w-3.5 h-3.5 text-brand-orange shrink-0" />
             <span>{t.city}</span>
           </div>
-          <span className="text-muted-grey block text-[11px] truncate max-w-[160px]">
+          <span className="text-text-secondary block text-[11px] truncate max-w-[160px]">
             {t.venue}
           </span>
         </div>
@@ -283,11 +283,11 @@ export const AdminTournamentsPage: React.FC = () => {
       sortable: true,
       render: (t) => (
         <div className="text-xs space-y-0.5 whitespace-nowrap">
-          <div className="flex items-center gap-1.5 text-soft-white">
-            <Calendar className="w-3.5 h-3.5 text-muted-grey shrink-0" />
+          <div className="flex items-center gap-1.5 text-text-primary">
+            <Calendar className="w-3.5 h-3.5 text-text-secondary shrink-0" />
             <span>{t.startDate}</span>
           </div>
-          <span className="text-muted-grey text-[11px] block">
+          <span className="text-text-secondary text-[11px] block">
             to {t.endDate}
           </span>
         </div>
@@ -299,11 +299,11 @@ export const AdminTournamentsPage: React.FC = () => {
       sortable: true,
       render: (t) => (
         <div className="text-xs">
-          <span className="font-bold text-soft-white">
+          <span className="font-bold text-text-primary">
             {t.registeredTeamsCount ?? t.totalTeams}
           </span>
-          <span className="text-muted-grey"> / {t.maxTeams || 32} teams</span>
-          <span className="text-[11px] text-muted-grey block mt-0.5">
+          <span className="text-text-secondary"> / {t.maxTeams || 32} teams</span>
+          <span className="text-[11px] text-text-secondary block mt-0.5">
             {t.courtsCount} courts
           </span>
         </div>
@@ -315,7 +315,7 @@ export const AdminTournamentsPage: React.FC = () => {
       sortable: true,
       render: (t) => (
         <div className="text-xs">
-          <span className="px-2 py-0.5 rounded-md bg-plum-900 border border-plum-700 text-brand-yellow font-bold text-[11px]">
+          <span className="px-2 py-0.5 rounded-md bg-brand-soft border border-brand-orange/20 text-brand-orange font-bold text-[11px]">
             {t.format}
           </span>
         </div>
@@ -344,7 +344,7 @@ export const AdminTournamentsPage: React.FC = () => {
         <div className="flex items-center justify-end gap-1.5">
           <button
             onClick={() => setViewingTournament(t)}
-            className="p-1.5 rounded-lg text-muted-grey hover:text-soft-white hover:bg-charcoal-800 transition-colors"
+            className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
             title="View Details"
           >
             <Eye className="w-4 h-4" />
@@ -352,7 +352,7 @@ export const AdminTournamentsPage: React.FC = () => {
 
           <button
             onClick={() => setTeamRegTournament(t)}
-            className="p-1.5 rounded-lg text-muted-grey hover:text-brand-orange hover:bg-charcoal-800 transition-colors"
+            className="p-1.5 rounded-lg text-text-secondary hover:text-brand-orange hover:bg-surface-muted transition-colors"
             title="Manage Teams & Rosters"
           >
             <Users className="w-4 h-4" />
@@ -365,7 +365,7 @@ export const AdminTournamentsPage: React.FC = () => {
                   setEditingTournament(t);
                   setIsFormOpen(true);
                 }}
-                className="p-1.5 rounded-lg text-muted-grey hover:text-brand-orange hover:bg-charcoal-800 transition-colors"
+                className="p-1.5 rounded-lg text-text-secondary hover:text-brand-orange hover:bg-surface-muted transition-colors"
                 title="Edit Tournament"
               >
                 <Edit3 className="w-4 h-4" />
@@ -373,7 +373,7 @@ export const AdminTournamentsPage: React.FC = () => {
 
               <button
                 onClick={() => handleArchive(t)}
-                className="p-1.5 rounded-lg text-muted-grey hover:text-soft-white hover:bg-charcoal-800 transition-colors"
+                className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
                 title={t.status === 'archived' ? 'Restore' : 'Archive'}
               >
                 {t.status === 'archived' ? (
@@ -385,7 +385,7 @@ export const AdminTournamentsPage: React.FC = () => {
 
               <button
                 onClick={() => handleDelete(t)}
-                className="p-1.5 rounded-lg text-muted-grey hover:text-brand-coral hover:bg-charcoal-800 transition-colors"
+                className="p-1.5 rounded-lg text-text-secondary hover:text-status-live hover:bg-red-50 transition-colors"
                 title="Delete"
               >
                 <Trash2 className="w-4 h-4" />
@@ -404,11 +404,11 @@ export const AdminTournamentsPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <Trophy className="w-5 h-5 text-brand-orange" />
-            <h1 className="text-xl sm:text-2xl font-display font-bold text-soft-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-display font-bold text-text-primary tracking-tight">
               Tournament Management
             </h1>
           </div>
-          <p className="text-xs text-muted-grey mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             Create, schedule, configure 5s formats, and supervise official Ball Badminton championships.
           </p>
         </div>
@@ -416,7 +416,7 @@ export const AdminTournamentsPage: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2.5">
           <button
             onClick={handleResetDefaults}
-            className="px-3 py-2 rounded-xl text-xs font-medium text-muted-grey hover:text-soft-white bg-charcoal-900 hover:bg-charcoal-800 border border-charcoal-700 transition-colors"
+            className="px-3 py-2 rounded-xl text-xs font-medium text-text-secondary hover:text-text-primary bg-white hover:bg-surface-muted border border-border-neutral transition-colors shadow-sm"
             title="Reset repository to seed tournaments"
           >
             Reset Demo Data
@@ -428,7 +428,7 @@ export const AdminTournamentsPage: React.FC = () => {
                 setEditingTournament(null);
                 setIsFormOpen(true);
               }}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all active:scale-95"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all active:scale-95"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />
               <span>Create Tournament</span>
@@ -438,7 +438,7 @@ export const AdminTournamentsPage: React.FC = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="p-4 rounded-2xl bg-charcoal-900 border border-plum-800 shadow-subtle">
+      <div className="p-4 rounded-2xl bg-white border border-border-neutral shadow-card">
         <SearchAndFilter
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -466,20 +466,20 @@ export const AdminTournamentsPage: React.FC = () => {
       {isFormOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
           <div
-            className="fixed inset-0 bg-charcoal-950/85 backdrop-blur-md"
+            className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm"
             onClick={() => setIsFormOpen(false)}
           />
-          <div className="relative w-full max-w-3xl bg-charcoal-900 border border-plum-800 rounded-3xl shadow-elevated overflow-hidden z-10 my-8">
-            <div className="px-6 py-5 border-b border-plum-800/80 bg-plum-950/70 flex items-center justify-between">
+          <div className="relative w-full max-w-3xl bg-white border border-border-neutral rounded-2xl shadow-elevated overflow-hidden z-10 my-8">
+            <div className="px-6 py-5 border-b border-border-neutral bg-surface-muted flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-plum-800 flex items-center justify-center text-brand-orange">
+                <div className="w-10 h-10 rounded-xl bg-brand-soft border border-brand-orange/20 flex items-center justify-center text-brand-orange">
                   <Trophy className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-display font-bold text-soft-white">
+                  <h3 className="text-lg font-display font-bold text-text-primary">
                     {editingTournament ? 'Edit Tournament Configuration' : 'Create Ball Badminton Tournament'}
                   </h3>
-                  <p className="text-xs text-muted-grey">
+                  <p className="text-xs text-text-secondary">
                     Configure dates, venue, 5s rules, court surface &amp; registration limits
                   </p>
                 </div>
@@ -487,7 +487,7 @@ export const AdminTournamentsPage: React.FC = () => {
 
               <button
                 onClick={() => setIsFormOpen(false)}
-                className="p-1.5 rounded-lg text-muted-grey hover:text-soft-white hover:bg-charcoal-800 transition-colors"
+                className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
                 aria-label="Close dialog"
               >
                 <X className="w-5 h-5" />
@@ -509,20 +509,20 @@ export const AdminTournamentsPage: React.FC = () => {
       {viewingTournament && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
           <div
-            className="fixed inset-0 bg-charcoal-950/85 backdrop-blur-md"
+            className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm"
             onClick={() => setViewingTournament(null)}
           />
-          <div className="relative w-full max-w-2xl bg-charcoal-900 border border-plum-800 rounded-3xl shadow-elevated overflow-hidden z-10 my-8">
-            <div className="px-6 py-5 border-b border-plum-800/80 bg-plum-950/70 flex items-center justify-between">
+          <div className="relative w-full max-w-2xl bg-white border border-border-neutral rounded-2xl shadow-elevated overflow-hidden z-10 my-8">
+            <div className="px-6 py-5 border-b border-border-neutral bg-surface-muted flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-plum-800 flex items-center justify-center text-brand-orange">
+                <div className="w-10 h-10 rounded-xl bg-brand-soft border border-brand-orange/20 flex items-center justify-center text-brand-orange">
                   <Trophy className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-display font-bold text-soft-white">
+                  <h3 className="text-base font-display font-bold text-text-primary">
                     Tournament Specification Sheet
                   </h3>
-                  <p className="text-xs text-muted-grey">
+                  <p className="text-xs text-text-secondary">
                     Official BBFI sanctioned tournament profile
                   </p>
                 </div>
@@ -530,7 +530,7 @@ export const AdminTournamentsPage: React.FC = () => {
 
               <button
                 onClick={() => setViewingTournament(null)}
-                className="p-1.5 rounded-lg text-muted-grey hover:text-soft-white hover:bg-charcoal-800 transition-colors"
+                className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
                 aria-label="Close dialog"
               >
                 <X className="w-5 h-5" />
@@ -543,75 +543,75 @@ export const AdminTournamentsPage: React.FC = () => {
                 <div className="flex items-center gap-2 flex-wrap">
                   <StatusBadge status={viewingTournament.status} />
                   <StatusBadge status={viewingTournament.registrationStatus || 'open'} />
-                  <span className="px-2 py-0.5 rounded bg-plum-950 border border-plum-800 text-brand-orange font-bold uppercase text-[10px]">
+                  <span className="px-2 py-0.5 rounded bg-brand-soft border border-brand-orange/20 text-brand-orange font-bold uppercase text-[10px]">
                     {viewingTournament.format}
                   </span>
                 </div>
-                <h2 className="text-xl font-display font-bold text-soft-white">
+                <h2 className="text-xl font-display font-bold text-text-primary">
                   {viewingTournament.name}
                 </h2>
-                <p className="text-muted-grey leading-relaxed">
+                <p className="text-text-secondary leading-relaxed">
                   {viewingTournament.description || 'No detailed description provided.'}
                 </p>
               </div>
 
               {/* Specification Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-xl bg-charcoal-950 border border-plum-800/80">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-xl bg-surface-muted border border-border-neutral">
                 <div>
-                  <span className="text-muted-grey block text-[11px]">Organizing Body:</span>
-                  <span className="font-semibold text-soft-white">{viewingTournament.organizer}</span>
+                  <span className="text-text-secondary block text-[11px]">Organizing Body:</span>
+                  <span className="font-semibold text-text-primary">{viewingTournament.organizer}</span>
                 </div>
                 <div>
-                  <span className="text-muted-grey block text-[11px]">Host Venue &amp; City:</span>
-                  <span className="font-semibold text-soft-white">{viewingTournament.venue}, {viewingTournament.city}</span>
+                  <span className="text-text-secondary block text-[11px]">Host Venue &amp; City:</span>
+                  <span className="font-semibold text-text-primary">{viewingTournament.venue}, {viewingTournament.city}</span>
                 </div>
                 <div>
-                  <span className="text-muted-grey block text-[11px]">Tournament Dates:</span>
-                  <span className="font-semibold text-soft-white">{viewingTournament.startDate} to {viewingTournament.endDate}</span>
+                  <span className="text-text-secondary block text-[11px]">Tournament Dates:</span>
+                  <span className="font-semibold text-text-primary">{viewingTournament.startDate} to {viewingTournament.endDate}</span>
                 </div>
                 <div>
-                  <span className="text-muted-grey block text-[11px]">Registration Deadline:</span>
-                  <span className="font-semibold text-soft-white">{viewingTournament.registrationDeadline || 'Closed / Completed'}</span>
+                  <span className="text-text-secondary block text-[11px]">Registration Deadline:</span>
+                  <span className="font-semibold text-text-primary">{viewingTournament.registrationDeadline || 'Closed / Completed'}</span>
                 </div>
                 <div>
-                  <span className="text-muted-grey block text-[11px]">Court Surface:</span>
-                  <span className="font-semibold text-soft-white">{viewingTournament.surfaceType || 'Outdoor Red Clay'}</span>
+                  <span className="text-text-secondary block text-[11px]">Court Surface:</span>
+                  <span className="font-semibold text-text-primary">{viewingTournament.surfaceType || 'Outdoor Red Clay'}</span>
                 </div>
                 <div>
-                  <span className="text-muted-grey block text-[11px]">Match Format:</span>
+                  <span className="text-text-secondary block text-[11px]">Match Format:</span>
                   <span className="font-semibold text-brand-orange">{viewingTournament.matchFormat || 'Best of 3 Sets (29 Points)'}</span>
                 </div>
                 <div>
-                  <span className="text-muted-grey block text-[11px]">Courts &amp; Capacity:</span>
-                  <span className="font-semibold text-soft-white">
+                  <span className="text-text-secondary block text-[11px]">Courts &amp; Capacity:</span>
+                  <span className="font-semibold text-text-primary">
                     {viewingTournament.courtsCount} Courts • {viewingTournament.registeredTeamsCount ?? viewingTournament.totalTeams} of {viewingTournament.maxTeams || 32} Teams
                   </span>
                 </div>
                 <div>
-                  <span className="text-muted-grey block text-[11px]">Chief Referee:</span>
-                  <span className="font-semibold text-soft-white">{viewingTournament.chiefReferee || 'BBFI Appointed Umpire'}</span>
+                  <span className="text-text-secondary block text-[11px]">Chief Referee:</span>
+                  <span className="font-semibold text-text-primary">{viewingTournament.chiefReferee || 'BBFI Appointed Umpire'}</span>
                 </div>
               </div>
 
               {/* Contact & Awards */}
               {(viewingTournament.prizePool || viewingTournament.contactEmail) && (
-                <div className="p-3.5 rounded-xl bg-plum-950/60 border border-plum-800 text-xs space-y-1.5">
+                <div className="p-3.5 rounded-xl bg-surface-muted border border-border-neutral text-xs space-y-1.5">
                   {viewingTournament.prizePool && (
                     <div className="flex justify-between">
-                      <span className="text-muted-grey">Prize Pool:</span>
-                      <span className="font-bold text-brand-yellow">{viewingTournament.prizePool}</span>
+                      <span className="text-text-secondary">Prize Pool:</span>
+                      <span className="font-bold text-amber-700">{viewingTournament.prizePool}</span>
                     </div>
                   )}
                   {viewingTournament.contactEmail && (
                     <div className="flex justify-between">
-                      <span className="text-muted-grey">Official Email:</span>
-                      <span className="text-soft-white">{viewingTournament.contactEmail}</span>
+                      <span className="text-text-secondary">Official Email:</span>
+                      <span className="text-text-primary">{viewingTournament.contactEmail}</span>
                     </div>
                   )}
                   {viewingTournament.contactPhone && (
                     <div className="flex justify-between">
-                      <span className="text-muted-grey">Contact Phone:</span>
-                      <span className="text-soft-white">{viewingTournament.contactPhone}</span>
+                      <span className="text-text-secondary">Contact Phone:</span>
+                      <span className="text-text-primary">{viewingTournament.contactPhone}</span>
                     </div>
                   )}
                 </div>
@@ -626,16 +626,16 @@ export const AdminTournamentsPage: React.FC = () => {
                     setViewingTournament(null);
                     setTeamRegTournament(target);
                   }}
-                  className="px-4 py-2 rounded-xl bg-plum-800 hover:bg-plum-700 text-soft-white font-bold text-xs flex items-center gap-2 border border-plum-700 transition-colors"
+                  className="px-4 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs flex items-center gap-2 transition-colors shadow-sm"
                 >
-                  <Users className="w-4 h-4 text-brand-orange" />
+                  <Users className="w-4 h-4 text-white" />
                   <span>Manage Participating Teams &amp; Rosters</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setViewingTournament(null)}
-                  className="px-5 py-2 rounded-xl bg-charcoal-800 hover:bg-charcoal-700 text-soft-white font-semibold text-xs border border-charcoal-700 transition-colors"
+                  className="px-5 py-2 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary font-semibold text-xs border border-border-neutral transition-colors"
                 >
                   Close Specification
                 </button>

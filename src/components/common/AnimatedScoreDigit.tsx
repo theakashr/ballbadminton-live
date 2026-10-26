@@ -39,7 +39,7 @@ export const AnimatedScoreDigit: React.FC<AnimatedScoreDigitProps> = ({
     orange: 'text-brand-orange',
     coral: 'text-brand-coral',
     yellow: 'text-brand-yellow',
-    neutral: 'text-soft-white',
+    neutral: 'text-text-primary',
   }[colorVariant];
 
   return (

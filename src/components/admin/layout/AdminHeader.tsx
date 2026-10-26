@@ -53,12 +53,12 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
   };
 
   return (
-    <header className="min-h-[4rem] pt-safe px-4 sm:px-6 bg-charcoal-900/90 backdrop-blur-md border-b border-plum-800/80 sticky top-0 z-30 flex items-center justify-between gap-4">
+    <header className="min-h-[4rem] pt-safe px-4 sm:px-6 bg-white/95 backdrop-blur-md border-b border-border-neutral sticky top-0 z-30 flex items-center justify-between gap-4">
       {/* Left: Mobile hamburger & Breadcrumbs */}
       <div className="flex items-center gap-3">
         <button
           onClick={onOpenMobileSidebar}
-          className="md:hidden p-2 rounded-xl bg-charcoal-800 text-muted-grey hover:text-soft-white border border-charcoal-700"
+          className="md:hidden p-2 rounded-xl bg-surface-muted text-text-secondary hover:text-text-primary border border-border-neutral"
           aria-label="Open navigation sidebar"
         >
           <Menu className="w-5 h-5" />
@@ -68,7 +68,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
         <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs">
           <Link
             to="/admin"
-            className="text-muted-grey hover:text-soft-white font-medium transition-colors"
+            className="text-text-secondary hover:text-text-primary font-medium transition-colors"
           >
             Admin
           </Link>
@@ -79,13 +79,13 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
               const title = breadcrumbMap[part] || part;
               return (
                 <React.Fragment key={to}>
-                  <ChevronRight className="w-3.5 h-3.5 text-charcoal-600" />
+                  <ChevronRight className="w-3.5 h-3.5 text-text-secondary" />
                   {isLast ? (
-                    <span className="font-bold text-soft-white">{title}</span>
+                    <span className="font-bold text-text-primary">{title}</span>
                   ) : (
                     <Link
                       to={to}
-                      className="text-muted-grey hover:text-soft-white font-medium transition-colors"
+                      className="text-text-secondary hover:text-text-primary font-medium transition-colors"
                     >
                       {title}
                     </Link>
@@ -101,10 +101,10 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
         {/* Backend Auth Mode Badge */}
         <div className={`hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] ${
           authBackend === 'supabase'
-            ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
-            : 'bg-plum-950 border-plum-700/80 text-muted-grey'
+            ? 'bg-emerald-500/10 border-emerald-500/25 text-status-success'
+            : 'bg-surface-muted border-border-neutral text-text-secondary'
         }`}>
-          <span className={`w-2 h-2 rounded-full ${authBackend === 'supabase' ? 'bg-emerald-400' : 'bg-brand-yellow animate-pulse'}`} />
+          <span className={`w-2 h-2 rounded-full ${authBackend === 'supabase' ? 'bg-status-success' : 'bg-status-warning animate-pulse'}`} />
           <span>{authBackend === 'supabase' ? 'Supabase RLS Active' : 'Dev Prototype Mode'}</span>
         </div>
 
@@ -116,7 +116,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
           to="/"
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-soft-white/80 hover:text-soft-white hover:bg-charcoal-800 border border-charcoal-700 transition-colors"
+          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-text-secondary hover:text-text-primary hover:bg-surface-muted border border-border-neutral transition-colors shadow-sm"
           title="Open public website in new tab"
         >
           <span>View Site</span>
@@ -127,32 +127,32 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-            className="flex items-center gap-2.5 p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-charcoal-950 hover:bg-plum-950 border border-plum-800 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+            className="flex items-center gap-2.5 p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-surface-muted hover:bg-border-neutral border border-border-neutral text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
           >
             <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs text-charcoal-950 shrink-0"
+              className="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs text-white shrink-0 shadow-sm"
               style={{ backgroundColor: currentUser?.avatarBg || '#FF851B' }}
             >
               {currentUser?.name.charAt(0) || 'A'}
             </div>
             <div className="hidden sm:block text-xs">
-              <span className="font-bold text-soft-white block leading-tight truncate max-w-[130px]">
+              <span className="font-bold text-text-primary block leading-tight truncate max-w-[130px]">
                 {currentUser?.name || 'Administrator'}
               </span>
               <span className="text-[10px] text-brand-orange font-semibold uppercase tracking-wider block">
                 {currentUser?.role.replace('_', ' ') || 'Admin'}
               </span>
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-muted-grey hidden sm:block" />
+            <ChevronDown className="w-3.5 h-3.5 text-text-secondary hidden sm:block" />
           </button>
 
           {/* User Menu Dropdown */}
           {userDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-charcoal-900 border border-plum-800 shadow-elevated p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
-              <div className="p-2 border-b border-charcoal-800 mb-2">
-                <p className="text-xs font-bold text-soft-white">{currentUser?.name}</p>
-                <p className="text-[11px] text-muted-grey truncate">{currentUser?.email}</p>
-                <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-brand-orange/20 text-brand-orange border border-brand-orange/30">
+            <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-white border border-border-neutral shadow-card-hover p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="p-2 border-b border-border-neutral mb-2">
+                <p className="text-xs font-bold text-text-primary">{currentUser?.name}</p>
+                <p className="text-[11px] text-text-secondary truncate">{currentUser?.email}</p>
+                <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-brand-soft text-brand-orange border border-brand-orange/30">
                   {currentUser?.role.replace('_', ' ')}
                 </span>
               </div>
@@ -160,7 +160,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
               {/* Persona Switcher for Quick Role Testing - ONLY in Dev/Demo Mode */}
               {authBackend === 'demo' && (
                 <div className="py-1">
-                  <p className="px-2 text-[10px] font-bold uppercase tracking-wider text-muted-grey mb-1">
+                  <p className="px-2 text-[10px] font-bold uppercase tracking-wider text-text-secondary mb-1">
                     Switch Active Persona (Dev):
                   </p>
                   <div className="space-y-1">
@@ -175,16 +175,16 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
                           }}
                           className={`w-full px-2.5 py-1.5 rounded-lg text-left text-xs flex items-center justify-between transition-colors ${
                             isActive
-                              ? 'bg-plum-850 text-soft-white font-bold border border-plum-700/60'
-                              : 'text-muted-grey hover:text-soft-white hover:bg-charcoal-800'
+                              ? 'bg-brand-soft text-brand-orange font-bold border border-brand-orange/30'
+                              : 'text-text-secondary hover:text-text-primary hover:bg-surface-muted'
                           }`}
                         >
                           <div className="truncate pr-2">
                             <span className="block truncate">{user.name}</span>
-                            <span className="text-[10px] text-muted-grey/80 truncate block">{user.email}</span>
+                            <span className="text-[10px] text-text-secondary truncate block">{user.email}</span>
                           </div>
                           {user.email === SUPER_ADMIN_EMAIL && (
-                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-brand-yellow/20 text-brand-yellow font-bold shrink-0">
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-status-warning font-bold shrink-0">
                               Super
                             </span>
                           )}
@@ -195,13 +195,13 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
                 </div>
               )}
 
-              <div className="pt-2 border-t border-charcoal-800 mt-2 flex flex-col gap-1">
+              <div className="pt-2 border-t border-border-neutral mt-2 flex flex-col gap-1">
                 <button
                   onClick={() => {
                     setUserDropdownOpen(false);
                     navigate('/admin/settings');
                   }}
-                  className="w-full px-2.5 py-1.5 rounded-lg text-left text-xs text-soft-white hover:bg-charcoal-800 flex items-center gap-2"
+                  className="w-full px-2.5 py-1.5 rounded-lg text-left text-xs text-text-primary hover:bg-surface-muted flex items-center gap-2 rounded-lg"
                 >
                   <ShieldCheck className="w-3.5 h-3.5 text-brand-orange" />
                   <span>Access & Role Permissions</span>
@@ -212,7 +212,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
                     setUserDropdownOpen(false);
                     logout();
                   }}
-                  className="w-full px-2.5 py-1.5 rounded-lg text-left text-xs text-brand-coral hover:bg-brand-coral/10 flex items-center gap-2"
+                  className="w-full px-2.5 py-1.5 rounded-lg text-left text-xs text-status-live hover:bg-rose-50 flex items-center gap-2 rounded-lg"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   <span>Sign Out Session</span>

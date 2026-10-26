@@ -5,7 +5,6 @@ import { MatchSection } from './MatchSection';
 import { matchRepository } from '../../repositories/matchRepository';
 import { dataService } from '../../services/dataService';
 import { Filter, EyeOff, Eye, ArrowRight } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext';
 import { nativeHaptics } from '../../lib/nativeBridge';
 
 interface MatchOverviewProps {
@@ -15,12 +14,9 @@ interface MatchOverviewProps {
 
 export const MatchOverview: React.FC<MatchOverviewProps> = ({ 
   onSelectMatch,
-  theme: propTheme 
+  theme = 'light' 
 }) => {
   const navigate = useNavigate();
-  const { theme: contextTheme } = useTheme();
-  const theme = propTheme || contextTheme;
-  const isLight = theme === 'light';
 
   const [liveList, setLiveList] = useState<Match[]>(() => matchRepository.getByStatus('live'));
   const [upcomingList, setUpcomingList] = useState<Match[]>(() => matchRepository.getByStatus('upcoming'));
@@ -90,23 +86,15 @@ export const MatchOverview: React.FC<MatchOverviewProps> = ({
   return (
     <section 
       id="matches-overview" 
-      className={`py-16 transition-colors duration-300 relative ${
-        isLight 
-          ? 'bg-[#F8FAFC] text-slate-900 border-y border-slate-200/80' 
-          : 'bg-charcoal-950 text-soft-white border-y border-plum-900/40'
-      }`}
+      className="py-16 transition-colors duration-300 relative bg-app-bg text-text-primary border-y border-border-neutral"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Category Filter Bar & Empty State Toggle */}
-        <div className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b ${
-          isLight ? 'border-slate-200' : 'border-plum-850'
-        }`}>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-border-neutral">
           <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
             <Filter className="w-4 h-4 shrink-0 hidden sm:block text-brand-orange" />
-            <span className={`text-xs uppercase tracking-wider font-bold shrink-0 mr-1 hidden sm:block ${
-              isLight ? 'text-slate-500' : 'text-muted-grey'
-            }`}>
+            <span className="text-xs uppercase tracking-wider font-bold shrink-0 mr-1 hidden sm:block text-text-secondary">
               Filter By:
             </span>
             <div className="flex items-center gap-1.5">
@@ -121,12 +109,8 @@ export const MatchOverview: React.FC<MatchOverviewProps> = ({
                     }}
                     className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange active:scale-95 ${
                       isSelected
-                        ? isLight 
-                          ? 'bg-slate-950 text-white font-extrabold shadow-sm' 
-                          : 'bg-brand-orange text-charcoal-950 font-bold shadow-sm'
-                        : isLight
-                          ? 'bg-white text-slate-700 hover:text-slate-950 hover:bg-slate-100 border border-slate-300 shadow-sm'
-                          : 'bg-charcoal-900/80 text-muted-grey hover:text-soft-white hover:bg-plum-900/50 border border-charcoal-800'
+                        ? 'bg-brand-orange text-white font-bold shadow-sm'
+                        : 'bg-white text-text-secondary hover:text-text-primary hover:bg-surface-muted border border-border-neutral shadow-sm'
                     }`}
                   >
                     {category}
@@ -141,10 +125,8 @@ export const MatchOverview: React.FC<MatchOverviewProps> = ({
             onClick={() => setSimulateEmptyState(!simulateEmptyState)}
             className={`text-xs font-semibold px-3 py-1.5 rounded-xl transition-all border flex items-center gap-1.5 self-end sm:self-auto ${
               simulateEmptyState 
-                ? 'bg-brand-orange/20 border-brand-orange/40 text-brand-orange' 
-                : isLight
-                  ? 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'
-                  : 'bg-charcoal-900 text-muted-grey border-charcoal-800 hover:text-soft-white hover:border-plum-800'
+                ? 'bg-brand-soft border-brand-orange/40 text-brand-orange' 
+                : 'bg-white text-text-secondary border-border-neutral hover:bg-surface-muted'
             }`}
           >
             {simulateEmptyState ? (
@@ -154,7 +136,7 @@ export const MatchOverview: React.FC<MatchOverviewProps> = ({
               </>
             ) : (
               <>
-                <EyeOff className="w-3.5 h-3.5 text-slate-400" />
+                <EyeOff className="w-3.5 h-3.5 text-text-secondary" />
                 <span>Simulate Empty State</span>
               </>
             )}
@@ -186,7 +168,7 @@ export const MatchOverview: React.FC<MatchOverviewProps> = ({
           </div>
         </div>
 
-        <div className={`my-8 border-t ${isLight ? 'border-slate-200' : 'border-charcoal-800/60'}`} />
+        <div className="my-8 border-t border-border-neutral" />
 
         {/* 2. Upcoming Fixtures Section */}
         <MatchSection
@@ -202,7 +184,7 @@ export const MatchOverview: React.FC<MatchOverviewProps> = ({
           theme={theme}
         />
 
-        <div className={`my-8 border-t ${isLight ? 'border-slate-200' : 'border-charcoal-800/60'}`} />
+        <div className="my-8 border-t border-border-neutral" />
 
         {/* 3. Recent Results Section */}
         <div className="relative">

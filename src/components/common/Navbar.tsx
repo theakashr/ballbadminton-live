@@ -10,7 +10,6 @@ import {
   BarChart2, 
   Users, 
   CheckCircle2,
-  ChevronRight,
   LayoutDashboard
 } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
@@ -33,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 15);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -54,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navLinks = [
     { id: 'home', label: 'Home', href: '#home', icon: Flame },
-    { id: 'matches', label: 'Matches', href: '#live-matches', icon: Flame, badge: 'Live' },
+    { id: 'matches', label: 'Live Matches', href: '#live-matches', icon: Flame, badge: 'Live' },
     { id: 'tournaments', label: 'Tournaments', href: '#tournaments', icon: Trophy },
     { id: 'results', label: 'Results', href: '#recent-results', icon: CheckCircle2 },
     { id: 'teams', label: 'Teams', href: '#teams', icon: Users },
@@ -74,10 +73,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
         isScrolled
-          ? 'bg-white/95 dark:bg-charcoal-950/90 backdrop-blur-md border-b border-slate-200/80 dark:border-plum-800/50 shadow-sm dark:shadow-elevated py-3'
-          : 'bg-gradient-to-b from-white/90 via-white/60 to-transparent dark:from-plum-950/85 dark:via-plum-950/50 dark:to-transparent py-4 sm:py-5'
+          ? 'bg-white/95 backdrop-blur-md border-b border-[#E4E7EC] shadow-[0_2px_12px_rgba(16,24,40,0.04)] py-2.5'
+          : 'bg-white/90 backdrop-blur-md border-b border-[#E4E7EC] py-3.5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,38 +91,38 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange rounded-lg p-1"
           >
             {/* Custom SVG Ball Badminton Badge */}
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-plum-800 to-charcoal-900 border border-plum-700/60 shadow-subtle group-hover:border-brand-orange/50 transition-colors">
+            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-[#FFF1E5] border border-[#FF851B]/30 shadow-sm group-hover:border-[#FF851B] transition-colors">
               <svg className="w-6 h-6" viewBox="0 0 32 32" fill="none">
                 {/* Racket */}
                 <ellipse cx="14" cy="13" rx="8" ry="9.5" stroke="#FF851B" strokeWidth="1.8" />
-                <path d="M10 7V19 M14 5V21 M18 7V19" stroke="#B7AFBD" strokeWidth="0.75" opacity="0.6"/>
-                <path d="M7 10H21 M6 13H22 M7 16H21" stroke="#B7AFBD" strokeWidth="0.75" opacity="0.6"/>
-                <line x1="14" y1="22.5" x2="14" y2="29" stroke="#F8F5F2" strokeWidth="2" strokeLinecap="round" />
+                <path d="M10 7V19 M14 5V21 M18 7V19" stroke="#98A2B3" strokeWidth="0.75" opacity="0.6"/>
+                <path d="M7 10H21 M6 13H22 M7 16H21" stroke="#98A2B3" strokeWidth="0.75" opacity="0.6"/>
+                <line x1="14" y1="22.5" x2="14" y2="29" stroke="#182230" strokeWidth="2" strokeLinecap="round" />
                 {/* Yellow Wool Ball */}
                 <circle cx="23" cy="21" r="5" fill="#FFDC00" stroke="#FF851B" strokeWidth="1.2" />
                 <path d="M20 21C21.5 23 24.5 23 26 21" stroke="#C49000" strokeWidth="0.8" strokeLinecap="round"/>
               </svg>
-              {/* Subtle live indicator dot */}
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-brand-coral border-2 border-charcoal-950"></span>
+              {/* Live indicator dot */}
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#D92D20] border-2 border-white"></span>
             </div>
 
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="font-display font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-soft-white group-hover:text-brand-orange transition-colors">
+                <span className="font-display font-black text-lg sm:text-xl tracking-tight text-[#182230] group-hover:text-[#FF851B] transition-colors">
                   BALL BADMINTON
                 </span>
-                <span className="bg-brand-coral/20 text-brand-coral text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider border border-brand-coral/40">
+                <span className="bg-[#D92D20]/10 text-[#D92D20] text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider border border-[#D92D20]/30">
                   LIVE
                 </span>
               </div>
-              <span className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-muted-grey font-semibold -mt-1 hidden sm:block">
+              <span className="text-[10px] uppercase tracking-widest text-[#667085] font-semibold -mt-1 hidden sm:block">
                 Federation Scoring &amp; Tournaments
               </span>
             </div>
           </a>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 bg-slate-100/90 dark:bg-charcoal-900/60 p-1.5 rounded-full border border-slate-200/80 dark:border-charcoal-800/80 backdrop-blur-md">
+          <nav className="hidden lg:flex items-center gap-1 bg-[#F0F2F6] p-1 rounded-full border border-[#E4E7EC]">
             {navLinks.map((link) => {
               const isActive = activeSection === link.id;
               return (
@@ -134,15 +133,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                     e.preventDefault();
                     handleLinkClick(link.id, link.href);
                   }}
-                  className={`relative px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${
+                  className={`relative px-4 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-white dark:bg-plum-800 text-slate-950 dark:text-soft-white shadow-sm font-bold'
-                      : 'text-slate-600 dark:text-muted-grey hover:text-slate-950 dark:hover:text-soft-white hover:bg-white/60 dark:hover:bg-charcoal-800/60'
+                      ? 'bg-white text-[#FF851B] shadow-sm font-bold'
+                      : 'text-[#667085] hover:text-[#182230] hover:bg-white/60'
                   }`}
                 >
-                  {link.label}
+                  <span>{link.label}</span>
                   {link.badge && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand-coral animate-pulse"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#D92D20] animate-pulse"></span>
                   )}
                 </a>
               );
@@ -155,47 +154,47 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <Link
               to="/admin"
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold text-brand-orange hover:text-soft-white hover:bg-plum-800/40 border border-brand-orange/40 hover:border-brand-orange transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-[#FF851B] bg-[#FFF1E5] border border-[#FF851B]/30 hover:bg-[#FF851B] hover:text-white transition-all active:scale-95"
             >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>Admin</span>
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              <span>Admin Portal</span>
             </Link>
 
             <button
               onClick={onOpenLogin}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium text-slate-700 dark:text-soft-white/90 hover:text-slate-950 dark:hover:text-soft-white hover:bg-slate-100 dark:hover:bg-plum-800/40 border border-slate-200 dark:border-transparent transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-[#182230] bg-[#F0F2F6] border border-[#E4E7EC] hover:bg-[#E4E7EC] transition-all active:scale-95"
             >
-              <User className="w-4 h-4 text-slate-500 dark:text-muted-grey" />
+              <User className="w-3.5 h-3.5 text-[#667085]" />
               <span>Login</span>
             </button>
 
             <button
               onClick={onCreateTournament}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 transition-all shadow-orange-glow hover:shadow-lg active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-[#FF851B] hover:bg-[#E96F0B] text-white shadow-sm transition-all active:scale-95"
             >
-              <PlusCircle className="w-4 h-4 text-charcoal-950 stroke-[2.5]" />
+              <PlusCircle className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Create Tournament</span>
             </button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Trigger Button */}
           <div className="flex sm:hidden items-center gap-2">
             <ThemeToggle />
 
             <button
               onClick={onCreateTournament}
               aria-label="Create Tournament"
-              className="p-2 rounded-lg bg-brand-orange text-charcoal-950 hover:bg-brand-orangeHover transition-colors"
+              className="p-2 rounded-xl bg-[#FF851B] text-white hover:bg-[#E96F0B] transition-colors"
             >
-              <PlusCircle className="w-5 h-5 stroke-[2.5]" />
+              <PlusCircle className="w-4 h-4 stroke-[2.5]" />
             </button>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
-              className="p-2 rounded-lg bg-charcoal-900 border border-charcoal-800 text-soft-white hover:text-brand-orange focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              className="p-2 rounded-xl bg-[#F0F2F6] border border-[#E4E7EC] text-[#182230] hover:text-[#FF851B]"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -203,15 +202,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 top-[65px] z-40 sm:hidden">
-          {/* Backdrop overlay */}
+        <div className="fixed inset-0 top-[60px] z-40 sm:hidden">
           <div 
-            className="fixed inset-0 bg-charcoal-950/80 backdrop-blur-md"
+            className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(false)}
           />
 
-          {/* Drawer content */}
-          <div className="relative bg-charcoal-900 border-b border-plum-800/60 p-6 shadow-2xl flex flex-col gap-4 animate-in slide-in-from-top duration-200">
+          <div className="relative bg-white border-b border-[#E4E7EC] p-5 shadow-elevated flex flex-col gap-3 animate-in slide-in-from-top duration-200">
             <div className="space-y-1">
               {navLinks.map((link) => {
                 const IconComponent = link.icon;
@@ -220,59 +217,35 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     key={link.id}
                     onClick={() => handleLinkClick(link.id, link.href)}
-                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-medium transition-all ${
+                    className={`w-full flex items-center justify-between p-3 rounded-xl text-sm font-semibold transition-all ${
                       isActive
-                        ? 'bg-plum-850 text-soft-white border border-plum-700/50'
-                        : 'text-muted-grey hover:text-soft-white hover:bg-charcoal-800'
+                        ? 'bg-[#FFF1E5] text-[#FF851B]'
+                        : 'text-[#667085] hover:text-[#182230] hover:bg-[#F0F2F6]'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <IconComponent className={`w-5 h-5 ${isActive ? 'text-brand-orange' : 'text-muted-grey'}`} />
+                      <IconComponent className={`w-4 h-4 ${isActive ? 'text-[#FF851B]' : 'text-[#667085]'}`} />
                       <span>{link.label}</span>
                     </div>
-                    {link.badge ? (
-                      <span className="px-2 py-0.5 rounded text-xs bg-brand-coral/20 text-brand-coral font-bold uppercase tracking-wider">
+                    {link.badge && (
+                      <span className="px-2 py-0.5 rounded-full bg-[#D92D20]/10 text-[#D92D20] text-[10px] font-bold">
                         {link.badge}
                       </span>
-                    ) : (
-                      <ChevronRight className="w-4 h-4 text-charcoal-600" />
                     )}
                   </button>
                 );
               })}
             </div>
 
-            <div className="pt-4 border-t border-charcoal-800 flex flex-col gap-3">
+            <div className="pt-3 border-t border-[#E4E7EC] flex flex-col gap-2">
               <Link
                 to="/admin"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-brand-orange/40 text-brand-orange hover:bg-plum-950 font-semibold text-sm transition-colors"
+                className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl bg-[#FFF1E5] text-[#FF851B] font-bold text-xs"
               >
                 <LayoutDashboard className="w-4 h-4" />
-                <span>Admin Dashboard</span>
+                <span>Admin &amp; Scorer Console</span>
               </Link>
-
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenLogin();
-                }}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-charcoal-700 text-soft-white hover:bg-charcoal-800 font-medium text-sm transition-colors"
-              >
-                <User className="w-4 h-4 text-muted-grey" />
-                <span>Scorer & Organizer Login</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onCreateTournament();
-                }}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-brand-orange text-charcoal-950 font-bold text-sm shadow-orange-glow transition-all"
-              >
-                <PlusCircle className="w-4 h-4 stroke-[2.5]" />
-                <span>Create Tournament</span>
-              </button>
             </div>
           </div>
         </div>

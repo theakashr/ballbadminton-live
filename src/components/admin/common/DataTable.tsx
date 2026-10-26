@@ -73,11 +73,11 @@ export function DataTable<T extends Record<string, any>>({
   }
 
   return (
-    <div className="rounded-2xl border border-plum-800 bg-charcoal-900 overflow-hidden shadow-subtle">
+    <div className="rounded-2xl border border-border-neutral bg-white overflow-hidden shadow-card">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="border-b border-plum-800/80 bg-plum-950/70 text-xs uppercase tracking-wider text-muted-grey font-semibold">
+            <tr className="border-b border-border-neutral bg-surface-muted text-xs uppercase tracking-wider text-text-secondary font-semibold">
               {columns.map((col) => {
                 const isSorted = sortKey === col.key;
                 return (
@@ -90,7 +90,7 @@ export function DataTable<T extends Record<string, any>>({
                       <button
                         type="button"
                         onClick={() => handleSort(col.key)}
-                        className="inline-flex items-center gap-1.5 hover:text-soft-white transition-colors"
+                        className="inline-flex items-center gap-1.5 hover:text-text-primary transition-colors"
                       >
                         <span>{col.header}</span>
                         {isSorted ? (
@@ -100,7 +100,7 @@ export function DataTable<T extends Record<string, any>>({
                             <ArrowDown className="w-3.5 h-3.5 text-brand-orange" />
                           )
                         ) : (
-                          <ArrowUpDown className="w-3.5 h-3.5 text-charcoal-600" />
+                          <ArrowUpDown className="w-3.5 h-3.5 text-text-secondary/60" />
                         )}
                       </button>
                     ) : (
@@ -111,7 +111,7 @@ export function DataTable<T extends Record<string, any>>({
               })}
             </tr>
           </thead>
-          <tbody className="divide-y divide-charcoal-800/80">
+          <tbody className="divide-y divide-border-neutral">
             {paginatedData.map((item, idx) => {
               const globalIndex = (currentPage - 1) * pageSize + idx;
               return (
@@ -119,13 +119,13 @@ export function DataTable<T extends Record<string, any>>({
                   key={keyExtractor(item)}
                   onClick={() => onRowClick?.(item)}
                   className={`transition-colors ${
-                    onRowClick ? 'cursor-pointer hover:bg-plum-900/30' : 'hover:bg-charcoal-850/50'
+                    onRowClick ? 'cursor-pointer hover:bg-surface-muted/60' : 'hover:bg-surface-muted/40'
                   }`}
                 >
                   {columns.map((col) => (
                     <td
                       key={col.key}
-                      className={`px-4 py-3.5 text-soft-white/90 ${col.className || ''}`}
+                      className={`px-4 py-3.5 text-text-primary ${col.className || ''}`}
                     >
                       {col.render
                         ? col.render(item, globalIndex)
@@ -143,31 +143,31 @@ export function DataTable<T extends Record<string, any>>({
 
       {/* Pagination Footer */}
       {totalPages > 1 && (
-        <div className="px-4 py-3 border-t border-charcoal-800 bg-charcoal-950/60 flex items-center justify-between text-xs text-muted-grey">
+        <div className="px-4 py-3 border-t border-border-neutral bg-surface-muted flex items-center justify-between text-xs text-text-secondary">
           <span>
-            Showing <strong className="text-soft-white">{(currentPage - 1) * pageSize + 1}</strong> to{' '}
-            <strong className="text-soft-white">
+            Showing <strong className="text-text-primary">{(currentPage - 1) * pageSize + 1}</strong> to{' '}
+            <strong className="text-text-primary">
               {Math.min(currentPage * pageSize, sortedData.length)}
             </strong>{' '}
-            of <strong className="text-soft-white">{sortedData.length}</strong> items
+            of <strong className="text-text-primary">{sortedData.length}</strong> items
           </span>
 
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
-              className="p-1.5 rounded-lg border border-charcoal-700 hover:bg-charcoal-800 disabled:opacity-40 disabled:pointer-events-none text-soft-white transition-colors"
+              className="p-1.5 rounded-lg border border-border-neutral bg-white hover:bg-surface-muted disabled:opacity-40 disabled:pointer-events-none text-text-primary transition-colors"
               aria-label="Previous page"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="px-2 text-soft-white font-medium">
+            <span className="px-2 text-text-primary font-medium">
               Page {currentPage} of {totalPages}
             </span>
             <button
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="p-1.5 rounded-lg border border-charcoal-700 hover:bg-charcoal-800 disabled:opacity-40 disabled:pointer-events-none text-soft-white transition-colors"
+              className="p-1.5 rounded-lg border border-border-neutral bg-white hover:bg-surface-muted disabled:opacity-40 disabled:pointer-events-none text-text-primary transition-colors"
               aria-label="Next page"
             >
               <ChevronRight className="w-4 h-4" />

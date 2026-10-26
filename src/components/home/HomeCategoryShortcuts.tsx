@@ -27,9 +27,9 @@ export const HomeCategoryShortcuts: React.FC<HomeCategoryShortcutsProps> = ({
       subtitle: liveCount > 0 ? `${liveCount} in play now` : 'Watch realtime feed',
       icon: Radio,
       badge: liveCount > 0 ? `${liveCount} LIVE` : undefined,
-      badgeColor: 'bg-brand-coral/20 text-brand-coral border-brand-coral/40',
-      iconColor: 'text-brand-coral',
-      borderColor: 'hover:border-brand-coral/60',
+      badgeColor: 'bg-[#D92D20]/10 text-[#D92D20] border-[#D92D20]/30',
+      iconColor: 'text-[#D92D20]',
+      borderColor: 'hover:border-[#D92D20]/60',
       action: () => navigate('/live'),
     },
     {
@@ -37,10 +37,10 @@ export const HomeCategoryShortcuts: React.FC<HomeCategoryShortcutsProps> = ({
       label: 'Upcoming Fixtures',
       subtitle: upcomingCount > 0 ? `${upcomingCount} scheduled` : 'Order of play',
       icon: Calendar,
-      badge: upcomingCount > 0 ? `${upcomingCount} MATCHES` : undefined,
-      badgeColor: 'bg-sky-500/20 text-sky-400 border-sky-500/40',
-      iconColor: 'text-sky-400',
-      borderColor: 'hover:border-sky-500/60',
+      badge: upcomingCount > 0 ? `${upcomingCount} FIXTURES` : undefined,
+      badgeColor: 'bg-[#FFF1E5] text-[#B54708] border-[#B54708]/30',
+      iconColor: 'text-[#B54708]',
+      borderColor: 'hover:border-[#B54708]/60',
       action: () => {
         if (onScrollToUpcoming) {
           onScrollToUpcoming();
@@ -55,9 +55,9 @@ export const HomeCategoryShortcuts: React.FC<HomeCategoryShortcutsProps> = ({
       subtitle: tournamentsCount > 0 ? `${tournamentsCount} championships` : 'Draws & pools',
       icon: Trophy,
       badge: tournamentsCount > 0 ? `${tournamentsCount} ACTIVE` : undefined,
-      badgeColor: 'bg-brand-orange/20 text-brand-orange border-brand-orange/40',
-      iconColor: 'text-brand-orange',
-      borderColor: 'hover:border-brand-orange/60',
+      badgeColor: 'bg-[#FFF1E5] text-[#FF851B] border-[#FF851B]/30',
+      iconColor: 'text-[#FF851B]',
+      borderColor: 'hover:border-[#FF851B]/60',
       action: () => navigate('/tournaments'),
     },
     {
@@ -66,9 +66,9 @@ export const HomeCategoryShortcuts: React.FC<HomeCategoryShortcutsProps> = ({
       subtitle: resultsCount > 0 ? `${resultsCount} completed` : 'Verified scorecards',
       icon: CheckCircle2,
       badge: resultsCount > 0 ? `${resultsCount} RESULTS` : undefined,
-      badgeColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40',
-      iconColor: 'text-emerald-400',
-      borderColor: 'hover:border-emerald-500/60',
+      badgeColor: 'bg-[#16803D]/10 text-[#16803D] border-[#16803D]/30',
+      iconColor: 'text-[#16803D]',
+      borderColor: 'hover:border-[#16803D]/60',
       action: () => navigate('/results'),
     },
   ];
@@ -84,15 +84,15 @@ export const HomeCategoryShortcuts: React.FC<HomeCategoryShortcutsProps> = ({
               nativeHaptics.impact('light');
               item.action();
             }}
-            className={`group relative flex flex-col justify-between p-3.5 sm:p-5 rounded-2xl bg-charcoal-900/90 hover:bg-plum-950/90 border border-plum-800/60 ${item.borderColor} shadow-subtle text-left transition-all duration-200 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange`}
+            className={`group relative flex flex-col justify-between p-4 rounded-2xl bg-white hover:bg-[#F0F2F6] border border-[#E4E7EC] ${item.borderColor} shadow-[0_1px_3px_rgba(16,24,40,0.05)] text-left transition-all duration-150 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange`}
           >
             <div className="flex items-start justify-between w-full mb-3">
-              <div className="p-2.5 rounded-xl bg-charcoal-800/90 border border-plum-800/80 group-hover:scale-105 transition-transform">
+              <div className="p-2.5 rounded-xl bg-[#F0F2F6] border border-[#E4E7EC] group-hover:scale-105 transition-transform">
                 <Icon className={`w-5 h-5 ${item.iconColor}`} />
               </div>
 
               {item.badge && (
-                <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border ${item.badgeColor}`}>
+                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${item.badgeColor}`}>
                   {item.badge}
                 </span>
               )}
@@ -100,12 +100,12 @@ export const HomeCategoryShortcuts: React.FC<HomeCategoryShortcutsProps> = ({
 
             <div>
               <div className="flex items-center justify-between">
-                <h4 className="font-display font-extrabold text-sm sm:text-base text-soft-white group-hover:text-brand-orange transition-colors">
+                <h4 className="font-display font-extrabold text-sm sm:text-base text-[#182230] group-hover:text-[#FF851B] transition-colors">
                   {item.label}
                 </h4>
-                <ChevronRight className="w-4 h-4 text-plum-600 group-hover:text-brand-orange group-hover:translate-x-0.5 transition-all" />
+                <ChevronRight className="w-4 h-4 text-[#98A2B3] group-hover:text-[#FF851B] group-hover:translate-x-0.5 transition-all" />
               </div>
-              <p className="text-xs text-muted-grey mt-0.5 line-clamp-1">
+              <p className="text-xs text-[#667085] mt-0.5 line-clamp-1">
                 {item.subtitle}
               </p>
             </div>

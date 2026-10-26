@@ -184,14 +184,14 @@ export const AdminScorersPage: React.FC = () => {
       sortable: true,
       render: (s) => (
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-plum-800 border border-plum-700 flex items-center justify-center font-bold text-xs text-brand-orange shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-brand-soft border border-brand-orange/20 flex items-center justify-center font-bold text-xs text-brand-orange shrink-0">
             {s.scorerName.charAt(0)}
           </div>
           <div>
-            <span className="font-bold text-soft-white block text-sm">{s.scorerName}</span>
-            <span className="text-[11px] text-muted-grey block">{s.scorerEmail}</span>
+            <span className="font-bold text-text-primary block text-sm">{s.scorerName}</span>
+            <span className="text-[11px] text-text-secondary block">{s.scorerEmail}</span>
             {s.phone && (
-              <span className="text-[10px] text-muted-grey/80 flex items-center gap-1 mt-0.5">
+              <span className="text-[10px] text-text-secondary/80 flex items-center gap-1 mt-0.5">
                 <Phone className="w-3 h-3 text-brand-orange" />
                 {s.phone}
               </span>
@@ -206,8 +206,8 @@ export const AdminScorersPage: React.FC = () => {
       sortable: true,
       render: (s) => (
         <div className="text-xs">
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-plum-950 border border-plum-700 text-brand-yellow font-medium">
-            <Award className="w-3.5 h-3.5 text-brand-yellow" />
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-medium">
+            <Award className="w-3.5 h-3.5 text-amber-600" />
             {s.certificationLevel || 'State Umpire'}
           </span>
         </div>
@@ -220,10 +220,10 @@ export const AdminScorersPage: React.FC = () => {
       render: (s) => (
         <div className="text-xs space-y-0.5">
           <span className="font-semibold text-brand-orange block">{s.court}</span>
-          <span className="text-soft-white block truncate max-w-[200px]">
+          <span className="text-text-primary block truncate max-w-[200px]">
             {s.matchTitle || 'Scheduled Match Rotation'}
           </span>
-          <span className="text-[11px] text-muted-grey block truncate max-w-[200px]">
+          <span className="text-[11px] text-text-secondary block truncate max-w-[200px]">
             {s.tournamentName}
           </span>
         </div>
@@ -248,7 +248,7 @@ export const AdminScorersPage: React.FC = () => {
               {s.status !== 'active_scoring' ? (
                 <button
                   onClick={() => handleStatusChange(s, 'active_scoring')}
-                  className="px-2 py-1 rounded-lg bg-charcoal-800 hover:bg-charcoal-700 text-xs font-semibold text-soft-white transition-colors"
+                  className="px-2 py-1 rounded-lg bg-surface-muted hover:bg-border-neutral text-xs font-semibold text-text-primary border border-border-neutral transition-colors"
                   title="Mark Active Scoring"
                 >
                   Activate
@@ -256,7 +256,7 @@ export const AdminScorersPage: React.FC = () => {
               ) : (
                 <button
                   onClick={() => handleStatusChange(s, 'available')}
-                  className="px-2 py-1 rounded-lg bg-charcoal-800 hover:bg-charcoal-700 text-xs font-semibold text-muted-grey transition-colors"
+                  className="px-2 py-1 rounded-lg bg-surface-muted hover:bg-border-neutral text-xs font-semibold text-text-secondary border border-border-neutral transition-colors"
                   title="Mark Available"
                 >
                   Relieve
@@ -265,7 +265,7 @@ export const AdminScorersPage: React.FC = () => {
 
               <button
                 onClick={() => setDeleteTarget(s)}
-                className="p-1.5 rounded-lg text-muted-grey hover:text-brand-coral hover:bg-charcoal-800 transition-colors"
+                className="p-1.5 rounded-lg text-text-secondary hover:text-status-live hover:bg-red-50 transition-colors"
                 title="Remove Assignment"
               >
                 <Trash2 className="w-4 h-4" />
@@ -283,11 +283,11 @@ export const AdminScorersPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <ClipboardList className="w-5 h-5 text-brand-orange" />
-            <h1 className="text-xl sm:text-2xl font-display font-bold text-soft-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-display font-bold text-text-primary tracking-tight">
               Scorer &amp; Umpire Assignments
             </h1>
           </div>
-          <p className="text-xs text-muted-grey mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             Assign certified BBFI Grade A and Grade B umpires to clay courts for official live scoring.
           </p>
         </div>
@@ -295,7 +295,7 @@ export const AdminScorersPage: React.FC = () => {
         {canAssignScorers && (
           <button
             onClick={() => setIsAddOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all active:scale-95"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all active:scale-95"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Assign Court Scorer</span>
@@ -303,7 +303,7 @@ export const AdminScorersPage: React.FC = () => {
         )}
       </div>
 
-      <div className="p-4 rounded-2xl bg-charcoal-900 border border-plum-800 shadow-subtle">
+      <div className="p-4 rounded-2xl bg-white border border-border-neutral shadow-card">
         <SearchAndFilter
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
@@ -336,26 +336,26 @@ export const AdminScorersPage: React.FC = () => {
       {/* Assign Modal */}
       {isAddOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="fixed inset-0 bg-charcoal-950/85 backdrop-blur-md" onClick={() => setIsAddOpen(false)} />
-          <div className="relative w-full max-w-lg bg-charcoal-900 border border-plum-800 rounded-3xl shadow-elevated p-6 z-10 my-8">
-            <div className="flex items-center justify-between pb-4 border-b border-plum-800 mb-5">
+          <div className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm" onClick={() => setIsAddOpen(false)} />
+          <div className="relative w-full max-w-lg bg-white border border-border-neutral rounded-2xl shadow-elevated p-6 z-10 my-8">
+            <div className="flex items-center justify-between pb-4 border-b border-border-neutral mb-5">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-plum-800 flex items-center justify-center text-brand-orange">
+                <div className="w-9 h-9 rounded-xl bg-brand-soft border border-brand-orange/20 flex items-center justify-center text-brand-orange">
                   <ClipboardList className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-display font-bold text-soft-white">
+                <h3 className="text-base font-display font-bold text-text-primary">
                   Assign Court Scorer / Umpire
                 </h3>
               </div>
-              <button onClick={() => setIsAddOpen(false)} className="p-1 rounded-lg text-muted-grey hover:text-soft-white">
+              <button onClick={() => setIsAddOpen(false)} className="p-1 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
-                  Select Authorized Scorer Account <span className="text-brand-coral">*</span>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
+                  Select Authorized Scorer Account <span className="text-status-live">*</span>
                 </label>
                 <select
                   value={newScorer.scorerEmail}
@@ -368,7 +368,7 @@ export const AdminScorersPage: React.FC = () => {
                       phone: found?.contactNumber || newScorer.phone,
                     });
                   }}
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 >
                   <option value="">-- Choose Authorized Official Scorer --</option>
                   {eligibleAccounts.map((acc) => (
@@ -377,32 +377,32 @@ export const AdminScorersPage: React.FC = () => {
                     </option>
                   ))}
                 </select>
-                {errors.scorerEmail && <p className="text-xs text-brand-coral mt-1">{errors.scorerEmail}</p>}
+                {errors.scorerEmail && <p className="text-xs text-status-live mt-1">{errors.scorerEmail}</p>}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
-                    Official Display Name <span className="text-brand-coral">*</span>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
+                    Official Display Name <span className="text-status-live">*</span>
                   </label>
                   <input
                     type="text"
                     value={newScorer.scorerName}
                     onChange={(e) => setNewScorer({ ...newScorer, scorerName: e.target.value })}
                     placeholder="e.g. B. Ramachandra"
-                    className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                   />
-                  {errors.scorerName && <p className="text-xs text-brand-coral mt-1">{errors.scorerName}</p>}
+                  {errors.scorerName && <p className="text-xs text-status-live mt-1">{errors.scorerName}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
                     Certification Level
                   </label>
                   <select
                     value={newScorer.certificationLevel}
                     onChange={(e) => setNewScorer({ ...newScorer, certificationLevel: e.target.value as any })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                   >
                     <option value="BBFI Grade A">BBFI Grade A (National)</option>
                     <option value="BBFI Grade B">BBFI Grade B</option>
@@ -413,13 +413,13 @@ export const AdminScorersPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
                   Tournament
                 </label>
                 <select
                   value={newScorer.tournamentId}
                   onChange={(e) => setNewScorer({ ...newScorer, tournamentId: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 >
                   {tournaments.map((t) => (
                     <option key={t.id} value={t.id}>
@@ -431,21 +431,21 @@ export const AdminScorersPage: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
-                    Court Assignment <span className="text-brand-coral">*</span>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
+                    Court Assignment <span className="text-status-live">*</span>
                   </label>
                   <input
                     type="text"
                     value={newScorer.court}
                     onChange={(e) => setNewScorer({ ...newScorer, court: e.target.value })}
                     placeholder="e.g. Centre Court"
-                    className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                   />
-                  {errors.court && <p className="text-xs text-brand-coral mt-1">{errors.court}</p>}
+                  {errors.court && <p className="text-xs text-status-live mt-1">{errors.court}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
                     Mobile Phone
                   </label>
                   <input
@@ -453,22 +453,22 @@ export const AdminScorersPage: React.FC = () => {
                     value={newScorer.phone}
                     onChange={(e) => setNewScorer({ ...newScorer, phone: e.target.value })}
                     placeholder="+91 98400 12345"
-                    className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                   />
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-charcoal-800 flex items-center justify-end gap-3">
+              <div className="pt-4 border-t border-border-neutral flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsAddOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs text-muted-grey hover:text-soft-white border border-charcoal-700"
+                  className="px-4 py-2 rounded-xl text-xs text-text-secondary hover:text-text-primary border border-border-neutral hover:bg-surface-muted transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all"
+                  className="px-5 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all"
                 >
                   Assign Scorer
                 </button>

@@ -98,23 +98,23 @@ export const InteractiveCourtView: React.FC<InteractiveCourtViewProps> = ({
       >
         {/* Ball Badminton Yellow Wool Ball Indicator on Active Server */}
         {isServer && (
-          <div className="absolute -top-3 w-3 h-3 rounded-full bg-brand-yellow shadow-[0_0_10px_#FFDC00] animate-bounce z-30" />
+          <div className="absolute -top-3 w-3 h-3 rounded-full bg-[#FFDC00] shadow-[0_0_10px_#FFDC00] animate-bounce z-30" />
         )}
 
         <div
           className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-md border-2 transition-all ${
             colorVariant === 'orange'
-              ? 'bg-brand-orange text-charcoal-950 border-orange-200 group-hover:border-white'
-              : 'bg-brand-coral text-white border-coral-200 group-hover:border-white'
+              ? 'bg-brand-orange text-white border-orange-200 group-hover:border-white'
+              : 'bg-[#FF5B45] text-white border-rose-200 group-hover:border-white'
           }`}
         >
           {player.number}
           {player.isCaptain && (
-            <Crown className="w-2.5 h-2.5 absolute -top-1.5 -right-1 text-brand-yellow stroke-[3]" />
+            <Crown className="w-2.5 h-2.5 absolute -top-1.5 -right-1 text-[#FFDC00] stroke-[3]" />
           )}
         </div>
 
-        <span className="text-[10px] font-semibold text-soft-white/90 bg-charcoal-950/80 px-1 rounded mt-0.5 whitespace-nowrap hidden sm:block">
+        <span className="text-[10px] font-semibold text-white bg-slate-900/80 px-1 rounded mt-0.5 whitespace-nowrap hidden sm:block">
           {player.name.split(' ')[0]}
         </span>
       </div>
@@ -126,18 +126,18 @@ export const InteractiveCourtView: React.FC<InteractiveCourtViewProps> = ({
       {/* Top Court Controls & Header */}
       <div className="flex items-center justify-between text-xs px-2">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-slate-900 dark:text-soft-white uppercase tracking-wider">
+          <span className="font-bold text-text-primary uppercase tracking-wider">
             BBFI 5s Tactical Court
           </span>
-          <span className="text-slate-500 dark:text-muted-grey text-[11px] hidden sm:inline">
+          <span className="text-text-secondary text-[11px] hidden sm:inline">
             (12m &times; 24m Standard Outdoor Dimension)
           </span>
         </div>
 
         <div className="flex items-center gap-3">
           {servingTeamId && (
-            <span className="text-[11px] font-semibold text-amber-600 dark:text-brand-yellow flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-yellow animate-ping" />
+            <span className="text-[11px] font-semibold text-status-warning flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
               Serving: Hand {servingHand}
             </span>
           )}
@@ -145,7 +145,7 @@ export const InteractiveCourtView: React.FC<InteractiveCourtViewProps> = ({
           {onToggleFlip && (
             <button
               onClick={onToggleFlip}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-charcoal-800 dark:hover:bg-charcoal-700 text-slate-700 hover:text-slate-950 dark:text-muted-grey dark:hover:text-soft-white border border-slate-200 dark:border-transparent transition-colors text-xs font-semibold"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-muted hover:bg-border-neutral text-text-primary border border-border-neutral transition-colors text-xs font-semibold"
               title="Change of ends (flip court sides)"
             >
               <ArrowLeftRight className="w-3.5 h-3.5" />
@@ -156,7 +156,7 @@ export const InteractiveCourtView: React.FC<InteractiveCourtViewProps> = ({
       </div>
 
       {/* The 2D Graphic Court Surface */}
-      <div className="relative w-full aspect-[21/9] sm:aspect-[24/10] bg-[#8B2E1D] rounded-2xl border-4 border-[#E2DDD5] p-3 shadow-2xl overflow-hidden select-none">
+      <div className="relative w-full aspect-[21/9] sm:aspect-[24/10] bg-[#8B2E1D] rounded-2xl border-4 border-[#E2DDD5] p-3 shadow-md overflow-hidden select-none">
         
         {/* Clay Surface Texture Grid */}
         <div className="absolute inset-0 bg-[radial-gradient(#9B3926_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
@@ -223,12 +223,12 @@ export const InteractiveCourtView: React.FC<InteractiveCourtViewProps> = ({
 
         {/* Side Team Badges */}
         <div className="absolute bottom-2 left-4 z-20">
-          <span className="text-[11px] font-bold text-soft-white bg-charcoal-950/80 px-2 py-0.5 rounded-md border border-brand-orange/40">
+          <span className="text-[11px] font-bold text-white bg-slate-900/80 px-2 py-0.5 rounded-md border border-brand-orange/40">
             {t1.name} {isT1Serving && '🎾'}
           </span>
         </div>
         <div className="absolute bottom-2 right-4 z-20">
-          <span className="text-[11px] font-bold text-soft-white bg-charcoal-950/80 px-2 py-0.5 rounded-md border border-brand-coral/40">
+          <span className="text-[11px] font-bold text-white bg-slate-900/80 px-2 py-0.5 rounded-md border border-[#FF5B45]/40">
             {t2.name} {isT2Serving && '🎾'}
           </span>
         </div>
@@ -236,13 +236,13 @@ export const InteractiveCourtView: React.FC<InteractiveCourtViewProps> = ({
 
       {/* Hovered Player Tooltip / Info Card */}
       {hoveredPlayer && (
-        <div className="p-3 rounded-xl bg-white dark:bg-charcoal-900 border border-slate-200 dark:border-plum-800 shadow-md text-xs flex items-center justify-between animate-fade-in-up">
+        <div className="p-3 rounded-xl bg-white border border-border-neutral shadow-card text-xs flex items-center justify-between animate-fade-in-up">
           <div className="flex items-center gap-2.5">
-            <span className="w-6 h-6 rounded-full bg-slate-100 dark:bg-charcoal-800 flex items-center justify-center font-bold text-slate-800 dark:text-soft-white border border-slate-300 dark:border-charcoal-700">
+            <span className="w-6 h-6 rounded-full bg-surface-muted flex items-center justify-center font-bold text-text-primary border border-border-neutral">
               #{hoveredPlayer.player.number}
             </span>
             <div>
-              <span className="font-bold text-slate-900 dark:text-soft-white">{hoveredPlayer.player.name}</span>
+              <span className="font-bold text-text-primary">{hoveredPlayer.player.name}</span>
               <span className={`text-[11px] block font-semibold ${hoveredPlayer.teamColor}`}>
                 {hoveredPlayer.teamName} • {hoveredPlayer.player.position}
               </span>
@@ -250,7 +250,7 @@ export const InteractiveCourtView: React.FC<InteractiveCourtViewProps> = ({
           </div>
 
           {hoveredPlayer.player.isCaptain && (
-            <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-brand-yellow font-bold text-[10px] border border-amber-500/30">
+            <span className="px-2 py-0.5 rounded bg-amber-500/10 text-status-warning font-bold text-[10px] border border-amber-500/30">
               Captain
             </span>
           )}

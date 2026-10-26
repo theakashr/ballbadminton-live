@@ -62,28 +62,28 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           return (
             <div
               key={toast.id}
-              className={`pointer-events-auto p-4 rounded-xl border shadow-elevated flex items-start gap-3 backdrop-blur-md transition-all duration-300 animate-in fade-in slide-in-from-bottom-5 ${
+              className={`pointer-events-auto p-4 rounded-xl border shadow-elevated flex items-start gap-3 backdrop-blur-md transition-all duration-300 animate-in fade-in slide-in-from-bottom-5 bg-white/95 ${
                 isSuccess
-                  ? 'bg-charcoal-900/95 border-brand-orange/40 text-soft-white'
+                  ? 'border-status-success/40 text-text-primary'
                   : isError
-                  ? 'bg-charcoal-900/95 border-brand-coral/40 text-soft-white'
-                  : 'bg-charcoal-900/95 border-plum-700/60 text-soft-white'
+                  ? 'border-status-error/40 text-text-primary'
+                  : 'border-brand-orange/30 text-text-primary'
               }`}
             >
               <div className="shrink-0 mt-0.5">
-                {isSuccess && <CheckCircle2 className="w-5 h-5 text-brand-orange" />}
-                {isError && <AlertCircle className="w-5 h-5 text-brand-coral" />}
-                {!isSuccess && !isError && <Info className="w-5 h-5 text-muted-grey" />}
+                {isSuccess && <CheckCircle2 className="w-5 h-5 text-status-success" />}
+                {isError && <AlertCircle className="w-5 h-5 text-status-error" />}
+                {!isSuccess && !isError && <Info className="w-5 h-5 text-brand-orange" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold">{toast.title}</p>
+                <p className="text-sm font-semibold text-text-primary">{toast.title}</p>
                 {toast.message && (
-                  <p className="text-xs text-muted-grey mt-0.5 leading-relaxed">{toast.message}</p>
+                  <p className="text-xs text-text-secondary mt-0.5 leading-relaxed">{toast.message}</p>
                 )}
               </div>
               <button
                 onClick={() => removeToast(toast.id)}
-                className="shrink-0 p-1 rounded-lg text-muted-grey hover:text-soft-white transition-colors"
+                className="shrink-0 p-1 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
                 aria-label="Dismiss notification"
               >
                 <X className="w-4 h-4" />

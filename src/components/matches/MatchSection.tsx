@@ -31,8 +31,6 @@ export const MatchSection: React.FC<MatchSectionProps> = ({
   emptyMessage = 'No matches currently scheduled in this category.',
   theme = 'light',
 }) => {
-  const isLight = theme === 'light';
-
   return (
     <section id={id} className="py-8">
       <SectionHeading
@@ -44,11 +42,7 @@ export const MatchSection: React.FC<MatchSectionProps> = ({
           onViewAll ? (
             <button
               onClick={onViewAll}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange ${
-                isLight
-                  ? 'bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 shadow-sm hover:border-slate-400'
-                  : 'bg-plum-900/60 hover:bg-plum-850 text-brand-orange hover:text-soft-white border border-plum-800/80'
-              }`}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange bg-white hover:bg-surface-muted text-text-primary border border-border-neutral shadow-sm"
             >
               <span>{isExpanded ? 'Show Less' : `${viewAllLabel} (${matches.length})`}</span>
             </button>
@@ -57,24 +51,14 @@ export const MatchSection: React.FC<MatchSectionProps> = ({
       />
 
       {matches.length === 0 ? (
-        <div className={`flex flex-col items-center justify-center p-12 rounded-2xl text-center ${
-          isLight 
-            ? 'bg-white border border-slate-200/90 shadow-sm' 
-            : 'bg-charcoal-900/40 border border-charcoal-800/80'
-        }`}>
-          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 ${
-            isLight ? 'bg-slate-100 border border-slate-200 text-slate-500' : 'bg-plum-950/80 border border-plum-800 text-muted-grey'
-          }`}>
+        <div className="flex flex-col items-center justify-center p-12 rounded-2xl text-center bg-white border border-border-neutral shadow-card">
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3 bg-surface-muted border border-border-neutral text-text-secondary">
             <Inbox className="w-6 h-6 stroke-1" />
           </div>
-          <h4 className={`text-base font-bold mb-1 ${
-            isLight ? 'text-slate-900' : 'text-soft-white'
-          }`}>
+          <h4 className="text-base font-bold mb-1 text-text-primary">
             No Active Matches Found
           </h4>
-          <p className={`text-xs max-w-sm ${
-            isLight ? 'text-slate-500' : 'text-muted-grey'
-          }`}>
+          <p className="text-xs max-w-sm text-text-secondary">
             {emptyMessage}
           </p>
         </div>

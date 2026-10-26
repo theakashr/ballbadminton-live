@@ -257,23 +257,23 @@ export const AdminSettingsPage: React.FC = () => {
       render: (u) => (
         <div className="flex items-center gap-3">
           <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs text-charcoal-950 uppercase shrink-0"
+            className="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs text-white uppercase shrink-0 shadow-sm"
             style={{ backgroundColor: u.avatarBg || '#FF851B' }}
           >
             {u.name.charAt(0)}
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-soft-white text-sm">{u.name}</span>
+              <span className="font-bold text-text-primary text-sm">{u.name}</span>
               {u.email === SUPER_ADMIN_EMAIL && (
-                <span className="px-1.5 py-0.2 rounded bg-brand-yellow/20 text-brand-yellow text-[9px] font-bold border border-brand-yellow/40">
+                <span className="px-1.5 py-0.2 rounded bg-amber-50 text-amber-700 text-[9px] font-bold border border-amber-200">
                   SUPER ADMIN
                 </span>
               )}
             </div>
-            <span className="text-[11px] text-muted-grey block">{u.email}</span>
+            <span className="text-[11px] text-text-secondary block">{u.email}</span>
             {u.designation && (
-              <span className="text-[10px] text-muted-grey/80 block mt-0.5">{u.designation}</span>
+              <span className="text-[10px] text-text-secondary/80 block mt-0.5">{u.designation}</span>
             )}
           </div>
         </div>
@@ -291,10 +291,10 @@ export const AdminSettingsPage: React.FC = () => {
       sortable: true,
       render: (u) => (
         <div className="text-xs">
-          <span className="font-medium text-soft-white block truncate max-w-[180px]">
+          <span className="font-medium text-text-primary block truncate max-w-[180px]">
             {u.grantedBy}
           </span>
-          <span className="text-[10px] text-muted-grey block">
+          <span className="text-[10px] text-text-secondary block">
             {new Date(u.grantedAt).toLocaleDateString()}
           </span>
         </div>
@@ -304,8 +304,8 @@ export const AdminSettingsPage: React.FC = () => {
       key: 'status',
       header: 'Status',
       render: () => (
-        <span className="inline-flex items-center gap-1 text-xs text-emerald-400 font-semibold">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+        <span className="inline-flex items-center gap-1 text-xs text-status-success font-semibold">
+          <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
           Active
         </span>
       ),
@@ -325,8 +325,8 @@ export const AdminSettingsPage: React.FC = () => {
               disabled={isCurrent}
               className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-colors ${
                 isCurrent
-                  ? 'bg-plum-950 text-brand-orange border border-plum-800 pointer-events-none'
-                  : 'bg-charcoal-800 hover:bg-charcoal-700 text-soft-white border border-charcoal-700'
+                  ? 'bg-brand-soft text-brand-orange border border-brand-orange/30 pointer-events-none'
+                  : 'bg-surface-muted hover:bg-border-neutral text-text-primary border border-border-neutral'
               }`}
               title="Simulate session as this persona"
             >
@@ -340,7 +340,7 @@ export const AdminSettingsPage: React.FC = () => {
                     setEditRoleUser(u);
                     setSelectedNewRole(u.role);
                   }}
-                  className="px-2 py-1 rounded-lg bg-charcoal-800 hover:bg-charcoal-700 text-xs text-muted-grey hover:text-soft-white transition-colors"
+                  className="px-2 py-1 rounded-lg bg-surface-muted hover:bg-border-neutral text-xs text-text-secondary hover:text-text-primary border border-border-neutral transition-colors"
                   title="Modify Role"
                 >
                   Edit Role
@@ -348,7 +348,7 @@ export const AdminSettingsPage: React.FC = () => {
 
                 <button
                   onClick={() => setRevokeTarget(u)}
-                  className="p-1.5 rounded-lg text-muted-grey hover:text-brand-coral hover:bg-charcoal-800 transition-colors"
+                  className="p-1.5 rounded-lg text-text-secondary hover:text-status-live hover:bg-red-50 transition-colors"
                   title="Revoke Dashboard Access"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -368,11 +368,11 @@ export const AdminSettingsPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <Settings className="w-5 h-5 text-brand-orange" />
-            <h1 className="text-xl sm:text-2xl font-display font-bold text-soft-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-display font-bold text-text-primary tracking-tight">
               Platform &amp; Scoring Configuration
             </h1>
           </div>
-          <p className="text-xs text-muted-grey mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             Super Admin user access governance, official Ball Badminton 5s scoring parameters, and local data controls.
           </p>
         </div>
@@ -380,7 +380,7 @@ export const AdminSettingsPage: React.FC = () => {
         {activeTab === 'access' && canManageUsers && (
           <button
             onClick={() => setIsGrantModalOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all active:scale-95"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all active:scale-95"
           >
             <UserPlus className="w-4 h-4 stroke-[2.5]" />
             <span>Grant Access to Person</span>
@@ -389,13 +389,13 @@ export const AdminSettingsPage: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-charcoal-800">
+      <div className="flex border-b border-border-neutral">
         <button
           onClick={() => setActiveTab('access')}
           className={`flex items-center gap-2 px-5 py-3 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all ${
             activeTab === 'access'
-              ? 'border-brand-orange text-brand-orange bg-plum-950/40'
-              : 'border-transparent text-muted-grey hover:text-soft-white'
+              ? 'border-brand-orange text-brand-orange bg-brand-soft'
+              : 'border-transparent text-text-secondary hover:text-text-primary'
           }`}
         >
           <ShieldCheck className="w-4 h-4" />
@@ -406,8 +406,8 @@ export const AdminSettingsPage: React.FC = () => {
           onClick={() => setActiveTab('scoring')}
           className={`flex items-center gap-2 px-5 py-3 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all ${
             activeTab === 'scoring'
-              ? 'border-brand-orange text-brand-orange bg-plum-950/40'
-              : 'border-transparent text-muted-grey hover:text-soft-white'
+              ? 'border-brand-orange text-brand-orange bg-brand-soft'
+              : 'border-transparent text-text-secondary hover:text-text-primary'
           }`}
         >
           <Sliders className="w-4 h-4" />
@@ -418,8 +418,8 @@ export const AdminSettingsPage: React.FC = () => {
           onClick={() => setActiveTab('storage')}
           className={`flex items-center gap-2 px-5 py-3 text-xs font-semibold uppercase tracking-wider border-b-2 transition-all ${
             activeTab === 'storage'
-              ? 'border-brand-orange text-brand-orange bg-plum-950/40'
-              : 'border-transparent text-muted-grey hover:text-soft-white'
+              ? 'border-brand-orange text-brand-orange bg-brand-soft'
+              : 'border-transparent text-text-secondary hover:text-text-primary'
           }`}
         >
           <Database className="w-4 h-4" />
@@ -431,25 +431,25 @@ export const AdminSettingsPage: React.FC = () => {
       {activeTab === 'access' && (
         <div className="space-y-6">
           {/* Highlight Card for akashakashr505@gmail.com */}
-          <div className="p-5 rounded-2xl bg-gradient-to-r from-plum-950 via-charcoal-900 to-plum-900 border border-brand-orange/40 shadow-elevated">
+          <div className="p-5 rounded-2xl bg-white border border-border-neutral shadow-card">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-start gap-3.5">
-                <div className="w-12 h-12 rounded-2xl bg-brand-orange/20 border border-brand-orange/50 flex items-center justify-center text-brand-orange shrink-0 shadow-orange-glow">
+                <div className="w-12 h-12 rounded-2xl bg-brand-soft border border-brand-orange/30 flex items-center justify-center text-brand-orange shrink-0">
                   <Shield className="w-6 h-6" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-base font-display font-bold text-soft-white">
+                    <h2 className="text-base font-display font-bold text-text-primary">
                       Super Admin &amp; Authority Architecture
                     </h2>
-                    <span className="px-2 py-0.5 rounded-full bg-brand-yellow/20 text-brand-yellow font-bold text-[10px] border border-brand-yellow/40">
+                    <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-bold text-[10px] border border-amber-200">
                       Primary Admin
                     </span>
                   </div>
-                  <p className="text-xs text-soft-white/90 mt-1">
+                  <p className="text-xs text-text-secondary mt-1">
                     Designated Primary Authority: <strong className="text-brand-orange">{SUPER_ADMIN_EMAIL}</strong>
                   </p>
-                  <p className="text-xs text-muted-grey mt-0.5 leading-relaxed max-w-2xl">
+                  <p className="text-xs text-text-secondary mt-0.5 leading-relaxed max-w-2xl">
                     As specified, <strong>{SUPER_ADMIN_EMAIL}</strong> holds full Super Admin permissions to manage tournaments, configure match scoring, and grant or revoke access to other persons.
                   </p>
                 </div>
@@ -458,7 +458,7 @@ export const AdminSettingsPage: React.FC = () => {
               {canManageUsers && (
                 <button
                   onClick={() => setIsGrantModalOpen(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all active:scale-95 shrink-0"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all active:scale-95 shrink-0"
                 >
                   <UserPlus className="w-4 h-4 stroke-[2.5]" />
                   <span>Grant Access to Person</span>
@@ -469,34 +469,34 @@ export const AdminSettingsPage: React.FC = () => {
 
           {/* Role Explanations */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-            <div className="p-3.5 rounded-xl bg-charcoal-900 border border-plum-800">
+            <div className="p-3.5 rounded-xl bg-white border border-border-neutral shadow-card">
               <StatusBadge status="super_admin" size="sm" />
-              <p className="font-semibold text-soft-white mt-2">Super Admin</p>
-              <p className="text-muted-grey text-[11px] mt-0.5 leading-snug">
+              <p className="font-semibold text-text-primary mt-2">Super Admin</p>
+              <p className="text-text-secondary text-[11px] mt-0.5 leading-snug">
                 Full authority: create tournaments, teams, schedule fixtures, configure rules, and grant/revoke access.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-charcoal-900 border border-plum-800">
+            <div className="p-3.5 rounded-xl bg-white border border-border-neutral shadow-card">
               <StatusBadge status="tournament_admin" size="sm" />
-              <p className="font-semibold text-soft-white mt-2">Tournament Admin</p>
-              <p className="text-muted-grey text-[11px] mt-0.5 leading-snug">
+              <p className="font-semibold text-text-primary mt-2">Tournament Admin</p>
+              <p className="text-text-secondary text-[11px] mt-0.5 leading-snug">
                 Can create and manage tournaments, verify team rosters, schedule matches, and assign umpires.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-charcoal-900 border border-plum-800">
+            <div className="p-3.5 rounded-xl bg-white border border-border-neutral shadow-card">
               <StatusBadge status="official_scorer" size="sm" />
-              <p className="font-semibold text-soft-white mt-2">Official Scorer</p>
-              <p className="text-muted-grey text-[11px] mt-0.5 leading-snug">
+              <p className="font-semibold text-text-primary mt-2">Official Scorer</p>
+              <p className="text-text-secondary text-[11px] mt-0.5 leading-snug">
                 Authorized court umpire access to input live rally points, set scores, and service hands.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-charcoal-900 border border-plum-800">
+            <div className="p-3.5 rounded-xl bg-white border border-border-neutral shadow-card">
               <StatusBadge status="viewer" size="sm" />
-              <p className="font-semibold text-soft-white mt-2">Viewer</p>
-              <p className="text-muted-grey text-[11px] mt-0.5 leading-snug">
+              <p className="font-semibold text-text-primary mt-2">Viewer</p>
+              <p className="text-text-secondary text-[11px] mt-0.5 leading-snug">
                 Read-only analytics and match summary access for media representatives and observers.
               </p>
             </div>
@@ -505,10 +505,10 @@ export const AdminSettingsPage: React.FC = () => {
           {/* Authorized Users Table */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-grey">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
                 Authorized Platform Users ({authorizedUsers.length})
               </h3>
-              <span className="text-xs text-muted-grey">
+              <span className="text-xs text-text-secondary">
                 Active Session: <strong className="text-brand-orange">{currentUser?.name}</strong> ({currentUser?.email})
               </span>
             </div>
@@ -526,42 +526,42 @@ export const AdminSettingsPage: React.FC = () => {
       {/* Tab 2: Scoring Rules Configuration */}
       {activeTab === 'scoring' && (
         <form onSubmit={handleSaveScoringRules} className="space-y-6 max-w-3xl">
-          <div className="p-6 rounded-2xl bg-charcoal-900 border border-plum-800 space-y-5 shadow-subtle">
+          <div className="p-6 rounded-2xl bg-white border border-border-neutral space-y-5 shadow-card">
             <div>
-              <h3 className="text-base font-display font-bold text-soft-white">
+              <h3 className="text-base font-display font-bold text-text-primary">
                 Official Ball Badminton Federation of India (BBFI) Rules
               </h3>
-              <p className="text-xs text-muted-grey mt-0.5">
+              <p className="text-xs text-text-secondary mt-0.5">
                 Default regulations applied when creating matches and live scoreboards.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                   Points Per Set
                 </label>
                 <select
                   value={scoringSettings.pointsPerSet}
                   onChange={(e) => setScoringSettings({ ...scoringSettings, pointsPerSet: parseInt(e.target.value) as 29 | 35 })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 >
                   <option value={29}>29 Points (BBFI Traditional Standard)</option>
                   <option value={35}>35 Points (Invitational Extended Set)</option>
                 </select>
-                <p className="text-[11px] text-muted-grey mt-1">
+                <p className="text-[11px] text-text-secondary mt-1">
                   Ball Badminton traditional games are contested up to 29 points.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                   Sets Per Match
                 </label>
                 <select
                   value={scoringSettings.bestOfSets}
                   onChange={(e) => setScoringSettings({ ...scoringSettings, bestOfSets: parseInt(e.target.value) as 3 | 5 })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 >
                   <option value={3}>Best of 3 Sets (Standard Championship)</option>
                   <option value={5}>Best of 5 Sets (Finals Option)</option>
@@ -571,33 +571,33 @@ export const AdminSettingsPage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                   Service System
                 </label>
                 <select
                   value={scoringSettings.servingSystem}
                   onChange={(e) => setScoringSettings({ ...scoringSettings, servingSystem: e.target.value as any })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 >
                   <option value="two_hands">Two Hands (1st Hand &amp; 2nd Hand - Traditional)</option>
                   <option value="single_hand">Single Hand Rotation</option>
                 </select>
-                <p className="text-[11px] text-muted-grey mt-1">
+                <p className="text-[11px] text-text-secondary mt-1">
                   In traditional 5s, each team has two hands to serve before service switches.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                   Max Deuce Point Cap
                 </label>
                 <input
                   type="number"
                   value={scoringSettings.maxOvertimeCap}
                   onChange={(e) => setScoringSettings({ ...scoringSettings, maxOvertimeCap: parseInt(e.target.value) || 33 })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 />
-                <p className="text-[11px] text-muted-grey mt-1">
+                <p className="text-[11px] text-text-secondary mt-1">
                   Upper ceiling for deciding rallies at 28-28 (typically 33).
                 </p>
               </div>
@@ -605,25 +605,25 @@ export const AdminSettingsPage: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                   Official Ball Specification
                 </label>
                 <input
                   type="text"
                   disabled
                   value={scoringSettings.ballSpecification}
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950/60 border border-charcoal-800 text-sm text-soft-white/70"
+                  className="w-full px-4 py-2.5 rounded-xl bg-surface-muted border border-border-neutral text-sm text-text-secondary"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
                   Standard Court Surface
                 </label>
                 <select
                   value={scoringSettings.courtSurface}
                   onChange={(e) => setScoringSettings({ ...scoringSettings, courtSurface: e.target.value as any })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 >
                   <option value="Outdoor Red Clay">Outdoor Red Clay (12m x 24m)</option>
                   <option value="Indoor Synthetic Mat">Indoor Synthetic Mat</option>
@@ -639,9 +639,9 @@ export const AdminSettingsPage: React.FC = () => {
                   id="autoPublishCheck"
                   checked={scoringSettings.autoPublishLiveScores}
                   onChange={(e) => setScoringSettings({ ...scoringSettings, autoPublishLiveScores: e.target.checked })}
-                  className="w-4 h-4 rounded text-brand-orange bg-charcoal-950 border-charcoal-700 focus:ring-brand-orange"
+                  className="w-4 h-4 rounded text-brand-orange bg-white border-border-neutral focus:ring-brand-orange"
                 />
-                <label htmlFor="autoPublishCheck" className="text-xs font-medium text-soft-white cursor-pointer">
+                <label htmlFor="autoPublishCheck" className="text-xs font-medium text-text-primary cursor-pointer">
                   Auto-publish court umpire score updates to live scoreboard
                 </label>
               </div>
@@ -652,18 +652,18 @@ export const AdminSettingsPage: React.FC = () => {
                   id="pinRequiredCheck"
                   checked={scoringSettings.umpirePinRequired}
                   onChange={(e) => setScoringSettings({ ...scoringSettings, umpirePinRequired: e.target.checked })}
-                  className="w-4 h-4 rounded text-brand-orange bg-charcoal-950 border-charcoal-700 focus:ring-brand-orange"
+                  className="w-4 h-4 rounded text-brand-orange bg-white border-border-neutral focus:ring-brand-orange"
                 />
-                <label htmlFor="pinRequiredCheck" className="text-xs font-medium text-soft-white cursor-pointer">
+                <label htmlFor="pinRequiredCheck" className="text-xs font-medium text-text-primary cursor-pointer">
                   Require official umpire verification PIN for match finalization
                 </label>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-charcoal-800 flex justify-end">
+            <div className="pt-4 border-t border-border-neutral flex justify-end">
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all"
               >
                 <Check className="w-4 h-4 stroke-[2.5]" />
                 <span>Save Scoring Rules</span>
@@ -677,26 +677,26 @@ export const AdminSettingsPage: React.FC = () => {
       {activeTab === 'storage' && (
         <div className="space-y-6 max-w-3xl">
           {/* Supabase Connection Status Card */}
-          <div className="p-6 rounded-2xl bg-charcoal-900 border border-plum-800 space-y-5 shadow-subtle">
+          <div className="p-6 rounded-2xl bg-white border border-border-neutral space-y-5 shadow-card">
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-brand-orange/20 border border-brand-orange flex items-center justify-center text-brand-orange shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-brand-soft border border-brand-orange/30 flex items-center justify-center text-brand-orange shrink-0">
                   <Server className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-base font-display font-bold text-soft-white">
+                    <h3 className="text-base font-display font-bold text-text-primary">
                       Supabase PostgreSQL &amp; Auth Architecture
                     </h3>
                     <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                       isSupabaseConfigured()
-                        ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                        : 'bg-brand-yellow/20 text-brand-yellow border-brand-yellow/30'
+                        ? 'bg-emerald-50 text-status-success border-emerald-200'
+                        : 'bg-amber-50 text-amber-800 border-amber-200'
                     }`}>
                       {isSupabaseConfigured() ? 'Supabase Connected' : 'Local Prototype Active'}
                     </span>
                   </div>
-                  <p className="text-xs text-muted-grey mt-1 leading-relaxed">
+                  <p className="text-xs text-text-secondary mt-1 leading-relaxed">
                     PostgreSQL schema with Row Level Security (RLS), transactional scoring RPCs, and Realtime pub/sub.
                   </p>
                 </div>
@@ -706,7 +706,7 @@ export const AdminSettingsPage: React.FC = () => {
                 type="button"
                 onClick={handleTestConnection}
                 disabled={connTest.testing}
-                className="px-3.5 py-1.5 rounded-xl bg-charcoal-800 hover:bg-charcoal-700 text-xs font-semibold text-soft-white border border-charcoal-700 transition-colors flex items-center gap-1.5 shrink-0"
+                className="px-3.5 py-1.5 rounded-xl bg-surface-muted hover:bg-border-neutral text-xs font-semibold text-text-primary border border-border-neutral transition-colors flex items-center gap-1.5 shrink-0"
               >
                 <Activity className="w-3.5 h-3.5 text-brand-orange" />
                 <span>{connTest.testing ? 'Testing...' : 'Test Connection'}</span>
@@ -717,8 +717,8 @@ export const AdminSettingsPage: React.FC = () => {
             {connTest.tested && (
               <div className={`p-3.5 rounded-xl text-xs border flex items-start gap-2.5 ${
                 connTest.connected
-                  ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
-                  : 'bg-brand-coral/15 border-brand-coral/40 text-brand-coral'
+                  ? 'bg-emerald-50 border-emerald-200 text-status-success'
+                  : 'bg-red-50 border-red-200 text-status-live'
               }`}>
                 {connTest.connected ? (
                   <Check className="w-4 h-4 shrink-0 mt-0.5" />
@@ -732,39 +732,39 @@ export const AdminSettingsPage: React.FC = () => {
                       : 'Connection Failed'}
                   </p>
                   {connTest.error && (
-                    <p className="text-[11px] text-muted-grey mt-0.5">{connTest.error}</p>
+                    <p className="text-[11px] text-text-secondary mt-0.5">{connTest.error}</p>
                   )}
                 </div>
               </div>
             )}
 
-            <div className="p-4 rounded-xl bg-plum-950 border border-plum-800 text-xs space-y-2">
-              <div className="flex justify-between py-1 border-b border-charcoal-800">
-                <span className="text-muted-grey">Target Database:</span>
-                <span className="font-mono text-soft-white">
+            <div className="p-4 rounded-xl bg-surface-muted border border-border-neutral text-xs space-y-2">
+              <div className="flex justify-between py-1 border-b border-border-neutral">
+                <span className="text-text-secondary">Target Database:</span>
+                <span className="font-mono text-text-primary font-medium">
                   {isSupabaseConfigured() ? 'Supabase PostgreSQL (Cloud)' : 'Browser LocalStorage (Prototype Fallback)'}
                 </span>
               </div>
-              <div className="flex justify-between py-1 border-b border-charcoal-800">
-                <span className="text-muted-grey">Row Level Security (RLS):</span>
-                <span className="font-semibold text-emerald-400">13 Tables Protected</span>
+              <div className="flex justify-between py-1 border-b border-border-neutral">
+                <span className="text-text-secondary">Row Level Security (RLS):</span>
+                <span className="font-semibold text-status-success">13 Tables Protected</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-charcoal-800">
-                <span className="text-muted-grey">Scoring Transactions:</span>
-                <span className="font-mono text-brand-orange">record_point_rpc (Idempotent &amp; Concurrency Checked)</span>
+              <div className="flex justify-between py-1 border-b border-border-neutral">
+                <span className="text-text-secondary">Scoring Transactions:</span>
+                <span className="font-mono text-brand-orange font-medium">record_point_rpc (Idempotent &amp; Concurrency Checked)</span>
               </div>
               <div className="flex justify-between py-1">
-                <span className="text-muted-grey">Realtime Engine:</span>
-                <span className="font-semibold text-soft-white">Supabase Realtime (postgres_changes)</span>
+                <span className="text-text-secondary">Realtime Engine:</span>
+                <span className="font-semibold text-text-primary">Supabase Realtime (postgres_changes)</span>
               </div>
             </div>
 
             {/* One-click Migration Button */}
-            <div className="p-4 rounded-xl bg-charcoal-950 border border-brand-orange/30 space-y-3">
+            <div className="p-4 rounded-xl bg-surface-muted border border-border-neutral space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold text-soft-white">Migrate Local Prototype to Supabase</p>
-                  <p className="text-[11px] text-muted-grey mt-0.5">
+                  <p className="text-xs font-bold text-text-primary">Migrate Local Prototype to Supabase</p>
+                  <p className="text-[11px] text-text-secondary mt-0.5">
                     Batch-upload tournaments, teams, rosters, and scoring configs into your live PostgreSQL tables.
                   </p>
                 </div>
@@ -772,7 +772,7 @@ export const AdminSettingsPage: React.FC = () => {
                   type="button"
                   onClick={handlePushToSupabase}
                   disabled={isMigrating}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all active:scale-95 disabled:opacity-50 shrink-0"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all active:scale-95 disabled:opacity-50 shrink-0"
                 >
                   <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                   <span>{isMigrating ? 'Migrating...' : 'Push to Supabase'}</span>
@@ -780,30 +780,30 @@ export const AdminSettingsPage: React.FC = () => {
               </div>
 
               {migrationSummary && (
-                <div className="p-3 rounded-lg bg-plum-950 border border-plum-800 text-[11px] text-muted-grey space-y-1">
-                  <p className="font-semibold text-soft-white">Migration Summary:</p>
+                <div className="p-3 rounded-lg bg-white border border-border-neutral text-[11px] text-text-secondary space-y-1">
+                  <p className="font-semibold text-text-primary">Migration Summary:</p>
                   <p>Tournaments: {migrationSummary.counts.tournaments} • Teams: {migrationSummary.counts.teams} • Players: {migrationSummary.counts.players}</p>
                   {migrationSummary.errors.length > 0 && (
-                    <p className="text-brand-coral">{migrationSummary.errors[0]}</p>
+                    <p className="text-status-live">{migrationSummary.errors[0]}</p>
                   )}
                 </div>
               )}
             </div>
 
             {/* Backup & Restore Tools */}
-            <div className="pt-4 border-t border-charcoal-800 flex flex-wrap items-center justify-between gap-3">
+            <div className="pt-4 border-t border-border-neutral flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={handleExportBackup}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-charcoal-800 hover:bg-charcoal-700 text-soft-white text-xs font-semibold border border-charcoal-700 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary text-xs font-semibold border border-border-neutral transition-colors"
                 >
                   <Download className="w-3.5 h-3.5 text-brand-orange" />
                   <span>Export JSON</span>
                 </button>
 
-                <label className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-charcoal-800 hover:bg-charcoal-700 text-soft-white text-xs font-semibold border border-charcoal-700 transition-colors cursor-pointer">
-                  <Upload className="w-3.5 h-3.5 text-brand-yellow" />
+                <label className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary text-xs font-semibold border border-border-neutral transition-colors cursor-pointer">
+                  <Upload className="w-3.5 h-3.5 text-brand-orange" />
                   <span>Import JSON</span>
                   <input
                     type="file"
@@ -817,7 +817,7 @@ export const AdminSettingsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsResetConfirmOpen(true)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-coral/15 hover:bg-brand-coral/25 text-brand-coral text-xs font-semibold border border-brand-coral/30 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-status-live text-xs font-semibold border border-red-200 transition-colors"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Reset Demo Seeds</span>
@@ -830,65 +830,65 @@ export const AdminSettingsPage: React.FC = () => {
       {/* Grant Access Modal */}
       {isGrantModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="fixed inset-0 bg-charcoal-950/85 backdrop-blur-md" onClick={() => setIsGrantModalOpen(false)} />
-          <div className="relative w-full max-w-lg bg-charcoal-900 border border-plum-800 rounded-3xl shadow-elevated p-6 z-10 my-8">
-            <div className="flex items-center justify-between pb-4 border-b border-plum-800 mb-5">
+          <div className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm" onClick={() => setIsGrantModalOpen(false)} />
+          <div className="relative w-full max-w-lg bg-white border border-border-neutral rounded-2xl shadow-elevated p-6 z-10 my-8">
+            <div className="flex items-center justify-between pb-4 border-b border-border-neutral mb-5">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-plum-800 flex items-center justify-center text-brand-orange">
+                <div className="w-9 h-9 rounded-xl bg-brand-soft border border-brand-orange/20 flex items-center justify-center text-brand-orange">
                   <UserPlus className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-display font-bold text-soft-white">
+                  <h3 className="text-base font-display font-bold text-text-primary">
                     Grant Dashboard Access
                   </h3>
-                  <p className="text-xs text-muted-grey">
+                  <p className="text-xs text-text-secondary">
                     Authorizing official by Super Admin ({SUPER_ADMIN_EMAIL})
                   </p>
                 </div>
               </div>
-              <button onClick={() => setIsGrantModalOpen(false)} className="p-1 rounded-lg text-muted-grey hover:text-soft-white">
+              <button onClick={() => setIsGrantModalOpen(false)} className="p-1 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleGrantSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
-                  Full Name <span className="text-brand-coral">*</span>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
+                  Full Name <span className="text-status-live">*</span>
                 </label>
                 <input
                   type="text"
                   value={newUserData.name}
                   onChange={(e) => setNewUserData({ ...newUserData, name: e.target.value })}
                   placeholder="e.g. Ramesh Kumar"
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 />
-                {grantErrors.name && <p className="text-xs text-brand-coral mt-1">{grantErrors.name}</p>}
+                {grantErrors.name && <p className="text-xs text-status-live mt-1">{grantErrors.name}</p>}
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
-                  Email Address <span className="text-brand-coral">*</span>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
+                  Email Address <span className="text-status-live">*</span>
                 </label>
                 <input
                   type="email"
                   value={newUserData.email}
                   onChange={(e) => setNewUserData({ ...newUserData, email: e.target.value })}
                   placeholder="official@bbfi.org or person@gmail.com"
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 />
-                {grantErrors.email && <p className="text-xs text-brand-coral mt-1">{grantErrors.email}</p>}
+                {grantErrors.email && <p className="text-xs text-status-live mt-1">{grantErrors.email}</p>}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
                     Access Role Level
                   </label>
                   <select
                     value={newUserData.role}
                     onChange={(e) => setNewUserData({ ...newUserData, role: e.target.value as UserRole })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                   >
                     <option value="tournament_admin">Tournament Admin</option>
                     <option value="official_scorer">Official Court Scorer</option>
@@ -898,7 +898,7 @@ export const AdminSettingsPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
                     Contact Phone
                   </label>
                   <input
@@ -906,13 +906,13 @@ export const AdminSettingsPage: React.FC = () => {
                     value={newUserData.contactNumber}
                     onChange={(e) => setNewUserData({ ...newUserData, contactNumber: e.target.value })}
                     placeholder="+91 94432 11223"
-                    className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
                   Official Designation / Notes
                 </label>
                 <input
@@ -920,26 +920,26 @@ export const AdminSettingsPage: React.FC = () => {
                   value={newUserData.designation}
                   onChange={(e) => setNewUserData({ ...newUserData, designation: e.target.value })}
                   placeholder="e.g. Coimbatore District Secretary / Court 2 Umpire"
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 />
               </div>
 
-              <div className="p-3 rounded-xl bg-plum-950 border border-plum-800 text-xs text-muted-grey">
-                <span className="text-soft-white font-semibold block mb-0.5">Permission Notice:</span>
+              <div className="p-3 rounded-xl bg-surface-muted border border-border-neutral text-xs text-text-secondary">
+                <span className="text-text-primary font-semibold block mb-0.5">Permission Notice:</span>
                 This grant will authorize the user immediately in local repository. They will be able to sign in or be simulated from the active persona switcher.
               </div>
 
-              <div className="pt-4 border-t border-charcoal-800 flex items-center justify-end gap-3">
+              <div className="pt-4 border-t border-border-neutral flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsGrantModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs text-muted-grey hover:text-soft-white border border-charcoal-700"
+                  className="px-4 py-2 rounded-xl text-xs text-text-secondary hover:text-text-primary border border-border-neutral hover:bg-surface-muted transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all"
+                  className="px-5 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all"
                 >
                   Confirm &amp; Grant Access
                 </button>
@@ -952,22 +952,22 @@ export const AdminSettingsPage: React.FC = () => {
       {/* Edit Role Modal */}
       {editRoleUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-charcoal-950/85 backdrop-blur-md" onClick={() => setEditRoleUser(null)} />
-          <div className="relative w-full max-w-md bg-charcoal-900 border border-plum-800 rounded-3xl shadow-elevated p-6 z-10">
-            <h3 className="text-base font-display font-bold text-soft-white mb-2">
+          <div className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm" onClick={() => setEditRoleUser(null)} />
+          <div className="relative w-full max-w-md bg-white border border-border-neutral rounded-2xl shadow-elevated p-6 z-10">
+            <h3 className="text-base font-display font-bold text-text-primary mb-2">
               Update Role for {editRoleUser.name}
             </h3>
-            <p className="text-xs text-muted-grey mb-4">{editRoleUser.email}</p>
+            <p className="text-xs text-text-secondary mb-4">{editRoleUser.email}</p>
 
             <form onSubmit={handleUpdateRoleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-soft-white mb-1">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
                   Select New Privilege Level
                 </label>
                 <select
                   value={selectedNewRole}
                   onChange={(e) => setSelectedNewRole(e.target.value as UserRole)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 >
                   <option value="super_admin">Super Admin</option>
                   <option value="tournament_admin">Tournament Admin</option>
@@ -976,17 +976,17 @@ export const AdminSettingsPage: React.FC = () => {
                 </select>
               </div>
 
-              <div className="pt-4 border-t border-charcoal-800 flex justify-end gap-3">
+              <div className="pt-4 border-t border-border-neutral flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setEditRoleUser(null)}
-                  className="px-4 py-2 rounded-xl text-xs text-muted-grey hover:text-soft-white border border-charcoal-700"
+                  className="px-4 py-2 rounded-xl text-xs text-text-secondary hover:text-text-primary border border-border-neutral hover:bg-surface-muted transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all"
+                  className="px-5 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all"
                 >
                   Update Role
                 </button>

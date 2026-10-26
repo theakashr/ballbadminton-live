@@ -4,22 +4,47 @@
 
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
+
+    /* Core Premium Light Design System Tokens */
+    --color-background: #F5F7FB;
+    --color-surface: #FFFFFF;
+    --color-text-primary: #182230;
+    --color-text-secondary: #667085;
+
+    --color-brand: #FF851B;
+    --color-brand-hover: #E96F0B;
+    --color-brand-soft: #FFF1E5;
+
+    --color-border: #E4E7EC;
+    --color-surface-muted: #F0F2F6;
+
+    --color-success: #16803D;
+    --color-warning: #B54708;
+    --color-error: #D92D20;
+    --color-live: #D92D20;
+    --color-overlay: rgba(24, 34, 48, 0.48);
+
+    --radius-card: 16px;
+    --radius-control: 10px;
+
+    /* Safe Area Insets for mobile displays */
     --sat: env(safe-area-inset-top, 0px);
     --sab: env(safe-area-inset-bottom, 0px);
     --sal: env(safe-area-inset-left, 0px);
     --sar: env(safe-area-inset-right, 0px);
   }
   
-  html.light {
+  html {
     color-scheme: light;
+    background-color: #F5F7FB;
   }
 
   body {
-    background-color: #15131B;
-    color: #F8F5F2;
+    background-color: #F5F7FB;
+    color: #182230;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    transition: background-color 0.25s ease, color 0.25s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
@@ -31,7 +56,7 @@
   }
 }
 
-/* Safe-area insets for modern mobile displays & notches */
+/* Safe-area utility classes for modern mobile displays */
 .pt-safe {
   padding-top: max(env(safe-area-inset-top), 0px);
 }
@@ -45,161 +70,42 @@
   padding-right: max(env(safe-area-inset-right), 0px);
 }
 
-/* =========================================================================
-   LIGHT / WHITE MODE THEME OVERRIDES
-   Provides clean, high-contrast, beautiful white background theme
-   ========================================================================= */
-
-html.light body {
-  background-color: #F8FAFC !important;
-  color: #0F172A !important;
-}
-
-/* Background surfaces */
-html.light .bg-charcoal-950 {
-  background-color: #F8FAFC !important;
-}
-
-html.light .bg-charcoal-900 {
-  background-color: #FFFFFF !important;
-}
-
-html.light .bg-charcoal-850 {
-  background-color: #F1F5F9 !important;
-}
-
-html.light .bg-charcoal-800 {
-  background-color: #E2E8F0 !important;
-}
-
-html.light .bg-plum-950 {
-  background-color: #FFFFFF !important;
-}
-
-html.light .bg-plum-900 {
-  background-color: #F8FAFC !important;
-}
-
-html.light .bg-plum-850 {
-  background-color: #F1F5F9 !important;
-}
-
-html.light .bg-plum-800 {
-  background-color: #E2E8F0 !important;
-}
-
-/* Text colors - targets all opacity variations like text-soft-white/85, text-soft-white/90 */
-html.light [class*="text-soft-white"] {
-  color: #0F172A !important;
-}
-
-html.light [class*="text-muted-grey"] {
-  color: #475569 !important;
-}
-
-/* Borders */
-html.light .border-plum-800,
-html.light .border-plum-900,
-html.light .border-charcoal-800,
-html.light .border-charcoal-700 {
-  border-color: #E2E8F0 !important;
-}
-
-/* Navbar in light mode */
-html.light header.fixed {
-  background-color: rgba(255, 255, 255, 0.94) !important;
-  border-bottom: 1px solid #E2E8F0 !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
-}
-
-html.light nav.rounded-full {
-  background-color: #F1F5F9 !important;
-  border-color: #E2E8F0 !important;
-}
-
-html.light nav.rounded-full a {
-  color: #64748B;
-}
-
-html.light nav.rounded-full a:hover {
-  color: #0F172A;
+/* Form input, select and textarea defaults */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
   background-color: #FFFFFF;
+  color: #182230;
+  border-color: #E4E7EC;
 }
 
-html.light nav.rounded-full a.bg-plum-800 {
-  background-color: #FFFFFF !important;
-  color: #0F172A !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+input::placeholder,
+textarea::placeholder {
+  color: #98A2B3;
 }
 
-/* Form inputs & selects */
-html.light input:not([type="checkbox"]):not([type="radio"]),
-html.light select,
-html.light textarea {
-  background-color: #FFFFFF !important;
-  color: #0F172A !important;
-  border-color: #CBD5E1 !important;
+/* Tabular figures for sport scoreboards */
+.score-digits {
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
 }
 
-html.light input::placeholder,
-html.light textarea::placeholder {
-  color: #94A3B8 !important;
+/* Custom sleek scrollbar for light theme */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
 }
 
-/* Button text contrast guarantees */
-html.light button.bg-brand-coral,
-html.light .bg-brand-coral,
-html.light button.bg-rose-600,
-html.light .bg-rose-600,
-html.light button.bg-emerald-600,
-html.light .bg-emerald-600 {
-  color: #FFFFFF !important;
+::-webkit-scrollbar-track {
+  background: #F0F2F6;
 }
 
-html.light button.bg-brand-orange,
-html.light .bg-brand-orange {
-  color: #15131B !important;
+::-webkit-scrollbar-thumb {
+  background: #D0D5DD;
+  border-radius: 4px;
 }
 
-/* Team badges and elements with dynamic background colors must keep white text */
-html.light [style*="background-color"],
-html.light [style*="backgroundColor"],
-html.light .team-badge,
-html.light .team-initials,
-html.light [data-text-white] {
-  color: #FFFFFF !important;
-}
-
-/* Tables in light mode */
-html.light thead,
-html.light th {
-  background-color: #F1F5F9 !important;
-  color: #475569 !important;
-}
-
-html.light tbody tr:hover {
-  background-color: #F8FAFC !important;
-}
-
-/* Shadows in light mode */
-html.light .shadow-elevated {
-  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.08) !important;
-}
-
-html.light .shadow-subtle {
-  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.05) !important;
-}
-
-/* Scrollbars in light mode */
-html.light ::-webkit-scrollbar-track {
-  background: #F1F5F9;
-}
-
-html.light ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
-}
-
-html.light ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: #FF851B;
 }
 
@@ -213,83 +119,4 @@ html.light ::-webkit-scrollbar-thumb:hover {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* Custom sleek scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #15131B;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #341E40;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #FF851B;
-}
-
-/* Tabular figures for sport scoreboards */
-.score-digits {
-  font-feature-settings: "tnum";
-  font-variant-numeric: tabular-nums;
-}
-
-/* Subtle sports court net pattern for section backdrops */
-.bg-court-pattern {
-  background-image: 
-    linear-gradient(to right, rgba(183, 175, 189, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(183, 175, 189, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-/* Tactile Spring Buttons for fast court-side scoring */
-.tactile-btn {
-  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease-out;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-}
-.tactile-btn:active {
-  transform: scale(0.93) translateY(2px);
-}
-
-/* 3D Court Perspective Container */
-.court-container {
-  perspective: 1200px;
-}
-.court-surface {
-  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-}
-.court-flipped {
-  transform: rotateY(180deg);
-}
-
-/* High Contrast Outdoor Mode for Direct Sunlight */
-.outdoor-contrast-mode {
-  background-color: #000000 !important;
-  color: #FFFFFF !important;
-  border-color: #FFE600 !important;
-}
-.outdoor-contrast-mode .outdoor-card {
-  background-color: #0A0A0A !important;
-  border: 2px solid #FFE600 !important;
-}
-.outdoor-contrast-mode .outdoor-score-t1 {
-  color: #FFE600 !important;
-  text-shadow: 0 0 12px rgba(255, 230, 0, 0.4);
-}
-.outdoor-contrast-mode .outdoor-score-t2 {
-  color: #00E5FF !important;
-  text-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
-}
-.outdoor-contrast-mode .outdoor-btn {
-  border: 2px solid #FFFFFF !important;
-  font-weight: 900 !important;
 }

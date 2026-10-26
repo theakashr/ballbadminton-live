@@ -21,7 +21,7 @@ export const AdminLayout: React.FC = () => {
   }, [isMobileSidebarOpen]);
 
   return (
-    <div className="min-h-screen bg-charcoal-950 text-soft-white font-sans flex selection:bg-brand-orange selection:text-charcoal-950">
+    <div className="min-h-screen bg-app-bg text-text-primary font-sans flex selection:bg-brand-orange selection:text-white">
       {/* 1. Admin Sidebar */}
       <AdminSidebar
         isCollapsed={isSidebarCollapsed}
@@ -37,28 +37,28 @@ export const AdminLayout: React.FC = () => {
         <AdminHeader onOpenMobileSidebar={() => setIsMobileSidebarOpen(true)} />
 
         {/* Backend & Architecture Banner */}
-        <div className="bg-plum-950/90 border-b border-plum-800/60 px-4 sm:px-6 py-2 flex items-center justify-between text-xs text-muted-grey">
+        <div className="bg-brand-soft border-b border-border-neutral px-4 sm:px-6 py-2 flex items-center justify-between text-xs text-text-secondary">
           <div className="flex items-center gap-2">
             {authBackend === 'supabase' ? (
               <>
-                <Server className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <Server className="w-3.5 h-3.5 text-status-success shrink-0" />
                 <span className="truncate">
-                  <strong className="text-soft-white">Supabase PostgreSQL Connected:</strong> RLS policies active, authoritative RPC scoring, and Realtime stream.
+                  <strong className="text-text-primary">Supabase PostgreSQL Connected:</strong> RLS policies active, authoritative RPC scoring, and Realtime stream.
                 </span>
               </>
             ) : (
               <>
                 <Database className="w-3.5 h-3.5 text-brand-orange shrink-0" />
                 <span className="truncate">
-                  <strong className="text-soft-white">Local Prototype Repository:</strong> Offline development mode. Connect Supabase in <code>.env.local</code> to enable cloud sync.
+                  <strong className="text-text-primary">Local Prototype Repository:</strong> Offline development mode. Connect Supabase in <code>.env.local</code> to enable cloud sync.
                 </span>
               </>
             )}
           </div>
           <span className={`hidden sm:inline-block px-2 py-0.5 rounded text-[10px] border font-mono ${
             authBackend === 'supabase'
-              ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-              : 'bg-charcoal-900 text-brand-orange border-charcoal-700'
+              ? 'bg-emerald-500/10 text-status-success border-emerald-500/25'
+              : 'bg-white text-brand-orange border-border-neutral'
           }`}>
             {authBackend === 'supabase' ? 'Supabase Cloud' : 'Prototype Demo'}
           </span>

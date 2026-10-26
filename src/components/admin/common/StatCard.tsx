@@ -27,27 +27,27 @@ export const StatCard: React.FC<StatCardProps> = ({
   const colorMap = {
     orange: {
       border: 'hover:border-brand-orange/40',
-      iconBg: 'bg-brand-orange/15 text-brand-orange border-brand-orange/30',
-      glow: 'group-hover:shadow-orange-glow',
+      iconBg: 'bg-brand-soft text-brand-orange border-brand-orange/20',
+      glow: '',
     },
     coral: {
-      border: 'hover:border-brand-coral/40',
-      iconBg: 'bg-brand-coral/15 text-brand-coral border-brand-coral/30',
-      glow: 'group-hover:shadow-coral-glow',
+      border: 'hover:border-status-live/40',
+      iconBg: 'bg-red-50 text-status-live border-red-200',
+      glow: '',
     },
     yellow: {
-      border: 'hover:border-brand-yellow/40',
-      iconBg: 'bg-brand-yellow/15 text-brand-yellow border-brand-yellow/30',
+      border: 'hover:border-amber-400/40',
+      iconBg: 'bg-amber-50 text-amber-700 border-amber-200',
       glow: '',
     },
     plum: {
-      border: 'hover:border-plum-600/40',
-      iconBg: 'bg-plum-800 text-soft-white border-plum-700',
+      border: 'hover:border-purple-300',
+      iconBg: 'bg-purple-50 text-purple-700 border-purple-200',
       glow: '',
     },
     purple: {
-      border: 'hover:border-purple-500/40',
-      iconBg: 'bg-purple-900/40 text-purple-300 border-purple-700/50',
+      border: 'hover:border-purple-300',
+      iconBg: 'bg-purple-50 text-purple-700 border-purple-200',
       glow: '',
     },
   };
@@ -57,18 +57,18 @@ export const StatCard: React.FC<StatCardProps> = ({
   return (
     <div
       onClick={onClick}
-      className={`group relative p-5 rounded-2xl bg-charcoal-900 border border-plum-800/80 shadow-subtle transition-all duration-200 ${
+      className={`group relative p-5 rounded-2xl bg-white border border-border-neutral shadow-card transition-all duration-200 hover:shadow-md ${
         style.border
-      } ${style.glow} ${
+      } ${
         onClick ? 'cursor-pointer hover:-translate-y-0.5 active:translate-y-0' : ''
       }`}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-grey">
+          <p className="text-xs font-semibold uppercase tracking-wider text-text-secondary">
             {title}
           </p>
-          <p className="text-3xl font-display font-bold text-soft-white tracking-tight">
+          <p className="text-3xl font-display font-bold text-text-primary tracking-tight">
             {value}
           </p>
         </div>
@@ -80,16 +80,16 @@ export const StatCard: React.FC<StatCardProps> = ({
       </div>
 
       {(subtitle || trend) && (
-        <div className="mt-4 pt-3 border-t border-charcoal-800/80 flex items-center justify-between text-xs">
-          {subtitle && <span className="text-muted-grey">{subtitle}</span>}
+        <div className="mt-4 pt-3 border-t border-border-neutral flex items-center justify-between text-xs">
+          {subtitle && <span className="text-text-secondary">{subtitle}</span>}
           {trend && (
             <span
               className={`font-semibold ${
                 trend.neutral
-                  ? 'text-muted-grey'
+                  ? 'text-text-secondary'
                   : trend.isPositive
-                  ? 'text-emerald-400'
-                  : 'text-brand-coral'
+                  ? 'text-status-success'
+                  : 'text-status-live'
               }`}
             >
               {trend.value}

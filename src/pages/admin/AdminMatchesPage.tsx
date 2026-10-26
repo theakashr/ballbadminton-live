@@ -132,21 +132,21 @@ export const AdminMatchesPage: React.FC = () => {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span
-              className="w-5 h-5 rounded-md flex items-center justify-center font-bold text-[10px] text-soft-white shrink-0"
+              className="w-5 h-5 rounded-md flex items-center justify-center font-bold text-[10px] text-white shrink-0"
               style={{ backgroundColor: m.team1.logoBg }}
             >
               {m.team1.shortName}
             </span>
-            <span className="font-bold text-soft-white text-sm">{m.team1.name}</span>
+            <span className="font-bold text-text-primary text-sm">{m.team1.name}</span>
           </div>
           <div className="flex items-center gap-2">
             <span
-              className="w-5 h-5 rounded-md flex items-center justify-center font-bold text-[10px] text-soft-white shrink-0"
+              className="w-5 h-5 rounded-md flex items-center justify-center font-bold text-[10px] text-white shrink-0"
               style={{ backgroundColor: m.team2.logoBg }}
             >
               {m.team2.shortName}
             </span>
-            <span className="font-bold text-soft-white text-sm">{m.team2.name}</span>
+            <span className="font-bold text-text-primary text-sm">{m.team2.name}</span>
           </div>
         </div>
       ),
@@ -158,8 +158,8 @@ export const AdminMatchesPage: React.FC = () => {
       render: (m) => (
         <div className="text-xs space-y-0.5">
           <span className="font-semibold text-brand-orange block">{m.stage}</span>
-          <span className="text-muted-grey block truncate max-w-[200px]">{m.tournamentName}</span>
-          <span className="text-[11px] text-brand-yellow font-medium block">{m.category}</span>
+          <span className="text-text-secondary block truncate max-w-[200px]">{m.tournamentName}</span>
+          <span className="text-[11px] text-text-secondary font-medium block">{m.category}</span>
         </div>
       ),
     },
@@ -169,11 +169,11 @@ export const AdminMatchesPage: React.FC = () => {
       sortable: true,
       render: (m) => (
         <div className="text-xs space-y-0.5 whitespace-nowrap">
-          <div className="flex items-center gap-1.5 font-medium text-soft-white">
-            <Clock className="w-3.5 h-3.5 text-muted-grey shrink-0" />
+          <div className="flex items-center gap-1.5 font-medium text-text-primary">
+            <Clock className="w-3.5 h-3.5 text-text-secondary shrink-0" />
             <span>{m.scheduledTime}</span>
           </div>
-          <span className="text-muted-grey text-[11px] block">{m.court}</span>
+          <span className="text-text-secondary text-[11px] block">{m.court}</span>
         </div>
       ),
     },
@@ -184,10 +184,10 @@ export const AdminMatchesPage: React.FC = () => {
         if (m.status === 'live') {
           return (
             <div className="text-xs">
-              <span className="px-2 py-0.5 rounded bg-brand-coral/20 text-brand-coral font-bold font-mono">
+              <span className="px-2 py-0.5 rounded bg-red-50 text-status-live font-bold font-mono border border-red-200">
                 Set {m.currentSet} ({m.team1SetsWon} - {m.team2SetsWon})
               </span>
-              <span className="text-[11px] text-muted-grey block mt-0.5">
+              <span className="text-[11px] text-text-secondary block mt-0.5">
                 Target: {m.maxPointsPerSet} pts
               </span>
             </div>
@@ -195,12 +195,12 @@ export const AdminMatchesPage: React.FC = () => {
         }
         if (m.status === 'completed') {
           return (
-            <div className="text-xs font-mono font-bold text-soft-white">
+            <div className="text-xs font-mono font-bold text-text-primary">
               {m.team1SetsWon} - {m.team2SetsWon} Sets
             </div>
           );
         }
-        return <span className="text-xs text-muted-grey">—</span>;
+        return <span className="text-xs text-text-secondary">—</span>;
       },
     },
     {
@@ -217,7 +217,7 @@ export const AdminMatchesPage: React.FC = () => {
         <div className="flex items-center justify-end gap-1.5">
           <button
             onClick={() => setScoringModalMatch(m)}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-orange/20 hover:bg-brand-orange/30 text-brand-orange text-xs font-semibold border border-brand-orange/40 transition-colors"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-soft hover:bg-brand-orange/20 text-brand-orange text-xs font-semibold border border-brand-orange/30 transition-colors"
             title="Live Court Scoring Console"
           >
             <Flame className="w-3 h-3" />
@@ -229,7 +229,7 @@ export const AdminMatchesPage: React.FC = () => {
               {m.status === 'upcoming' && (
                 <button
                   onClick={() => handleUpdateStatus(m, 'live')}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-coral/20 hover:bg-brand-coral/30 text-brand-coral text-xs font-semibold border border-brand-coral/30 transition-colors"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-status-live text-xs font-semibold border border-red-200 transition-colors"
                   title="Mark Match as LIVE"
                 >
                   <Play className="w-3 h-3 fill-current" />
@@ -240,7 +240,7 @@ export const AdminMatchesPage: React.FC = () => {
               {m.status === 'live' && (
                 <button
                   onClick={() => handleUpdateStatus(m, 'completed')}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 text-xs font-semibold border border-emerald-500/30 transition-colors"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-status-success text-xs font-semibold border border-emerald-200 transition-colors"
                   title="Mark Match as Completed"
                 >
                   <CheckCircle className="w-3 h-3" />
@@ -250,7 +250,7 @@ export const AdminMatchesPage: React.FC = () => {
 
               <button
                 onClick={() => setDeleteTarget(m)}
-                className="p-1.5 rounded-lg text-muted-grey hover:text-brand-coral hover:bg-charcoal-800 transition-colors"
+                className="p-1.5 rounded-lg text-text-secondary hover:text-status-live hover:bg-red-50 transition-colors"
                 title="Remove Fixture"
               >
                 <Trash2 className="w-4 h-4" />
@@ -268,11 +268,11 @@ export const AdminMatchesPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <CalendarClock className="w-5 h-5 text-brand-orange" />
-            <h1 className="text-xl sm:text-2xl font-display font-bold text-soft-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-display font-bold text-text-primary tracking-tight">
               Match Scheduling &amp; Fixtures
             </h1>
           </div>
-          <p className="text-xs text-muted-grey mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             Organize court orders of play, assign stages, and oversee live rally proceedings.
           </p>
         </div>
@@ -280,7 +280,7 @@ export const AdminMatchesPage: React.FC = () => {
         {canScheduleMatches && (
           <button
             onClick={() => setIsAddOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all active:scale-95"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all active:scale-95"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Schedule New Match</span>
@@ -288,7 +288,7 @@ export const AdminMatchesPage: React.FC = () => {
         )}
       </div>
 
-      <div className="p-4 rounded-2xl bg-charcoal-900 border border-plum-800 shadow-subtle">
+      <div className="p-4 rounded-2xl bg-white border border-border-neutral shadow-card">
         <SearchAndFilter
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}

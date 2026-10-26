@@ -21,12 +21,8 @@ export const HomeBroadcastBanner: React.FC<HomeBroadcastBannerProps> = ({
   const hasAdminRole = isSuperAdmin || isTournamentAdmin || isScorer;
 
   return (
-    <div className="relative overflow-hidden border-b border-plum-800/40 bg-gradient-to-r from-plum-950 via-charcoal-950 to-charcoal-900 text-soft-white">
-      {/* Subtle background ambient mesh */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,133,27,0.08),transparent_50%)] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(255,91,69,0.06),transparent_50%)] pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+    <div className="relative overflow-hidden border-b border-[#E4E7EC] bg-white text-[#182230]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           
           {/* Left: Brand Identity & Live Broadcast Status */}
@@ -39,28 +35,28 @@ export const HomeBroadcastBanner: React.FC<HomeBroadcastBannerProps> = ({
                 size="sm" 
               />
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-charcoal-900 border border-plum-800/70 text-[11px] font-bold tracking-wider uppercase text-muted-grey">
-                <span className="w-2 h-2 rounded-full bg-slate-500" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F0F2F6] border border-[#E4E7EC] text-[11px] font-bold tracking-wider uppercase text-[#667085]">
+                <span className="w-2 h-2 rounded-full bg-[#667085]" />
                 <span>STANDBY</span>
               </span>
             )}
 
-            <div className="h-3.5 w-px bg-plum-800/60 hidden sm:block" />
+            <div className="h-3.5 w-px bg-[#E4E7EC] hidden sm:block" />
 
             {/* Federation / Broadcaster Pill */}
-            <div className="flex items-center gap-1.5 text-xs text-soft-white/90 font-medium">
-              <span className="font-display font-extrabold text-soft-white tracking-wide">
+            <div className="flex items-center gap-1.5 text-xs text-[#182230] font-medium">
+              <span className="font-display font-black text-[#182230] tracking-wide">
                 BBFI MATCH CENTER
               </span>
-              <span className="text-muted-grey hidden md:inline">•</span>
-              <span className="text-muted-grey hidden md:inline text-[11px]">
+              <span className="text-[#667085] hidden md:inline">•</span>
+              <span className="text-[#667085] hidden md:inline text-[11px]">
                 Official 29-Pt Set Standards
               </span>
             </div>
 
             {/* Realtime Stream Health Pill */}
-            <div className="hidden lg:flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-plum-900/60 border border-plum-800/50 text-[10px] text-muted-grey">
-              <Zap className={`w-3 h-3 ${realtimeStatus === 'connected' ? 'text-emerald-400' : 'text-brand-orange'}`} />
+            <div className="hidden lg:flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F0F2F6] border border-[#E4E7EC] text-[10px] text-[#667085]">
+              <Zap className={`w-3 h-3 ${realtimeStatus === 'connected' ? 'text-[#16803D]' : 'text-[#FF851B]'}`} />
               <span className="font-semibold capitalize">
                 {realtimeStatus === 'connected' ? 'Realtime Stream Active' : realtimeStatus === 'demo' ? 'Official Courtside Feed' : 'Connecting Stream...'}
               </span>
@@ -72,9 +68,9 @@ export const HomeBroadcastBanner: React.FC<HomeBroadcastBannerProps> = ({
             <Link
               to="/live"
               onClick={() => nativeHaptics.selection()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-plum-900/80 hover:bg-plum-850 border border-plum-700/60 hover:border-brand-orange/60 text-xs font-bold text-brand-orange transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FFF1E5] hover:bg-[#FFE5D0] border border-[#FF851B]/30 text-xs font-bold text-[#FF851B] transition-all active:scale-95"
             >
-              <Radio className="w-3.5 h-3.5 text-brand-coral" />
+              <Radio className="w-3.5 h-3.5 text-[#D92D20]" />
               <span>Watch Live Feed</span>
             </Link>
 
@@ -83,7 +79,7 @@ export const HomeBroadcastBanner: React.FC<HomeBroadcastBannerProps> = ({
                 nativeHaptics.impact('light');
                 onCreateTournament();
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-display font-extrabold text-xs shadow-orange-glow transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF851B] hover:bg-[#E96F0B] text-white font-display font-extrabold text-xs shadow-sm transition-all active:scale-95"
             >
               <PlusCircle className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Create Tournament</span>
@@ -93,10 +89,10 @@ export const HomeBroadcastBanner: React.FC<HomeBroadcastBannerProps> = ({
               <Link
                 to="/admin"
                 onClick={() => nativeHaptics.selection()}
-                className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-charcoal-800/80 hover:bg-charcoal-800 border border-plum-800/80 text-xs font-semibold text-soft-white transition-all active:scale-95"
+                className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#F0F2F6] hover:bg-[#E4E7EC] border border-[#E4E7EC] text-xs font-semibold text-[#182230] transition-all active:scale-95"
                 title="Open Scorer / Admin Console"
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-brand-orange" />
+                <ShieldCheck className="w-3.5 h-3.5 text-[#FF851B]" />
                 <span>Portal</span>
               </Link>
             )}

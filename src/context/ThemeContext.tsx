@@ -20,13 +20,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (savedTheme === 'light' || savedTheme === 'dark') {
         return savedTheme;
       }
-      // Check system preference
-      if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        return 'light';
-      }
-      return 'dark';
+      // Premium Light is the default
+      return 'light';
     } catch {
-      return 'dark';
+      return 'light';
     }
   });
 

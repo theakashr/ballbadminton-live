@@ -303,32 +303,32 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="fixed inset-0 bg-charcoal-950/85 backdrop-blur-md" onClick={onClose} />
+      <div className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="relative w-full max-w-3xl bg-charcoal-900 border border-plum-800 rounded-3xl shadow-elevated overflow-hidden z-10 my-8">
+      <div className="relative w-full max-w-3xl bg-white border border-border-neutral rounded-2xl sm:rounded-3xl shadow-card-hover overflow-hidden z-10 my-8">
         
         {/* Header */}
-        <div className="px-6 py-5 border-b border-plum-800 bg-plum-950/70 flex items-center justify-between">
+        <div className="px-6 py-5 border-b border-border-neutral bg-surface-muted flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-orange/20 border border-brand-orange/40 flex items-center justify-center text-brand-orange">
+            <div className="w-10 h-10 rounded-xl bg-brand-soft border border-brand-orange/30 flex items-center justify-center text-brand-orange">
               <Trophy className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-display font-bold text-soft-white">
+              <h2 className="text-lg font-display font-bold text-text-primary">
                 Match Creation Wizard
               </h2>
-              <p className="text-xs text-muted-grey">
+              <p className="text-xs text-text-secondary">
                 Step {currentStep} of 6 • End-to-end fixture, lineup, and scoring setup
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-muted-grey hover:text-soft-white hover:bg-charcoal-800">
+          <button onClick={onClose} className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-border-neutral">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Progress Stepper */}
-        <div className="bg-charcoal-950 px-6 py-3 border-b border-plum-900/60 flex items-center justify-between text-xs overflow-x-auto">
+        <div className="bg-white px-6 py-3 border-b border-border-neutral flex items-center justify-between text-xs overflow-x-auto">
           {[
             { step: 1, label: 'Tournament' },
             { step: 2, label: 'Teams' },
@@ -340,24 +340,24 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
             <div key={item.step} className="flex items-center gap-1.5 shrink-0 px-2">
               <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
                 currentStep === item.step
-                  ? 'bg-brand-orange text-charcoal-950'
+                  ? 'bg-brand-orange text-white'
                   : currentStep > item.step
-                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                  : 'bg-charcoal-800 text-muted-grey'
+                  ? 'bg-emerald-500/10 text-status-success border border-emerald-500/30'
+                  : 'bg-surface-muted text-text-secondary'
               }`}>
                 {currentStep > item.step ? '✓' : item.step}
               </span>
-              <span className={`font-medium ${currentStep === item.step ? 'text-soft-white' : 'text-muted-grey'}`}>
+              <span className={`font-medium ${currentStep === item.step ? 'text-text-primary font-bold' : 'text-text-secondary'}`}>
                 {item.label}
               </span>
-              {item.step < 6 && <ChevronRight className="w-3.5 h-3.5 text-charcoal-700 ml-1" />}
+              {item.step < 6 && <ChevronRight className="w-3.5 h-3.5 text-text-secondary ml-1" />}
             </div>
           ))}
         </div>
 
         {/* Error Alert */}
         {errorMsg && (
-          <div className="mx-6 mt-4 p-3 rounded-xl bg-brand-coral/15 border border-brand-coral/40 text-brand-coral text-xs flex items-center gap-2">
+          <div className="mx-6 mt-4 p-3 rounded-xl bg-rose-50 border border-status-live/30 text-status-live text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMsg}</span>
           </div>
@@ -369,7 +369,7 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
           {/* STEP 1: SELECT TOURNAMENT */}
           {currentStep === 1 && (
             <div className="space-y-4">
-              <h3 className="text-sm font-bold text-soft-white uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider">
                 Select Host Tournament
               </h3>
               <div className="grid grid-cols-1 gap-2.5">
@@ -377,19 +377,19 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
                   <div
                     key={t.id}
                     onClick={() => setSelectedTournament(t)}
-                    className={`p-4 rounded-2xl border cursor-pointer transition-all ${
+                    className={`p-4 rounded-xl border cursor-pointer transition-all ${
                       selectedTournament?.id === t.id
-                        ? 'bg-plum-950/70 border-brand-orange text-soft-white shadow-orange-glow'
-                        : 'bg-charcoal-950 border-charcoal-800 text-muted-grey hover:border-plum-700'
+                        ? 'bg-brand-soft border-brand-orange text-text-primary shadow-sm'
+                        : 'bg-surface-muted border-border-neutral text-text-secondary hover:border-brand-orange/40'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-sm text-soft-white">{t.name}</span>
-                      <span className="text-xs px-2 py-0.5 rounded bg-charcoal-800 font-mono text-brand-orange">
+                      <span className="font-bold text-sm text-text-primary">{t.name}</span>
+                      <span className="text-xs px-2 py-0.5 rounded bg-white border border-border-neutral font-mono text-brand-orange">
                         {t.format}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-grey mt-1">
+                    <p className="text-xs text-text-secondary mt-1">
                       {t.venue}, {t.city} • {t.startDate} to {t.endDate}
                     </p>
                   </div>
@@ -402,32 +402,32 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
           {currentStep === 2 && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-soft-white uppercase tracking-wider">
+                <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider">
                   Select Participating Teams
                 </h3>
-                <p className="text-xs text-muted-grey mt-0.5">
+                <p className="text-xs text-text-secondary mt-0.5">
                   Teams must be registered in {selectedTournament?.name}.
                 </p>
               </div>
 
               {registeredTeams.length < 2 ? (
-                <div className="p-6 rounded-2xl bg-plum-950/40 border border-plum-800 text-center">
+                <div className="p-6 rounded-2xl bg-surface-muted border border-border-neutral text-center">
                   <AlertCircle className="w-8 h-8 text-brand-orange mx-auto mb-2" />
-                  <p className="text-sm font-bold text-soft-white">Fewer than 2 Teams Registered</p>
-                  <p className="text-xs text-muted-grey mt-1">
+                  <p className="text-sm font-bold text-text-primary">Fewer than 2 Teams Registered</p>
+                  <p className="text-xs text-text-secondary mt-1">
                     Please register at least 2 teams to this tournament from the Tournament Directory before scheduling a match.
                   </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 rounded-2xl bg-charcoal-950 border border-charcoal-800">
+                  <div className="p-4 rounded-xl bg-surface-muted border border-border-neutral">
                     <label className="block text-xs font-semibold text-brand-orange mb-2">
                       TEAM A (Host / Home)
                     </label>
                     <select
                       value={team1Id}
                       onChange={(e) => setTeam1Id(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-charcoal-900 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-orange"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                     >
                       {registeredTeams.map((t) => (
                         <option key={t.id} value={t.id} disabled={t.id === team2Id}>
@@ -437,14 +437,14 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
                     </select>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-charcoal-950 border border-charcoal-800">
-                    <label className="block text-xs font-semibold text-brand-coral mb-2">
+                  <div className="p-4 rounded-xl bg-surface-muted border border-border-neutral">
+                    <label className="block text-xs font-semibold text-brand-orangeHover mb-2">
                       TEAM B (Visitor / Away)
                     </label>
                     <select
                       value={team2Id}
                       onChange={(e) => setTeam2Id(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-charcoal-900 border border-charcoal-700 text-sm text-soft-white focus:outline-none focus:border-brand-coral"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orangeHover"
                     >
                       {registeredTeams.map((t) => (
                         <option key={t.id} value={t.id} disabled={t.id === team1Id}>
@@ -462,52 +462,52 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
           {currentStep === 3 && (
             <div className="space-y-5">
               <div>
-                <h3 className="text-sm font-bold text-soft-white uppercase tracking-wider">
+                <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider">
                   Court Lineups (5 Starters + Up to 4 Bench Substitutes)
                 </h3>
-                <p className="text-xs text-muted-grey mt-0.5">
+                <p className="text-xs text-text-secondary mt-0.5">
                   BBFI regulation positions: 2 Front/Net, 1 Centre/Pivot, 2 Base/Deep.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Team 1 Lineup */}
-                <div className="p-4 rounded-2xl bg-charcoal-950 border border-plum-800">
+                <div className="p-4 rounded-xl bg-surface-muted border border-border-neutral">
                   <span className="font-bold text-xs text-brand-orange block mb-2">
                     {team1?.name} Starting Five
                   </span>
-                  <div className="space-y-1.5 text-xs text-soft-white">
+                  <div className="space-y-1.5 text-xs text-text-primary">
                     {['Net 1', 'Net 2', 'Centre Pivot', 'Base Deep 1', 'Base Deep 2'].map((pos, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-charcoal-900 border border-charcoal-800">
-                        <span className="text-muted-grey text-[11px]">{pos}:</span>
-                        <span className="font-semibold text-soft-white">
+                      <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-white border border-border-neutral">
+                        <span className="text-text-secondary text-[11px]">{pos}:</span>
+                        <span className="font-semibold text-text-primary">
                           Player #{team1Starters[idx] || (idx + 1) * 2 + 1}
                         </span>
                       </div>
                     ))}
                   </div>
-                  <div className="mt-3 text-[11px] text-emerald-400 flex items-center gap-1.5">
+                  <div className="mt-3 text-[11px] text-status-success flex items-center gap-1.5">
                     <UserCheck className="w-3.5 h-3.5" />
                     <span>5 starters eligible + {team1Subs.length} substitutes on bench</span>
                   </div>
                 </div>
 
                 {/* Team 2 Lineup */}
-                <div className="p-4 rounded-2xl bg-charcoal-950 border border-plum-800">
-                  <span className="font-bold text-xs text-brand-coral block mb-2">
+                <div className="p-4 rounded-xl bg-surface-muted border border-border-neutral">
+                  <span className="font-bold text-xs text-brand-orangeHover block mb-2">
                     {team2?.name} Starting Five
                   </span>
-                  <div className="space-y-1.5 text-xs text-soft-white">
+                  <div className="space-y-1.5 text-xs text-text-primary">
                     {['Net 1', 'Net 2', 'Centre Pivot', 'Base Deep 1', 'Base Deep 2'].map((pos, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-charcoal-900 border border-charcoal-800">
-                        <span className="text-muted-grey text-[11px]">{pos}:</span>
-                        <span className="font-semibold text-soft-white">
+                      <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-white border border-border-neutral">
+                        <span className="text-text-secondary text-[11px]">{pos}:</span>
+                        <span className="font-semibold text-text-primary">
                           Player #{team2Starters[idx] || (idx + 1) * 2}
                         </span>
                       </div>
                     ))}
                   </div>
-                  <div className="mt-3 text-[11px] text-emerald-400 flex items-center gap-1.5">
+                  <div className="mt-3 text-[11px] text-status-success flex items-center gap-1.5">
                     <UserCheck className="w-3.5 h-3.5" />
                     <span>5 starters eligible + {team2Subs.length} substitutes on bench</span>
                   </div>
@@ -520,17 +520,17 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
           {currentStep === 4 && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-soft-white uppercase tracking-wider">
+                <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider">
                   BBFI Scoring Configuration Snapshot
                 </h3>
-                <p className="text-xs text-muted-grey mt-0.5">
+                <p className="text-xs text-text-secondary mt-0.5">
                   Rules frozen for this fixture upon commencement.
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="p-3.5 rounded-xl bg-charcoal-950 border border-charcoal-800">
-                  <label className="text-muted-grey block mb-1">Target Points Per Set</label>
+                <div className="p-3.5 rounded-xl bg-surface-muted border border-border-neutral">
+                  <label className="text-text-secondary block mb-1">Target Points Per Set</label>
                   <select
                     value={pointsPerSet}
                     onChange={(e) => {
@@ -538,46 +538,46 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
                       setPointsPerSet(p);
                       setMaxCap(p + 4);
                     }}
-                    className="w-full px-3 py-2 rounded-lg bg-charcoal-900 border border-charcoal-700 text-soft-white font-bold"
+                    className="w-full px-3 py-2 rounded-lg bg-white border border-border-neutral text-text-primary font-bold"
                   >
                     <option value={29}>29 Points (BBFI Standard)</option>
                     <option value={35}>35 Points (Senior State Extended)</option>
                   </select>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-charcoal-950 border border-charcoal-800">
-                  <label className="text-muted-grey block mb-1">Match Format (Sets)</label>
+                <div className="p-3.5 rounded-xl bg-surface-muted border border-border-neutral">
+                  <label className="text-text-secondary block mb-1">Match Format (Sets)</label>
                   <select
                     value={bestOfSets}
                     onChange={(e) => setBestOfSets(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg bg-charcoal-900 border border-charcoal-700 text-soft-white font-bold"
+                    className="w-full px-3 py-2 rounded-lg bg-white border border-border-neutral text-text-primary font-bold"
                   >
                     <option value={3}>Best of 3 Sets</option>
                     <option value={5}>Best of 5 Sets</option>
                   </select>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-charcoal-950 border border-charcoal-800">
-                  <label className="text-muted-grey block mb-1">Overtime Sudden Death Cap</label>
+                <div className="p-3.5 rounded-xl bg-surface-muted border border-border-neutral">
+                  <label className="text-text-secondary block mb-1">Overtime Sudden Death Cap</label>
                   <input
                     type="number"
                     value={maxCap}
                     onChange={(e) => setMaxCap(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg bg-charcoal-900 border border-charcoal-700 text-soft-white font-bold"
+                    className="w-full px-3 py-2 rounded-lg bg-white border border-border-neutral text-text-primary font-bold"
                   />
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-charcoal-950 border border-charcoal-800">
-                  <label className="text-muted-grey block mb-1">Service Rotation</label>
-                  <div className="px-3 py-2 rounded-lg bg-charcoal-900 border border-charcoal-700 text-soft-white font-bold">
+                <div className="p-3.5 rounded-xl bg-surface-muted border border-border-neutral">
+                  <label className="text-text-secondary block mb-1">Service Rotation</label>
+                  <div className="px-3 py-2 rounded-lg bg-white border border-border-neutral text-text-primary font-bold">
                     Two Hands (1st &amp; 2nd Hand)
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-charcoal-950 border border-charcoal-800 col-span-2 flex items-center justify-between">
+                <div className="p-3.5 rounded-xl bg-surface-muted border border-border-neutral col-span-2 flex items-center justify-between">
                   <div>
-                    <span className="text-soft-white font-semibold block">Deuce Rule (Lead by 2)</span>
-                    <span className="text-muted-grey text-[11px]">Require a 2-point lead at 28-28 (up to max cap)</span>
+                    <span className="text-text-primary font-semibold block">Deuce Rule (Lead by 2)</span>
+                    <span className="text-text-secondary text-[11px]">Require a 2-point lead at 28-28 (up to max cap)</span>
                   </div>
                   <input
                     type="checkbox"
@@ -594,21 +594,21 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
           {currentStep === 5 && (
             <div className="space-y-4 text-xs">
               <div>
-                <h3 className="text-sm font-bold text-soft-white uppercase tracking-wider">
+                <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider">
                   Scheduling &amp; Scorer Assignment
                 </h3>
-                <p className="text-muted-grey mt-0.5">
+                <p className="text-text-secondary mt-0.5">
                   Designate venue court, competition category, and certified scorer official.
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-muted-grey mb-1">Competition Category</label>
+                  <label className="block text-text-secondary mb-1">Competition Category</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as MatchCategory)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-soft-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-text-primary"
                   >
                     <option value="Men's Open 5s">Men's Open 5s</option>
                     <option value="Women's Open 5s">Women's Open 5s</option>
@@ -619,11 +619,11 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-muted-grey mb-1">Tournament Stage</label>
+                  <label className="block text-text-secondary mb-1">Tournament Stage</label>
                   <select
                     value={stage}
                     onChange={(e) => setStage(e.target.value as MatchStage)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-soft-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-text-primary"
                   >
                     <option value="Championship Final">Championship Final</option>
                     <option value="Semi-Final 1">Semi-Final 1</option>
@@ -635,11 +635,11 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-muted-grey mb-1">Court</label>
+                  <label className="block text-text-secondary mb-1">Court</label>
                   <select
                     value={court}
                     onChange={(e) => setCourt(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-soft-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-text-primary"
                   >
                     <option value="Centre Court (Outdoor Red Clay)">Centre Court (Outdoor Red Clay)</option>
                     <option value="Court 2 (North Clay)">Court 2 (North Clay)</option>
@@ -649,34 +649,34 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-muted-grey mb-1">Scheduled Date</label>
+                  <label className="block text-text-secondary mb-1">Scheduled Date</label>
                   <input
                     type="date"
                     value={scheduledDate}
                     onChange={(e) => setScheduledDate(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-soft-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-text-primary"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-muted-grey mb-1">Scheduled Time</label>
+                  <label className="block text-text-secondary mb-1">Scheduled Time</label>
                   <input
                     type="text"
                     value={scheduledTime}
                     onChange={(e) => setScheduledTime(e.target.value)}
                     placeholder="e.g. 10:00 AM"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-soft-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-text-primary"
                   />
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-muted-grey mb-1">
+                  <label className="block text-text-secondary mb-1">
                     Assigned Official Scorer <span className="text-brand-orange">*</span>
                   </label>
                   <select
                     value={assignedScorerEmail}
                     onChange={(e) => setAssignedScorerEmail(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-charcoal-950 border border-charcoal-700 text-soft-white font-medium"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-text-primary font-medium"
                   >
                     {availableScorers.map((s) => (
                       <option key={s.email} value={s.email}>
@@ -692,10 +692,10 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
           {/* STEP 6: REVIEW & CONFIRM */}
           {currentStep === 6 && (
             <div className="space-y-4 text-xs">
-              <div className="p-4 rounded-2xl bg-plum-950/70 border border-plum-800 space-y-3">
-                <div className="flex items-center justify-between pb-3 border-b border-plum-800">
-                  <span className="font-bold text-sm text-soft-white">{selectedTournament?.name}</span>
-                  <span className="px-2 py-0.5 rounded bg-brand-orange text-charcoal-950 font-bold text-[10px]">
+              <div className="p-4 rounded-xl bg-surface-muted border border-border-neutral space-y-3">
+                <div className="flex items-center justify-between pb-3 border-b border-border-neutral">
+                  <span className="font-bold text-sm text-text-primary">{selectedTournament?.name}</span>
+                  <span className="px-2 py-0.5 rounded bg-brand-soft text-brand-orange font-bold text-[10px] border border-brand-orange/30">
                     {stage}
                   </span>
                 </div>
@@ -703,25 +703,25 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
                 <div className="flex items-center justify-around py-2">
                   <div className="text-center">
                     <span className="text-sm font-bold text-brand-orange block">{team1?.name}</span>
-                    <span className="text-[11px] text-muted-grey">{team1?.state}</span>
+                    <span className="text-[11px] text-text-secondary">{team1?.state}</span>
                   </div>
-                  <span className="text-xs font-mono font-bold text-brand-yellow">VS</span>
+                  <span className="text-xs font-mono font-bold text-text-secondary">VS</span>
                   <div className="text-center">
-                    <span className="text-sm font-bold text-brand-coral block">{team2?.name}</span>
-                    <span className="text-[11px] text-muted-grey">{team2?.state}</span>
+                    <span className="text-sm font-bold text-brand-orangeHover block">{team2?.name}</span>
+                    <span className="text-[11px] text-text-secondary">{team2?.state}</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-plum-900 text-[11px] text-muted-grey">
-                  <div>Venue: <span className="text-soft-white font-medium">{court}</span></div>
-                  <div>Time: <span className="text-soft-white font-medium">{scheduledDate}, {scheduledTime}</span></div>
-                  <div>Rules: <span className="text-soft-white font-medium">{pointsPerSet} Pts • Cap {maxCap} • Best of {bestOfSets}</span></div>
-                  <div>Scorer: <span className="text-soft-white font-medium">{assignedScorerEmail}</span></div>
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border-neutral text-[11px] text-text-secondary">
+                  <div>Venue: <span className="text-text-primary font-medium">{court}</span></div>
+                  <div>Time: <span className="text-text-primary font-medium">{scheduledDate}, {scheduledTime}</span></div>
+                  <div>Rules: <span className="text-text-primary font-medium">{pointsPerSet} Pts • Cap {maxCap} • Best of {bestOfSets}</span></div>
+                  <div>Scorer: <span className="text-text-primary font-medium">{assignedScorerEmail}</span></div>
                 </div>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-charcoal-950 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+              <div className="p-3.5 rounded-xl bg-brand-soft border border-brand-orange/30 text-brand-orange text-xs flex items-center gap-2">
+                <Check className="w-4 h-4 text-brand-orange shrink-0" />
                 <span>Lineups and rules validated against BBFI 5s standards. Ready to publish fixture.</span>
               </div>
             </div>
@@ -729,11 +729,11 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
         </div>
 
         {/* Wizard Footer Controls */}
-        <div className="px-6 py-4 border-t border-plum-800 bg-plum-950/60 flex items-center justify-between">
+        <div className="px-6 py-4 border-t border-border-neutral bg-surface-muted flex items-center justify-between">
           <button
             type="button"
             onClick={currentStep === 1 ? onClose : handleBack}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-muted-grey hover:text-soft-white border border-charcoal-700 hover:bg-charcoal-800 transition-colors flex items-center gap-1.5"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-text-secondary hover:text-text-primary border border-border-neutral bg-white hover:bg-surface-muted transition-colors flex items-center gap-1.5 shadow-sm"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>{currentStep === 1 ? 'Cancel' : 'Back'}</span>
@@ -743,7 +743,7 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
             <button
               type="button"
               onClick={handleNext}
-              className="px-5 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 font-bold text-xs shadow-orange-glow transition-all flex items-center gap-1.5"
+              className="px-5 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-card transition-all flex items-center gap-1.5"
             >
               <span>Next Step</span>
               <ChevronRight className="w-4 h-4" />
@@ -752,7 +752,7 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
             <button
               type="button"
               onClick={handleConfirmAndCreate}
-              className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-charcoal-950 font-bold text-xs shadow-lg transition-all flex items-center gap-1.5"
+              className="px-6 py-2.5 rounded-xl bg-status-success hover:bg-emerald-700 text-white font-bold text-xs shadow-card transition-all flex items-center gap-1.5"
             >
               <Check className="w-4 h-4" />
               <span>Confirm &amp; Schedule Match</span>

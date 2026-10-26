@@ -18,12 +18,12 @@ export const Badge: React.FC<BadgeProps> = ({
   const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-xs tracking-wider';
 
   const variantClasses = {
-    live: 'bg-brand-coral/20 text-brand-coral border border-brand-coral/40 font-semibold',
-    upcoming: 'bg-brand-orange/15 text-brand-orange border border-brand-orange/30 font-medium',
-    completed: 'bg-muted-grey/15 text-muted-grey border border-muted-grey/25 font-medium',
-    neutral: 'bg-charcoal-800 text-soft-white/80 border border-charcoal-700 font-normal',
-    orange: 'bg-brand-orange text-charcoal-950 font-semibold shadow-sm',
-    outline: 'bg-transparent text-soft-white/70 border border-charcoal-700',
+    live: 'bg-[#D92D20]/10 text-[#D92D20] border border-[#D92D20]/30 font-semibold',
+    upcoming: 'bg-[#FFF1E5] text-[#B54708] border border-[#B54708]/30 font-semibold',
+    completed: 'bg-[#16803D]/10 text-[#16803D] border border-[#16803D]/30 font-semibold',
+    neutral: 'bg-[#F0F2F6] text-[#667085] border border-[#E4E7EC] font-medium',
+    orange: 'bg-[#FF851B] text-white font-semibold shadow-sm',
+    outline: 'bg-transparent text-[#667085] border border-[#E4E7EC]',
   }[variant];
 
   return (
@@ -32,8 +32,8 @@ export const Badge: React.FC<BadgeProps> = ({
     >
       {pulse && (
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-coral opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-coral"></span>
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D92D20] opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D92D20]"></span>
         </span>
       )}
       {children}

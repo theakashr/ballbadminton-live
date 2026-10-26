@@ -55,15 +55,15 @@ export const SlideToConfirm: React.FC<SlideToConfirmProps> = ({
   };
 
   const trackBg = {
-    danger: 'bg-rose-950/50 border-rose-800/80',
-    success: 'bg-emerald-950/50 border-emerald-800/80',
-    orange: 'bg-plum-950/80 border-plum-800',
+    danger: 'bg-red-50 border-red-200',
+    success: 'bg-green-50 border-green-200',
+    orange: 'bg-surface-muted border-border-neutral',
   }[variant];
 
   const handleBg = {
-    danger: 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-900/50',
-    success: 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-900/50',
-    orange: 'bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 shadow-orange-glow',
+    danger: 'bg-status-error hover:bg-red-700 text-white shadow-sm',
+    success: 'bg-status-success hover:bg-green-700 text-white shadow-sm',
+    orange: 'bg-brand-orange hover:bg-brand-orangeHover text-white shadow-sm',
   }[variant];
 
   return (
@@ -75,7 +75,7 @@ export const SlideToConfirm: React.FC<SlideToConfirmProps> = ({
       className={`relative w-full h-12 rounded-xl border flex items-center p-1 overflow-hidden select-none touch-none ${trackBg}`}
     >
       {/* Background track text */}
-      <span className="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase tracking-wider text-muted-grey/80 pointer-events-none transition-opacity duration-200">
+      <span className="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase tracking-wider text-text-secondary/80 pointer-events-none transition-opacity duration-200">
         {isConfirmed ? confirmedLabel : label}
       </span>
 

@@ -22,7 +22,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
       className={`tactile-btn inline-flex items-center gap-2 p-2 rounded-xl transition-all duration-200 border focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange ${
         isDark
           ? 'bg-charcoal-800/80 hover:bg-charcoal-700/80 text-brand-yellow hover:text-white border-charcoal-700/80 shadow-sm'
-          : 'bg-white hover:bg-slate-100 text-slate-800 hover:text-slate-950 border-slate-200 shadow-sm'
+          : 'bg-white hover:bg-surface-muted text-text-primary border-border-neutral shadow-sm'
       } ${className}`}
     >
       <div className="relative w-4 h-4 flex items-center justify-center">

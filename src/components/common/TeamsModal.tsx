@@ -21,23 +21,23 @@ export const TeamsModal: React.FC<TeamsModalProps> = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div 
-        className="fixed inset-0 bg-charcoal-950/85 backdrop-blur-md transition-opacity"
+        className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-3xl bg-charcoal-900 border border-plum-800 rounded-2xl sm:rounded-3xl shadow-elevated overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200 my-8">
+      <div className="relative w-full max-w-3xl bg-white border border-border-neutral rounded-2xl sm:rounded-3xl shadow-card-hover overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200 my-8">
         
         {/* Header */}
-        <div className="px-6 py-5 border-b border-plum-800/80 bg-plum-950/70 flex items-center justify-between">
+        <div className="px-6 py-5 border-b border-border-neutral bg-surface-muted flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-plum-800 flex items-center justify-center text-brand-orange">
+            <div className="w-10 h-10 rounded-xl bg-brand-soft border border-brand-orange/30 flex items-center justify-center text-brand-orange">
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-display font-bold text-soft-white">
+              <h3 className="text-lg font-display font-bold text-text-primary">
                 Ball Badminton Teams Directory
               </h3>
-              <p className="text-xs text-muted-grey">
+              <p className="text-xs text-text-secondary">
                 Active State Associations &amp; Collegiate Fives Squads
               </p>
             </div>
@@ -45,7 +45,7 @@ export const TeamsModal: React.FC<TeamsModalProps> = ({ isOpen, onClose }) => {
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-muted-grey hover:text-soft-white hover:bg-charcoal-800 transition-colors"
+            className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-border-neutral transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -53,7 +53,7 @@ export const TeamsModal: React.FC<TeamsModalProps> = ({ isOpen, onClose }) => {
 
         {/* Body */}
         <div className="p-6 max-h-[75vh] overflow-y-auto space-y-4">
-          <div className="p-3 rounded-xl bg-plum-950/60 border border-plum-800/60 text-xs text-muted-grey flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-brand-soft border border-brand-orange/30 text-xs text-text-secondary flex items-center gap-2">
             <Shield className="w-4 h-4 text-brand-orange shrink-0" />
             <span>
               All squads are registered under standard BBFI regulations (5 on-court players + 3 reserves).
@@ -64,29 +64,29 @@ export const TeamsModal: React.FC<TeamsModalProps> = ({ isOpen, onClose }) => {
             {teams.map((team) => (
               <div 
                 key={team.id}
-                className="p-4 rounded-xl bg-charcoal-950/80 border border-charcoal-800 hover:border-plum-700 transition-colors"
+                className="p-4 rounded-xl bg-surface-muted border border-border-neutral hover:border-brand-orange/60 transition-colors shadow-sm"
               >
                 <div className="flex items-center gap-3 mb-2.5">
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm text-soft-white border border-plum-700/80"
-                    style={{ backgroundColor: team.logoBg }}
+                    className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm text-white border border-border-neutral"
+                    style={{ backgroundColor: team.logoBg || '#182230' }}
                   >
                     {team.shortName}
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold text-soft-white">
+                    <h4 className="text-sm font-semibold text-text-primary">
                       {team.name}
                     </h4>
-                    <div className="flex items-center gap-1 text-[11px] text-muted-grey">
+                    <div className="flex items-center gap-1 text-[11px] text-text-secondary">
                       <MapPin className="w-3 h-3 text-brand-orange" />
                       <span>{team.city}, {team.state}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="text-xs text-muted-grey pt-2 border-t border-charcoal-800/80 flex items-center justify-between">
-                  <span>Captain: <strong className="text-soft-white">{team.captainName}</strong></span>
-                  <span className="text-brand-orange text-[10px] font-semibold bg-brand-orange/15 px-2 py-0.5 rounded">
+                <div className="text-xs text-text-secondary pt-2 border-t border-border-neutral flex items-center justify-between">
+                  <span>Captain: <strong className="text-text-primary">{team.captainName}</strong></span>
+                  <span className="text-brand-orange text-[10px] font-semibold bg-brand-soft px-2 py-0.5 rounded border border-brand-orange/20">
                     5s Active Roster
                   </span>
                 </div>
@@ -96,13 +96,13 @@ export const TeamsModal: React.FC<TeamsModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-plum-800/80 bg-charcoal-950/60 flex items-center justify-between">
-          <span className="text-xs text-muted-grey">
+        <div className="px-6 py-4 border-t border-border-neutral bg-surface-muted flex items-center justify-between">
+          <span className="text-xs text-text-secondary">
             Phase 1 Team Directory Preview
           </span>
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-xl text-xs font-semibold bg-plum-850 hover:bg-plum-800 text-soft-white border border-plum-700 transition-colors"
+            className="px-5 py-2 rounded-xl text-xs font-semibold bg-white hover:bg-surface-muted text-text-primary border border-border-neutral transition-colors shadow-sm"
           >
             Close Directory
           </button>

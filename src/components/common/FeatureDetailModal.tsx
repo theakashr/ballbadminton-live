@@ -91,23 +91,23 @@ export const FeatureDetailModal: React.FC<FeatureDetailModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
       <div 
-        className="fixed inset-0 bg-charcoal-950/85 backdrop-blur-md transition-opacity"
+        className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-lg bg-charcoal-900 border border-plum-800 rounded-2xl sm:rounded-3xl shadow-elevated overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-lg bg-white border border-border-neutral rounded-2xl shadow-card-hover overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="px-6 py-5 border-b border-plum-800/80 bg-plum-950/70 flex items-center justify-between">
+        <div className="px-6 py-5 border-b border-border-neutral bg-surface-muted flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-plum-800 flex items-center justify-center text-brand-orange">
+            <div className="w-10 h-10 rounded-xl bg-brand-soft border border-brand-orange/30 flex items-center justify-center text-brand-orange">
               <IconComponent className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-display font-bold text-soft-white">
+              <h3 className="text-base font-display font-bold text-text-primary">
                 {current.title}
               </h3>
-              <p className="text-xs text-muted-grey">
+              <p className="text-xs text-text-secondary">
                 {current.subtitle}
               </p>
             </div>
@@ -115,7 +115,7 @@ export const FeatureDetailModal: React.FC<FeatureDetailModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-muted-grey hover:text-soft-white hover:bg-charcoal-800 transition-colors"
+            className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-border-neutral transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -123,7 +123,7 @@ export const FeatureDetailModal: React.FC<FeatureDetailModalProps> = ({
 
         {/* Body */}
         <div className="p-6 space-y-5">
-          <p className="text-sm text-soft-white/85 leading-relaxed">
+          <p className="text-sm text-text-primary leading-relaxed">
             {current.description}
           </p>
 
@@ -132,8 +132,8 @@ export const FeatureDetailModal: React.FC<FeatureDetailModalProps> = ({
               Key Capabilities:
             </span>
             {current.bullets.map((bullet, idx) => (
-              <div key={idx} className="flex items-start gap-2 text-xs text-muted-grey">
-                <div className="w-4 h-4 rounded-full bg-plum-800 text-brand-orange flex items-center justify-center shrink-0 mt-0.5">
+              <div key={idx} className="flex items-start gap-2 text-xs text-text-secondary">
+                <div className="w-4 h-4 rounded-full bg-brand-soft text-brand-orange flex items-center justify-center shrink-0 mt-0.5 border border-brand-orange/30">
                   <Check className="w-2.5 h-2.5 stroke-[3]" />
                 </div>
                 <span>{bullet}</span>
@@ -141,17 +141,17 @@ export const FeatureDetailModal: React.FC<FeatureDetailModalProps> = ({
             ))}
           </div>
 
-          <div className="p-3 rounded-xl bg-charcoal-950/80 border border-plum-900/80 flex items-center gap-2 text-xs text-muted-grey">
+          <div className="p-3 rounded-xl bg-surface-muted border border-border-neutral flex items-center gap-2 text-xs text-text-secondary">
             <Sparkles className="w-4 h-4 text-brand-orange shrink-0" />
             <span>Built in accordance with BBFI official rule regulations.</span>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-plum-800/80 bg-charcoal-950/60 flex items-center justify-end gap-3">
+        <div className="px-6 py-4 border-t border-border-neutral bg-surface-muted flex items-center justify-end gap-3">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-medium text-muted-grey hover:text-soft-white transition-colors"
+            className="px-4 py-2 rounded-xl text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
           >
             Close
           </button>
@@ -160,7 +160,7 @@ export const FeatureDetailModal: React.FC<FeatureDetailModalProps> = ({
               onClose();
               onActionClick();
             }}
-            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold bg-brand-orange hover:bg-brand-orangeHover text-charcoal-950 shadow-orange-glow transition-all active:scale-95"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold bg-brand-orange hover:bg-brand-orangeHover text-white shadow-card transition-all active:scale-95"
           >
             <span>{current.actionLabel}</span>
             <ArrowRight className="w-3.5 h-3.5" />

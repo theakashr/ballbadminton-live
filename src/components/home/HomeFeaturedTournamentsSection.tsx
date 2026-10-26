@@ -20,25 +20,25 @@ export const HomeFeaturedTournamentsSection: React.FC<HomeFeaturedTournamentsSec
       case 'ongoing':
       case 'active':
         return (
-          <span className="px-2 py-0.5 rounded-full bg-brand-coral/20 border border-brand-coral/40 text-[10px] font-bold text-brand-coral uppercase tracking-wider">
+          <span className="px-2 py-0.5 rounded-full bg-[#D92D20]/10 border border-[#D92D20]/30 text-[10px] font-bold text-[#D92D20] uppercase tracking-wider">
             Active Now
           </span>
         );
       case 'upcoming':
         return (
-          <span className="px-2 py-0.5 rounded-full bg-sky-500/20 border border-sky-500/40 text-[10px] font-bold text-sky-400 uppercase tracking-wider">
+          <span className="px-2 py-0.5 rounded-full bg-[#FFF1E5] border border-[#B54708]/30 text-[10px] font-bold text-[#B54708] uppercase tracking-wider">
             Upcoming
           </span>
         );
       case 'completed':
         return (
-          <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
+          <span className="px-2 py-0.5 rounded-full bg-[#16803D]/10 border border-[#16803D]/30 text-[10px] font-bold text-[#16803D] uppercase tracking-wider">
             Completed
           </span>
         );
       default:
         return (
-          <span className="px-2 py-0.5 rounded-full bg-brand-orange/20 border border-brand-orange/40 text-[10px] font-bold text-brand-orange uppercase tracking-wider">
+          <span className="px-2 py-0.5 rounded-full bg-[#FFF1E5] border border-[#FF851B]/30 text-[10px] font-bold text-[#FF851B] uppercase tracking-wider">
             Registration Open
           </span>
         );
@@ -51,18 +51,18 @@ export const HomeFeaturedTournamentsSection: React.FC<HomeFeaturedTournamentsSec
   };
 
   return (
-    <section id="featured-tournaments-section" className="my-8 sm:my-12">
+    <section id="featured-tournaments-section" className="my-8 sm:my-10">
       {/* Section Header */}
-      <div className="flex items-center justify-between gap-3 mb-4 sm:mb-6">
+      <div className="flex items-center justify-between gap-3 mb-4 sm:mb-5">
         <div className="flex items-center gap-2.5">
-          <div className="p-1.5 rounded-lg bg-brand-orange/15 border border-brand-orange/30 text-brand-orange">
+          <div className="p-1.5 rounded-lg bg-[#FFF1E5] border border-[#FF851B]/30 text-[#FF851B]">
             <Trophy className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="font-display font-extrabold text-lg sm:text-2xl text-soft-white tracking-tight">
+            <h2 className="font-display font-extrabold text-lg sm:text-2xl text-[#182230] tracking-tight">
               Featured Tournaments
             </h2>
-            <p className="text-xs text-muted-grey hidden sm:block">
+            <p className="text-xs text-[#667085] hidden sm:block">
               National, State, and Inter-Collegiate championships
             </p>
           </div>
@@ -71,7 +71,7 @@ export const HomeFeaturedTournamentsSection: React.FC<HomeFeaturedTournamentsSec
         <Link
           to="/tournaments"
           onClick={() => nativeHaptics.selection()}
-          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-brand-orange hover:text-brand-orangeHover transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#FF851B] hover:text-[#E96F0B] transition-colors"
         >
           <span>View All Tournaments</span>
           <ArrowRight className="w-4 h-4" />
@@ -85,31 +85,31 @@ export const HomeFeaturedTournamentsSection: React.FC<HomeFeaturedTournamentsSec
             <div
               key={tournament.id}
               onClick={() => handleTournamentClick(tournament.id)}
-              className="group relative rounded-2xl bg-charcoal-900/90 hover:bg-plum-950/90 border border-plum-800/70 hover:border-brand-orange/60 p-5 shadow-subtle transition-all duration-200 cursor-pointer active:scale-[0.98] flex flex-col justify-between"
+              className="group relative rounded-2xl bg-white hover:bg-[#F0F2F6] border border-[#E4E7EC] hover:border-[#FF851B]/60 p-5 shadow-[0_1px_3px_rgba(16,24,40,0.05)] transition-all duration-150 cursor-pointer active:scale-[0.98] flex flex-col justify-between"
             >
               <div>
                 {/* Status & Format */}
                 <div className="flex items-center justify-between gap-2 mb-3">
                   {getStatusBadge(tournament.status)}
-                  <span className="text-[11px] font-semibold text-muted-grey">
+                  <span className="text-[11px] font-semibold text-[#667085]">
                     {tournament.category || "Men's Open 5s"}
                   </span>
                 </div>
 
                 {/* Tournament Name */}
-                <h3 className="font-display font-extrabold text-base sm:text-lg text-soft-white group-hover:text-brand-orange transition-colors mb-2 line-clamp-1">
+                <h3 className="font-display font-extrabold text-base sm:text-lg text-[#182230] group-hover:text-[#FF851B] transition-colors mb-2 line-clamp-1">
                   {tournament.name}
                 </h3>
 
                 {/* Venue & City */}
-                <div className="flex items-center gap-1.5 text-xs text-muted-grey mb-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-brand-orange shrink-0" />
+                <div className="flex items-center gap-1.5 text-xs text-[#667085] mb-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#FF851B] shrink-0" />
                   <span className="truncate">{tournament.venue || tournament.city || 'India'}</span>
                 </div>
 
                 {/* Dates */}
-                <div className="flex items-center gap-1.5 text-xs text-muted-grey mb-3">
-                  <Calendar className="w-3.5 h-3.5 text-brand-coral shrink-0" />
+                <div className="flex items-center gap-1.5 text-xs text-[#667085] mb-3">
+                  <Calendar className="w-3.5 h-3.5 text-[#B54708] shrink-0" />
                   <span>
                     {tournament.startDate ? new Date(tournament.startDate).toLocaleDateString([], { month: 'short', day: 'numeric' }) : 'TBD'}
                     {tournament.endDate ? ` - ${new Date(tournament.endDate).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}
@@ -118,13 +118,13 @@ export const HomeFeaturedTournamentsSection: React.FC<HomeFeaturedTournamentsSec
               </div>
 
               {/* Bottom Meta & Action */}
-              <div className="flex items-center justify-between pt-3 mt-2 border-t border-plum-900/50 text-xs">
-                <div className="flex items-center gap-1.5 text-muted-grey font-medium">
-                  <Users className="w-3.5 h-3.5 text-brand-yellow" />
+              <div className="flex items-center justify-between pt-3 mt-2 border-t border-[#E4E7EC] text-xs">
+                <div className="flex items-center gap-1.5 text-[#667085] font-medium">
+                  <Users className="w-3.5 h-3.5 text-[#FF851B]" />
                   <span>{tournament.totalTeams || tournament.maxTeams || 16} Teams</span>
                 </div>
 
-                <span className="inline-flex items-center gap-1 font-bold text-brand-orange group-hover:translate-x-0.5 transition-transform">
+                <span className="inline-flex items-center gap-1 font-bold text-[#FF851B] group-hover:translate-x-0.5 transition-transform">
                   <span>View Draws</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </span>
@@ -133,13 +133,13 @@ export const HomeFeaturedTournamentsSection: React.FC<HomeFeaturedTournamentsSec
           ))}
         </div>
       ) : (
-        <div className="p-8 rounded-2xl bg-charcoal-900/70 border border-plum-800/50 text-center">
-          <p className="text-sm font-semibold text-soft-white mb-2">
+        <div className="p-8 rounded-2xl bg-white border border-[#E4E7EC] text-center shadow-sm">
+          <p className="text-sm font-semibold text-[#182230] mb-2">
             No Tournaments Listed Yet
           </p>
           <button
             onClick={onCreateTournament}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-orange text-charcoal-950 font-bold text-xs shadow-orange-glow active:scale-95"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FF851B] text-white font-bold text-xs shadow-sm hover:bg-[#E96F0B] active:scale-95"
           >
             <PlusCircle className="w-4 h-4" />
             <span>Create the First Tournament</span>
