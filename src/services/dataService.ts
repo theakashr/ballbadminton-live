@@ -11,6 +11,24 @@ import type {
   MatchStatus
 } from '../types';
 
+const DB_TIMEOUT_MS = 600;
+
+/**
+ * Executes a Supabase query with a strict timeout to ensure seamless fallback
+ * to local repositories when offline or on poor network conditions.
+ */
+async function withTimeout<T>(promise: PromiseLike<T>, timeoutMs = DB_TIMEOUT_MS): Promise<T> {
+  let timer: any;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error('Supabase request timed out')), timeoutMs);
+  });
+  try {
+    return await Promise.race([promise, timeoutPromise]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /**
  * Maps a Supabase relational match row to the client Match interface.
  */
@@ -137,11 +155,13 @@ export const dataService = {
   async getTournaments(): Promise<AdminTournament[]> {
     if (isSupabaseConfigured() && supabase) {
       try {
-        const { data, error } = await supabase
-          .from('tournaments')
-          .select('*')
-          .eq('is_archived', false)
-          .order('start_date', { ascending: false });
+        const { data, error } = await withTimeout(
+          supabase
+            .from('tournaments')
+            .select('*')
+            .eq('is_archived', false)
+            .order('start_date', { ascending: false })
+        );
 
         if (!error && Array.isArray(data) && data.length > 0) {
           return data.map(mapSupabaseTournamentToDomain);
@@ -159,11 +179,13 @@ export const dataService = {
   async getTournamentById(id: string): Promise<AdminTournament | undefined> {
     if (isSupabaseConfigured() && supabase && isUuid(id)) {
       try {
-        const { data, error } = await supabase
-          .from('tournaments')
-          .select('*')
-          .eq('id', id)
-          .single();
+        const { data, error } = await withTimeout(
+          supabase
+            .from('tournaments')
+            .select('*')
+            .eq('id', id)
+            .single()
+        );
 
         if (!error && data) {
           return mapSupabaseTournamentToDomain(data);
@@ -196,7 +218,7 @@ export const dataService = {
           query = query.eq('status', status);
         }
 
-        const { data, error } = await query;
+        const { data, error } = await withTimeout(query);
         if (!error && Array.isArray(data) && data.length > 0) {
           return data.map(mapSupabaseMatchToDomain);
         }
@@ -231,17 +253,19 @@ export const dataService = {
   async getMatchesByTournament(tournamentId: string): Promise<Match[]> {
     if (isSupabaseConfigured() && supabase && isUuid(tournamentId)) {
       try {
-        const { data, error } = await supabase
-          .from('matches')
-          .select(`
-            *,
-            team1:teams!matches_team1_id_fkey(*),
-            team2:teams!matches_team2_id_fkey(*),
-            tournament:tournaments!matches_tournament_id_fkey(name),
-            match_games(*)
-          `)
-          .eq('tournament_id', tournamentId)
-          .order('scheduled_time', { ascending: true });
+        const { data, error } = await withTimeout(
+          supabase
+            .from('matches')
+            .select(`
+              *,
+              team1:teams!matches_team1_id_fkey(*),
+              team2:teams!matches_team2_id_fkey(*),
+              tournament:tournaments!matches_tournament_id_fkey(name),
+              match_games(*)
+            `)
+            .eq('tournament_id', tournamentId)
+            .order('scheduled_time', { ascending: true })
+        );
 
         if (!error && Array.isArray(data) && data.length > 0) {
           return data.map(mapSupabaseMatchToDomain);
@@ -260,17 +284,19 @@ export const dataService = {
   async getMatchById(id: string): Promise<Match | undefined> {
     if (isSupabaseConfigured() && supabase && isUuid(id)) {
       try {
-        const { data, error } = await supabase
-          .from('matches')
-          .select(`
-            *,
-            team1:teams!matches_team1_id_fkey(*),
-            team2:teams!matches_team2_id_fkey(*),
-            tournament:tournaments!matches_tournament_id_fkey(name),
-            match_games(*)
-          `)
-          .eq('id', id)
-          .single();
+        const { data, error } = await withTimeout(
+          supabase
+            .from('matches')
+            .select(`
+              *,
+              team1:teams!matches_team1_id_fkey(*),
+              team2:teams!matches_team2_id_fkey(*),
+              tournament:tournaments!matches_tournament_id_fkey(name),
+              match_games(*)
+            `)
+            .eq('id', id)
+            .single()
+        );
 
         if (!error && data) {
           return mapSupabaseMatchToDomain(data);
@@ -289,11 +315,13 @@ export const dataService = {
   async getScoreEvents(matchId: string): Promise<any[]> {
     if (isSupabaseConfigured() && supabase && isUuid(matchId)) {
       try {
-        const { data, error } = await supabase
-          .from('score_events')
-          .select('*')
-          .eq('match_id', matchId)
-          .order('sequence_number', { ascending: true });
+        const { data, error } = await withTimeout(
+          supabase
+            .from('score_events')
+            .select('*')
+            .eq('match_id', matchId)
+            .order('sequence_number', { ascending: true })
+        );
 
         if (!error && Array.isArray(data)) {
           return data;
@@ -311,13 +339,15 @@ export const dataService = {
   async getTournamentTeams(tournamentId: string): Promise<TournamentTeamRegistration[]> {
     if (isSupabaseConfigured() && supabase && isUuid(tournamentId)) {
       try {
-        const { data, error } = await supabase
-          .from('tournament_teams')
-          .select(`
-            *,
-            team:teams(*)
-          `)
-          .eq('tournament_id', tournamentId);
+        const { data, error } = await withTimeout(
+          supabase
+            .from('tournament_teams')
+            .select(`
+              *,
+              team:teams(*)
+            `)
+            .eq('tournament_id', tournamentId)
+        );
 
         if (!error && Array.isArray(data) && data.length > 0) {
           return data.map((d: any) => ({

@@ -175,6 +175,64 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
         setErrorMsg('An authorized official scorer must be assigned to the match.');
         return false;
       }
+
+      // Conflict Detection Safeguards
+      const activeMatches = matchRepository.getAll().filter(
+        (m) => m.status !== 'completed' && m.status !== 'cancelled'
+      );
+
+      // 1. Court Conflict Detection
+      const courtConflict = activeMatches.find(
+        (m) =>
+          m.court.toLowerCase() === court.toLowerCase() &&
+          m.scheduledTime.toLowerCase().includes(scheduledDate.toLowerCase()) &&
+          m.scheduledTime.toLowerCase().includes(scheduledTime.toLowerCase())
+      );
+      if (courtConflict) {
+        setErrorMsg(
+          `Court Conflict: "${court}" is already booked for ${courtConflict.team1.name} vs ${courtConflict.team2.name} at ${scheduledTime}.`
+        );
+        return false;
+      }
+
+      // 2. Team Simultaneous Play Conflict Detection
+      const t1 = registeredTeams.find((t) => t.id === team1Id);
+      const t2 = registeredTeams.find((t) => t.id === team2Id);
+
+      const teamConflict = activeMatches.find(
+        (m) =>
+          (m.team1.id === team1Id || m.team2.id === team1Id || m.team1.id === team2Id || m.team2.id === team2Id) &&
+          m.scheduledTime.toLowerCase().includes(scheduledDate.toLowerCase()) &&
+          m.scheduledTime.toLowerCase().includes(scheduledTime.toLowerCase())
+      );
+      if (teamConflict) {
+        const conflictingTeam =
+          teamConflict.team1.id === team1Id || teamConflict.team2.id === team1Id
+            ? t1?.name
+            : t2?.name;
+        setErrorMsg(
+          `Team Conflict: "${conflictingTeam || 'A selected team'}" is already scheduled to play another match at ${scheduledTime}.`
+        );
+        return false;
+      }
+
+      // 3. Scorer Double-Booking Conflict Detection
+      if (assignedScorerEmail) {
+        const scorerConflict = activeMatches.find(
+          (m) =>
+            m.scorerEmail?.toLowerCase() === assignedScorerEmail.toLowerCase() &&
+            m.court.toLowerCase() !== court.toLowerCase() &&
+            m.scheduledTime.toLowerCase().includes(scheduledDate.toLowerCase()) &&
+            m.scheduledTime.toLowerCase().includes(scheduledTime.toLowerCase())
+        );
+        if (scorerConflict) {
+          setErrorMsg(
+            `Scorer Conflict: The assigned official (${assignedScorerEmail}) is already officiating on "${scorerConflict.court}" at ${scheduledTime}.`
+          );
+          return false;
+        }
+      }
+
       return true;
     }
 
@@ -328,7 +386,7 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
         </div>
 
         {/* Progress Stepper */}
-        <div className="bg-white px-6 py-3 border-b border-border-neutral flex items-center justify-between text-xs overflow-x-auto">
+        <div className="bg-white px-4 sm:px-6 py-3 border-b border-border-neutral flex items-center justify-between text-xs overflow-x-auto no-scrollbar">
           {[
             { step: 1, label: 'Tournament' },
             { step: 2, label: 'Teams' },
@@ -337,20 +395,20 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
             { step: 5, label: 'Schedule' },
             { step: 6, label: 'Review' },
           ].map((item) => (
-            <div key={item.step} className="flex items-center gap-1.5 shrink-0 px-2">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+            <div key={item.step} className="flex items-center gap-1.5 shrink-0 px-1 sm:px-2">
+              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all ${
                 currentStep === item.step
-                  ? 'bg-brand-orange text-white'
+                  ? 'bg-brand-orange text-white ring-2 ring-brand-orange/30'
                   : currentStep > item.step
                   ? 'bg-emerald-500/10 text-status-success border border-emerald-500/30'
                   : 'bg-surface-muted text-text-secondary'
               }`}>
                 {currentStep > item.step ? '✓' : item.step}
               </span>
-              <span className={`font-medium ${currentStep === item.step ? 'text-text-primary font-bold' : 'text-text-secondary'}`}>
+              <span className={`text-[11px] sm:text-xs font-medium ${currentStep === item.step ? 'text-text-primary font-bold inline' : 'text-text-secondary hidden sm:inline'}`}>
                 {item.label}
               </span>
-              {item.step < 6 && <ChevronRight className="w-3.5 h-3.5 text-text-secondary ml-1" />}
+              {item.step < 6 && <ChevronRight className="w-3.5 h-3.5 text-text-secondary/60 ml-0.5 sm:ml-1" />}
             </div>
           ))}
         </div>

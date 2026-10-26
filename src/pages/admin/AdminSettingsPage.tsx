@@ -52,6 +52,9 @@ export const AdminSettingsPage: React.FC = () => {
   // Scoring Settings State
   const [scoringSettings, setScoringSettings] = useState<ScoringSettings>(() => settingsRepository.get());
 
+  // Tournaments list for scoping
+  const allTournaments = tournamentRepository.getAll();
+
   // Grant Access Modal
   const [isGrantModalOpen, setIsGrantModalOpen] = useState(false);
   const [newUserData, setNewUserData] = useState({
@@ -60,6 +63,7 @@ export const AdminSettingsPage: React.FC = () => {
     role: 'tournament_admin' as UserRole,
     designation: '',
     contactNumber: '',
+    assignedTournaments: [] as string[],
   });
   const [grantErrors, setGrantErrors] = useState<Record<string, string>>({});
 
@@ -69,6 +73,7 @@ export const AdminSettingsPage: React.FC = () => {
   // Edit role modal
   const [editRoleUser, setEditRoleUser] = useState<AdminUser | null>(null);
   const [selectedNewRole, setSelectedNewRole] = useState<UserRole>('tournament_admin');
+  const [editAssignedTournaments, setEditAssignedTournaments] = useState<string[]>([]);
 
   // Reset all data confirm
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
@@ -163,6 +168,7 @@ export const AdminSettingsPage: React.FC = () => {
       role: 'tournament_admin',
       designation: '',
       contactNumber: '',
+      assignedTournaments: [],
     });
     setGrantErrors({});
   };
@@ -180,13 +186,13 @@ export const AdminSettingsPage: React.FC = () => {
     }
   };
 
-  // Handle Update Role
+  // Handle Update Role & Tournament Scope
   const handleUpdateRoleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (editRoleUser) {
-      const res = await updateUserRole(editRoleUser.id, selectedNewRole);
+      const res = await updateUserRole(editRoleUser.id, selectedNewRole, editAssignedTournaments);
       if (res.success) {
-        toast.success('Role Updated', `${editRoleUser.name} is now ${selectedNewRole.replace('_', ' ')}.`);
+        toast.success('Role & Scope Updated', `${editRoleUser.name} credentials updated.`);
         setEditRoleUser(null);
       } else {
         toast.error('Update Failed', res.error);
@@ -302,13 +308,32 @@ export const AdminSettingsPage: React.FC = () => {
     },
     {
       key: 'status',
-      header: 'Status',
-      render: () => (
-        <span className="inline-flex items-center gap-1 text-xs text-status-success font-semibold">
-          <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
-          Active
-        </span>
-      ),
+      header: 'Tournament Scope',
+      render: (u) => {
+        if (!u.assignedTournaments || u.assignedTournaments.length === 0) {
+          return (
+            <span className="inline-flex items-center gap-1 text-[11px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+              Global Scope
+            </span>
+          );
+        }
+        return (
+          <div className="flex flex-wrap gap-1 max-w-[200px]">
+            {u.assignedTournaments.map((tid) => {
+              const tour = allTournaments.find((t) => t.id === tid);
+              return (
+                <span
+                  key={tid}
+                  className="px-1.5 py-0.5 rounded bg-brand-soft text-brand-orange text-[10px] font-bold border border-brand-orange/20 truncate"
+                  title={tour?.name || tid}
+                >
+                  {tour?.name.split(' ')[0] || tid}
+                </span>
+              );
+            })}
+          </div>
+        );
+      },
     },
     {
       key: 'actions',
@@ -339,6 +364,7 @@ export const AdminSettingsPage: React.FC = () => {
                   onClick={() => {
                     setEditRoleUser(u);
                     setSelectedNewRole(u.role);
+                    setEditAssignedTournaments(u.assignedTournaments || []);
                   }}
                   className="px-2 py-1 rounded-lg bg-surface-muted hover:bg-border-neutral text-xs text-text-secondary hover:text-text-primary border border-border-neutral transition-colors"
                   title="Modify Role"
@@ -428,7 +454,24 @@ export const AdminSettingsPage: React.FC = () => {
       </div>
 
       {/* Tab 1: Access Control & Permissions */}
-      {activeTab === 'access' && (
+      {activeTab === 'access' && !canManageUsers && (
+        <div className="p-8 rounded-2xl bg-white border border-border-neutral text-center space-y-4 max-w-xl mx-auto shadow-card">
+          <div className="w-14 h-14 rounded-2xl bg-brand-soft border border-brand-orange/30 flex items-center justify-center text-brand-orange mx-auto">
+            <Shield className="w-7 h-7" />
+          </div>
+          <div>
+            <h3 className="text-lg font-display font-bold text-text-primary">Owner-Only Access Governance</h3>
+            <p className="text-xs text-text-secondary mt-1.5 leading-relaxed">
+              Platform user access governance, role elevation, and tournament assignments are strictly restricted to the Super Admin &amp; Owner (<strong className="text-brand-orange">{SUPER_ADMIN_EMAIL}</strong>).
+            </p>
+          </div>
+          <div className="p-3 rounded-xl bg-surface-muted border border-border-neutral inline-block text-[11px] text-text-secondary">
+            Current active session: <strong className="text-text-primary">{currentUser?.name}</strong> ({currentUser?.email}) • Role: <span className="font-semibold text-brand-orange">{currentUser?.role?.replace('_', ' ').toUpperCase()}</span>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'access' && canManageUsers && (
         <div className="space-y-6">
           {/* Highlight Card for akashakashr505@gmail.com */}
           <div className="p-5 rounded-2xl bg-white border border-border-neutral shadow-card">
@@ -443,7 +486,7 @@ export const AdminSettingsPage: React.FC = () => {
                       Super Admin &amp; Authority Architecture
                     </h2>
                     <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-bold text-[10px] border border-amber-200">
-                      Primary Admin
+                      Primary Admin &amp; Owner
                     </span>
                   </div>
                   <p className="text-xs text-text-secondary mt-1">
@@ -502,7 +545,7 @@ export const AdminSettingsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Authorized Users Table */}
+          {/* Authorized Users Section */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold uppercase tracking-wider text-text-secondary">
@@ -513,12 +556,126 @@ export const AdminSettingsPage: React.FC = () => {
               </span>
             </div>
 
-            <DataTable
-              columns={userColumns}
-              data={authorizedUsers}
-              keyExtractor={(u) => u.id}
-              pageSize={10}
-            />
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+              <DataTable
+                columns={userColumns}
+                data={authorizedUsers}
+                keyExtractor={(u) => u.id}
+                pageSize={10}
+              />
+            </div>
+
+            {/* Mobile-First Card View */}
+            <div className="block md:hidden space-y-3">
+              {authorizedUsers.map((u) => {
+                const isCurrent = currentUser?.id === u.id;
+                const isSuper = u.email === SUPER_ADMIN_EMAIL;
+                return (
+                  <div key={u.id} className="p-4 rounded-xl bg-white border border-border-neutral shadow-card space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs text-white uppercase shrink-0 shadow-sm"
+                          style={{ backgroundColor: u.avatarBg || '#FF851B' }}
+                        >
+                          {u.name.charAt(0)}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="font-bold text-text-primary text-sm">{u.name}</span>
+                            {isSuper && (
+                              <span className="px-1.5 py-0.2 rounded bg-amber-50 text-amber-700 text-[9px] font-bold border border-amber-200">
+                                OWNER
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[11px] text-text-secondary block break-all">{u.email}</span>
+                        </div>
+                      </div>
+                      <StatusBadge status={u.role} size="sm" />
+                    </div>
+
+                    {u.designation && (
+                      <p className="text-xs text-text-secondary bg-surface-muted px-2.5 py-1.5 rounded-lg border border-border-neutral">
+                        {u.designation}
+                      </p>
+                    )}
+
+                    <div className="space-y-1 text-[11px] text-text-secondary border-t border-border-neutral pt-2">
+                      <div className="flex justify-between">
+                        <span>Authority:</span>
+                        <span className="font-medium text-text-primary truncate max-w-[160px]">{u.grantedBy}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>Tournament Scope:</span>
+                        <span className="font-medium text-text-primary">
+                          {u.assignedTournaments && u.assignedTournaments.length > 0 ? (
+                            <span className="text-brand-orange font-bold">
+                              {u.assignedTournaments.length} Assigned
+                            </span>
+                          ) : (
+                            <span className="text-emerald-700 font-semibold">Global (All)</span>
+                          )}
+                        </span>
+                      </div>
+                      {u.assignedTournaments && u.assignedTournaments.length > 0 && (
+                        <div className="flex flex-wrap gap-1 pt-1">
+                          {u.assignedTournaments.map((tid) => {
+                            const tour = allTournaments.find((t) => t.id === tid);
+                            return (
+                              <span
+                                key={tid}
+                                className="px-1.5 py-0.5 rounded bg-brand-soft text-brand-orange text-[9px] font-bold border border-brand-orange/20 truncate"
+                              >
+                                {tour?.name || tid}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-2 pt-2 border-t border-border-neutral">
+                      <button
+                        onClick={() => switchActiveUser(u.id)}
+                        disabled={isCurrent}
+                        className={`flex-1 py-2 rounded-xl text-xs font-semibold text-center transition-all ${
+                          isCurrent
+                            ? 'bg-brand-soft text-brand-orange border border-brand-orange/30 pointer-events-none'
+                            : 'bg-surface-muted hover:bg-border-neutral text-text-primary border border-border-neutral'
+                        }`}
+                      >
+                        {isCurrent ? 'Active Now' : 'Switch Persona'}
+                      </button>
+
+                      {canManageUsers && !isSuper && (
+                        <>
+                          <button
+                            onClick={() => {
+                              setEditRoleUser(u);
+                              setSelectedNewRole(u.role);
+                              setEditAssignedTournaments(u.assignedTournaments || []);
+                            }}
+                            className="px-3 py-2 rounded-xl bg-surface-muted hover:bg-border-neutral text-xs font-semibold text-text-secondary hover:text-text-primary border border-border-neutral transition-colors"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => setRevokeTarget(u)}
+                            className="p-2 rounded-xl text-text-secondary hover:text-status-live hover:bg-red-50 border border-border-neutral transition-colors"
+                            title="Revoke Access"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
@@ -924,6 +1081,39 @@ export const AdminSettingsPage: React.FC = () => {
                 />
               </div>
 
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
+                  Assigned Tournament Scope (Optional)
+                </label>
+                <p className="text-[11px] text-text-secondary mb-2">
+                  Select specific tournaments to restrict this official, or leave all unselected for global platform access.
+                </p>
+                <div className="space-y-1.5 max-h-36 overflow-y-auto p-2.5 rounded-xl border border-border-neutral bg-surface-muted">
+                  {allTournaments.map((t) => (
+                    <label key={t.id} className="flex items-center gap-2.5 p-1.5 rounded-lg hover:bg-white text-xs cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={newUserData.assignedTournaments.includes(t.id)}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setNewUserData((prev) => ({
+                            ...prev,
+                            assignedTournaments: checked
+                              ? [...prev.assignedTournaments, t.id]
+                              : prev.assignedTournaments.filter((id) => id !== t.id),
+                          }));
+                        }}
+                        className="rounded border-border-neutral text-brand-orange focus:ring-brand-orange h-4 w-4"
+                      />
+                      <div className="truncate">
+                        <span className="font-semibold text-text-primary block truncate">{t.name}</span>
+                        <span className="text-[10px] text-text-secondary">{t.city} • {t.format}</span>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
               <div className="p-3 rounded-xl bg-surface-muted border border-border-neutral text-xs text-text-secondary">
                 <span className="text-text-primary font-semibold block mb-0.5">Permission Notice:</span>
                 This grant will authorize the user immediately in local repository. They will be able to sign in or be simulated from the active persona switcher.
@@ -953,9 +1143,9 @@ export const AdminSettingsPage: React.FC = () => {
       {editRoleUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm" onClick={() => setEditRoleUser(null)} />
-          <div className="relative w-full max-w-md bg-white border border-border-neutral rounded-2xl shadow-elevated p-6 z-10">
+          <div className="relative w-full max-w-md bg-white border border-border-neutral rounded-2xl shadow-elevated p-6 z-10 max-h-[90vh] overflow-y-auto">
             <h3 className="text-base font-display font-bold text-text-primary mb-2">
-              Update Role for {editRoleUser.name}
+              Update Role &amp; Scope for {editRoleUser.name}
             </h3>
             <p className="text-xs text-text-secondary mb-4">{editRoleUser.email}</p>
 
@@ -974,6 +1164,36 @@ export const AdminSettingsPage: React.FC = () => {
                   <option value="official_scorer">Official Court Scorer</option>
                   <option value="viewer">Viewer (Read-Only)</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
+                  Assigned Tournament Scope (Optional)
+                </label>
+                <p className="text-[11px] text-text-secondary mb-2">
+                  Select specific tournaments to restrict this official, or leave all unselected for global access.
+                </p>
+                <div className="space-y-1.5 max-h-36 overflow-y-auto p-2.5 rounded-xl border border-border-neutral bg-surface-muted">
+                  {allTournaments.map((t) => (
+                    <label key={t.id} className="flex items-center gap-2.5 p-1.5 rounded-lg hover:bg-white text-xs cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={editAssignedTournaments.includes(t.id)}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setEditAssignedTournaments((prev) =>
+                            checked ? [...prev, t.id] : prev.filter((id) => id !== t.id)
+                          );
+                        }}
+                        className="rounded border-border-neutral text-brand-orange focus:ring-brand-orange h-4 w-4"
+                      />
+                      <div className="truncate">
+                        <span className="font-semibold text-text-primary block truncate">{t.name}</span>
+                        <span className="text-[10px] text-text-secondary">{t.city} • {t.format}</span>
+                      </div>
+                    </label>
+                  ))}
+                </div>
               </div>
 
               <div className="pt-4 border-t border-border-neutral flex justify-end gap-3">

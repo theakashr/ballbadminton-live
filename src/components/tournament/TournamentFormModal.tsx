@@ -7,6 +7,7 @@ import {
   Sparkles,
   Info
 } from 'lucide-react';
+import { tournamentRepository } from '../../repositories/tournamentRepository';
 import type { NewTournamentFormData } from '../../types';
 
 interface TournamentFormModalProps {
@@ -87,6 +88,24 @@ export const TournamentFormModal: React.FC<TournamentFormModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
+      try {
+        tournamentRepository.create({
+          name: formData.name,
+          organizer: formData.organizer,
+          category: formData.category,
+          format: formData.format,
+          startDate: formData.startDate,
+          endDate: formData.endDate,
+          city: formData.city,
+          venue: formData.venue,
+          courtsCount: formData.courtsCount,
+          totalTeams: formData.expectedTeams,
+          contactEmail: formData.contactEmail,
+          status: 'upcoming',
+        });
+      } catch (err) {
+        console.warn('Tournament repo create error:', err);
+      }
       setSubmittedData(formData);
       if (onSuccess) {
         onSuccess(formData);

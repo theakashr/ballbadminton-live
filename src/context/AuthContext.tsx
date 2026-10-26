@@ -74,7 +74,7 @@ export interface AuthContextType {
     assignedTournaments?: string[];
   }) => Promise<{ success: boolean; error?: string }>;
   revokeAccess: (userId: string) => Promise<{ success: boolean; error?: string }>;
-  updateUserRole: (userId: string, newRole: UserRole) => Promise<{ success: boolean; error?: string }>;
+  updateUserRole: (userId: string, newRole: UserRole, assignedTournaments?: string[]) => Promise<{ success: boolean; error?: string }>;
   switchActiveUser: (userIdOrEmail: string) => void;
   loginWithEmail: (email: string) => { success: boolean; error?: string };
   signInWithPassword: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
@@ -416,8 +416,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { success: true };
   };
 
-  // Update user role
-  const updateUserRole = async (userId: string, newRole: UserRole): Promise<{ success: boolean; error?: string }> => {
+  // Update user role and assigned tournaments
+  const updateUserRole = async (
+    userId: string, 
+    newRole: UserRole, 
+    assignedTournaments?: string[]
+  ): Promise<{ success: boolean; error?: string }> => {
     if (!canManageUsers) {
       return { success: false, error: 'Only Super Admin can update roles.' };
     }
@@ -439,12 +443,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const updated = authorizedUsers.map((u) => 
-      u.id === userId ? { ...u, role: newRole } : u
+      u.id === userId 
+        ? { 
+            ...u, 
+            role: newRole,
+            assignedTournaments: assignedTournaments !== undefined ? assignedTournaments : u.assignedTournaments,
+          } 
+        : u
     );
     setAuthorizedUsers(updated);
 
     if (currentUser?.id === userId) {
-      setCurrentUser({ ...currentUser, role: newRole });
+      setCurrentUser({ 
+        ...currentUser, 
+        role: newRole,
+        assignedTournaments: assignedTournaments !== undefined ? assignedTournaments : currentUser.assignedTournaments,
+      });
     }
 
     activityRepository.log({
