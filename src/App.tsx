@@ -101,7 +101,11 @@ const AppContent: React.FC = () => {
         return true;
       }
       if (location.pathname !== '/') {
-        navigate(-1);
+        if (window.history.state && window.history.state.idx > 0) {
+          navigate(-1);
+        } else {
+          navigate('/');
+        }
         return true;
       }
       return false; // Root level: allow OS default (exit / background app)
@@ -230,8 +234,8 @@ const AppContent: React.FC = () => {
         />
       )}
 
-      {/* 3. Page Routing (with pb-20 on mobile to clear bottom nav) */}
-      <div className={`flex-1 ${!isAdminRoute ? 'pb-20 md:pb-0' : ''}`}>
+      {/* 3. Page Routing (with dynamic safe-area bottom padding to prevent bottom nav collision) */}
+      <div className={`flex-1 ${!isAdminRoute ? 'pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-0' : ''}`}>
         <Routes>
           {/* Public Routes */}
           <Route

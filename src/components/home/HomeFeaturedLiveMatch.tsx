@@ -102,8 +102,77 @@ export const HomeFeaturedLiveMatch: React.FC<HomeFeaturedLiveMatchProps> = ({
             </div>
           </div>
 
-          {/* Main Scoreboard Area */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center my-6">
+          {/* Mobile-First Compact Matchup (Visible on small screens) */}
+          <div className="md:hidden my-4 space-y-2.5">
+            {/* Team 1 Row */}
+            <div className="flex items-center justify-between p-3 rounded-xl bg-[#F0F2F6] border border-[#E4E7EC]">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div 
+                  className="w-9 h-9 rounded-xl flex items-center justify-center font-display font-extrabold text-xs text-white border border-[#E4E7EC] shrink-0"
+                  style={{ backgroundColor: match.team1.logoBg || '#182230' }}
+                >
+                  {match.team1.shortName}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-display font-bold text-sm text-[#182230] truncate">
+                      {match.team1.name}
+                    </span>
+                    {isTeam1Serving && (
+                      <span className="px-1.5 py-0.5 rounded bg-[#FFF1E5] border border-[#FF851B]/40 text-[9px] font-black text-[#FF851B] shrink-0">
+                        {match.servingHand === 1 ? '1H' : '2H'}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-[#667085]">{match.team1.state} • Sets: {match.team1SetsWon}</span>
+                </div>
+              </div>
+              <div className="text-right pl-3 shrink-0">
+                <span className={`text-2xl font-score font-black ${isTeam1Serving ? 'text-[#FF851B]' : 'text-[#182230]'}`}>
+                  {currentSetScore.team1Score}
+                </span>
+              </div>
+            </div>
+
+            {/* Set & Target Center Strip */}
+            <div className="flex items-center justify-between px-2 text-[11px] font-bold text-[#667085]">
+              <span className="text-[#FF851B] uppercase">Set {match.currentSet} of 3 (Target {match.maxPointsPerSet || 29})</span>
+              <span>Sets Won: {match.team1SetsWon} - {match.team2SetsWon}</span>
+            </div>
+
+            {/* Team 2 Row */}
+            <div className="flex items-center justify-between p-3 rounded-xl bg-[#F0F2F6] border border-[#E4E7EC]">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div 
+                  className="w-9 h-9 rounded-xl flex items-center justify-center font-display font-extrabold text-xs text-white border border-[#E4E7EC] shrink-0"
+                  style={{ backgroundColor: match.team2.logoBg || '#182230' }}
+                >
+                  {match.team2.shortName}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-display font-bold text-sm text-[#182230] truncate">
+                      {match.team2.name}
+                    </span>
+                    {isTeam2Serving && (
+                      <span className="px-1.5 py-0.5 rounded bg-[#FFF1E5] border border-[#FF851B]/40 text-[9px] font-black text-[#FF851B] shrink-0">
+                        {match.servingHand === 1 ? '1H' : '2H'}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-[#667085]">{match.team2.state} • Sets: {match.team2SetsWon}</span>
+                </div>
+              </div>
+              <div className="text-right pl-3 shrink-0">
+                <span className={`text-2xl font-score font-black ${isTeam2Serving ? 'text-[#FF851B]' : 'text-[#182230]'}`}>
+                  {currentSetScore.team2Score}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Scoreboard Area (Hidden on mobile) */}
+          <div className="hidden md:grid md:grid-cols-12 gap-6 items-center my-6">
             
             {/* Team 1 Side (Left) */}
             <div className="md:col-span-4 flex items-center gap-3.5 min-w-0">

@@ -4,20 +4,20 @@ const config: CapacitorConfig = {
   appId: 'org.bbfi.ballbadmintonlive',
   appName: 'Ball Badminton Live',
   webDir: 'dist',
-  backgroundColor: '#211329',
+  backgroundColor: '#F5F7FB',
   server: {
     androidScheme: 'https',
   },
   plugins: {
     StatusBar: {
-      style: 'DARK',
-      backgroundColor: '#211329',
+      style: 'LIGHT',
+      backgroundColor: '#F5F7FB',
       overlaysWebView: false,
     },
     SplashScreen: {
       launchShowDuration: 1800,
       launchAutoHide: true,
-      backgroundColor: '#211329',
+      backgroundColor: '#F5F7FB',
       androidSplashResourceName: 'splash',
       androidScaleType: 'CENTER_CROP',
       showSpinner: false,
@@ -26,7 +26,7 @@ const config: CapacitorConfig = {
     },
     Keyboard: {
       resize: 'body',
-      style: 'DARK',
+      style: 'LIGHT',
       resizeOnFullScreen: true,
     },
   },

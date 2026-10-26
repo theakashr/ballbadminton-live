@@ -222,8 +222,107 @@ export const MatchCenterPage: React.FC = () => {
         )}
 
         {/* Big Score Arena */}
-        <div className="p-6 sm:p-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="p-4 sm:p-10">
+          {/* Mobile-First Scoreboard Arena (Phones) */}
+          <div className="md:hidden space-y-3 mb-6">
+            <div className="flex items-center justify-between text-xs font-semibold text-text-secondary pb-2 border-b border-border-neutral">
+              <span className="text-brand-orange uppercase font-bold">{match.stage || 'Court Match'}</span>
+              <span>Target: {match.maxPointsPerSet || 29} Pts</span>
+            </div>
+
+            {/* Team 1 Score Row */}
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-surface-muted border border-border-neutral">
+              <div className="flex items-center gap-3 min-w-0">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-sm text-white border border-border-neutral shadow-sm shrink-0"
+                  style={{ backgroundColor: match.team1.logoBg || '#182230' }}
+                >
+                  {match.team1.shortName}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <h2 className={`font-display font-extrabold text-sm truncate ${
+                      isCompleted && isTeam1Winner ? 'text-brand-orange' : 'text-text-primary'
+                    }`}>
+                      {match.team1.name}
+                    </h2>
+                    {isLive && isTeam1Serving && (
+                      <span className="px-1.5 py-0.5 rounded bg-brand-soft border border-brand-orange/40 text-[9px] font-black text-brand-orange shrink-0">
+                        {match.servingHand === 1 ? '1H' : '2H'}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-text-secondary">{match.team1.state} • Sets Won: {match.team1SetsWon}</span>
+                </div>
+              </div>
+
+              <div className="text-right pl-3 shrink-0">
+                {isLive ? (
+                  <span className={`text-2xl font-score font-black ${isTeam1Serving ? 'text-brand-orange' : 'text-text-primary'}`}>
+                    {currentSetScore.team1Score}
+                  </span>
+                ) : isCompleted ? (
+                  <span className={`text-2xl font-score font-black ${isTeam1Winner ? 'text-brand-orange' : 'text-text-primary'}`}>
+                    {match.team1SetsWon}
+                  </span>
+                ) : (
+                  <span className="text-xs text-text-secondary font-mono">{match.scheduledTime}</span>
+                )}
+              </div>
+            </div>
+
+            {/* Live Center Indicator Strip */}
+            {isLive && (
+              <div className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-brand-soft/70 border border-brand-orange/20 text-xs text-brand-orange font-bold">
+                <span>Set {match.currentSet} of 3 in play</span>
+                <span>Sets: {match.team1SetsWon} - {match.team2SetsWon}</span>
+              </div>
+            )}
+
+            {/* Team 2 Score Row */}
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-surface-muted border border-border-neutral">
+              <div className="flex items-center gap-3 min-w-0">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center font-display font-black text-sm text-white border border-border-neutral shadow-sm shrink-0"
+                  style={{ backgroundColor: match.team2.logoBg || '#182230' }}
+                >
+                  {match.team2.shortName}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <h2 className={`font-display font-extrabold text-sm truncate ${
+                      isCompleted && !isTeam1Winner ? 'text-brand-orange' : 'text-text-primary'
+                    }`}>
+                      {match.team2.name}
+                    </h2>
+                    {isLive && isTeam2Serving && (
+                      <span className="px-1.5 py-0.5 rounded bg-brand-soft border border-brand-orange/40 text-[9px] font-black text-brand-orange shrink-0">
+                        {match.servingHand === 1 ? '1H' : '2H'}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-text-secondary">{match.team2.state} • Sets Won: {match.team2SetsWon}</span>
+                </div>
+              </div>
+
+              <div className="text-right pl-3 shrink-0">
+                {isLive ? (
+                  <span className={`text-2xl font-score font-black ${isTeam2Serving ? 'text-brand-orange' : 'text-text-primary'}`}>
+                    {currentSetScore.team2Score}
+                  </span>
+                ) : isCompleted ? (
+                  <span className={`text-2xl font-score font-black ${!isTeam1Winner ? 'text-brand-orange' : 'text-text-primary'}`}>
+                    {match.team2SetsWon}
+                  </span>
+                ) : (
+                  <span className="text-xs text-text-secondary font-mono">{match.scheduledTime}</span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop Score Arena (Tablets & Desktops) */}
+          <div className="hidden md:grid md:grid-cols-12 gap-8 items-center">
             
             {/* Team 1 */}
             <div className="lg:col-span-5 flex items-center gap-4">

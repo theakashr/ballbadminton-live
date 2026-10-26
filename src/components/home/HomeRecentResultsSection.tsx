@@ -41,9 +41,9 @@ export const HomeRecentResultsSection: React.FC<HomeRecentResultsSectionProps> =
         </Link>
       </div>
 
-      {/* Results Grid */}
+      {/* Results Rail / Grid */}
       {completedMatches.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 overflow-x-auto snap-x snap-mandatory gap-3.5 sm:gap-4 pb-2.5 sm:pb-0 no-scrollbar card-rail">
           {completedMatches.slice(0, 3).map((match) => {
             const isTeam1Winner = match.team1SetsWon > match.team2SetsWon;
             const isTeam2Winner = match.team2SetsWon > match.team1SetsWon;
@@ -55,7 +55,7 @@ export const HomeRecentResultsSection: React.FC<HomeRecentResultsSectionProps> =
                   nativeHaptics.impact('light');
                   onOpenDetails(match);
                 }}
-                className="group relative rounded-2xl bg-white hover:bg-[#F0F2F6] border border-[#E4E7EC] hover:border-[#16803D]/60 p-4 sm:p-5 shadow-[0_1px_3px_rgba(16,24,40,0.05)] transition-all duration-150 cursor-pointer active:scale-[0.98] flex flex-col justify-between"
+                className="group relative rounded-2xl bg-white hover:bg-[#F0F2F6] border border-[#E4E7EC] hover:border-[#16803D]/60 p-4 sm:p-5 shadow-[0_1px_3px_rgba(16,24,40,0.05)] transition-all duration-150 cursor-pointer active:scale-[0.98] flex flex-col justify-between min-w-[280px] sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center"
               >
                 <div>
                   {/* Top Metadata */}

@@ -126,8 +126,54 @@ export const TournamentStandingsAndBrackets: React.FC<TournamentStandingsAndBrac
             </div>
           )}
 
-          {/* Standings Table */}
-          <div className="overflow-x-auto rounded-2xl border border-border-neutral bg-white">
+          {/* Mobile Standings Cards (Phones) */}
+          <div className="sm:hidden space-y-2.5">
+            {displayedStandings.length === 0 ? (
+              <div className="py-8 text-center text-text-secondary text-xs rounded-xl bg-surface-muted border border-border-neutral">
+                No teams or match records in this tournament yet.
+              </div>
+            ) : (
+              displayedStandings.map((row, idx) => (
+                <div key={row.teamId} className="p-3.5 rounded-2xl bg-white border border-border-neutral shadow-sm flex items-center justify-between">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className={`w-7 h-7 rounded-xl flex items-center justify-center font-mono font-bold text-xs shrink-0 ${
+                      idx === 0 ? 'bg-amber-100 text-amber-900 border border-amber-300' :
+                      idx === 1 ? 'bg-slate-100 text-slate-800 border border-slate-300' :
+                      idx === 2 ? 'bg-orange-100 text-orange-900 border border-orange-300' :
+                      'bg-surface-muted text-text-secondary border border-border-neutral'
+                    }`}>
+                      #{idx + 1}
+                    </span>
+                    <div className="min-w-0">
+                      <span className="font-display font-bold text-sm text-text-primary block truncate">
+                        {row.teamName}
+                      </span>
+                      <div className="flex items-center gap-2 text-[10px] text-text-secondary mt-0.5">
+                        <span>P: {row.played}</span>
+                        <span>•</span>
+                        <span className="text-status-success font-bold">W: {row.won}</span>
+                        <span>•</span>
+                        <span className="text-status-error font-medium">L: {row.lost}</span>
+                        <span>•</span>
+                        <span>Sets: {row.setDifference >= 0 ? `+${row.setDifference}` : row.setDifference}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right pl-3 shrink-0">
+                    <span className="font-score font-black text-lg text-brand-orange block">
+                      {row.points}
+                    </span>
+                    <span className="text-[9px] uppercase font-bold text-text-secondary">
+                      PTS
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Desktop Standings Table */}
+          <div className="hidden sm:block overflow-x-auto rounded-2xl border border-border-neutral bg-white">
             <table className="w-full text-left text-xs">
               <thead className="bg-surface-muted border-b border-border-neutral text-text-secondary uppercase text-[10px] tracking-wider">
                 <tr>
@@ -218,11 +264,11 @@ export const TournamentStandingsAndBrackets: React.FC<TournamentStandingsAndBrac
             </div>
           )}
 
-          {/* Bracket Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Bracket Rail / Grid */}
+          <div className="flex md:grid md:grid-cols-3 overflow-x-auto snap-x snap-mandatory gap-4 pb-3 sm:pb-0 no-scrollbar card-rail">
             
             {/* Round 1: Quarter Finals */}
-            <div className="space-y-3">
+            <div className="space-y-3 min-w-[260px] sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center">
               <div className="text-xs font-bold uppercase tracking-wider text-brand-orange pb-2 border-b border-border-neutral flex items-center justify-between">
                 <span>Quarter-Finals</span>
                 <span className="text-[10px] text-text-secondary">4 Fixtures</span>
@@ -253,7 +299,7 @@ export const TournamentStandingsAndBrackets: React.FC<TournamentStandingsAndBrac
             </div>
 
             {/* Round 2: Semi Finals */}
-            <div className="space-y-3">
+            <div className="space-y-3 min-w-[260px] sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center">
               <div className="text-xs font-bold uppercase tracking-wider text-status-warning pb-2 border-b border-border-neutral flex items-center justify-between">
                 <span>Semi-Finals</span>
                 <span className="text-[10px] text-text-secondary">2 Fixtures</span>
@@ -284,7 +330,7 @@ export const TournamentStandingsAndBrackets: React.FC<TournamentStandingsAndBrac
             </div>
 
             {/* Round 3: Championship Final */}
-            <div className="space-y-3">
+            <div className="space-y-3 min-w-[260px] sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center">
               <div className="text-xs font-bold uppercase tracking-wider text-status-success pb-2 border-b border-border-neutral flex items-center justify-between">
                 <span>Grand Final</span>
                 <Trophy className="w-3.5 h-3.5 text-brand-orange" />

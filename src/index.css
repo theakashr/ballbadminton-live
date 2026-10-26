@@ -109,6 +109,21 @@ textarea::placeholder {
   background: #FF851B;
 }
 
+/* Hide scrollbar for clean mobile horizontal card rails */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Momentum scrolling for touch horizontal rails */
+.card-rail {
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *,

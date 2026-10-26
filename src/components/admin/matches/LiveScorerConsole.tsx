@@ -270,10 +270,10 @@ export const LiveScorerConsole: React.FC<LiveScorerConsoleProps> = ({
   const team2Roster = rosterRepository.getRoster(match.team2.id, match.tournamentId);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm" onClick={onClose} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 overflow-y-auto pt-safe pb-safe">
+      <div className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm hidden sm:block" onClick={onClose} />
 
-      <div className={`relative w-full max-w-2xl bg-white border border-border-neutral rounded-2xl sm:rounded-3xl shadow-card-hover overflow-hidden z-10 my-8 transition-colors ${
+      <div className={`relative w-full max-w-2xl min-h-screen sm:min-h-0 bg-white border-0 sm:border border-border-neutral rounded-none sm:rounded-3xl shadow-card-hover overflow-hidden z-10 my-0 sm:my-8 transition-colors ${
         isOutdoorMode ? 'outdoor-contrast-mode' : ''
       }`}>
         

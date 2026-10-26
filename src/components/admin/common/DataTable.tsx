@@ -74,7 +74,52 @@ export function DataTable<T extends Record<string, any>>({
 
   return (
     <div className="rounded-2xl border border-border-neutral bg-white overflow-hidden shadow-card">
-      <div className="overflow-x-auto">
+      {/* Mobile Card List (Phones) */}
+      <div className="md:hidden divide-y divide-border-neutral">
+        {paginatedData.map((item, idx) => {
+          const globalIndex = (currentPage - 1) * pageSize + idx;
+          const firstCol = columns[0];
+          const otherCols = columns.slice(1);
+
+          return (
+            <div
+              key={keyExtractor(item)}
+              onClick={() => onRowClick?.(item)}
+              className={`p-4 space-y-2 transition-colors ${
+                onRowClick ? 'cursor-pointer active:bg-surface-muted/60' : ''
+              }`}
+            >
+              {/* Primary Header Row (Column 0) */}
+              <div className="flex items-center justify-between gap-2">
+                <div className="font-bold text-sm text-text-primary min-w-0">
+                  {firstCol.render ? firstCol.render(item, globalIndex) : String(item[firstCol.key] || '—')}
+                </div>
+              </div>
+
+              {/* Other Columns as Attribute Grid */}
+              <div className="grid grid-cols-2 gap-2.5 text-xs pt-1">
+                {otherCols.map((col) => (
+                  <div key={col.key} className="space-y-0.5 min-w-0">
+                    <span className="text-[10px] uppercase font-bold text-text-secondary block">
+                      {col.header}
+                    </span>
+                    <div className="text-text-primary font-medium truncate">
+                      {col.render
+                        ? col.render(item, globalIndex)
+                        : (item[col.key] !== undefined && item[col.key] !== null)
+                        ? String(item[col.key])
+                        : '—'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop Table View (Tablets & Desktops) */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-border-neutral bg-surface-muted text-xs uppercase tracking-wider text-text-secondary font-semibold">
