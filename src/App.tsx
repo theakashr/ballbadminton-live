@@ -13,6 +13,7 @@ import { MatchCenterPage } from './pages/MatchCenterPage';
 import { TournamentsPage } from './pages/TournamentsPage';
 import { TournamentDetailPage } from './pages/TournamentDetailPage';
 import { ResultsPage } from './pages/ResultsPage';
+import { LoginPage } from './pages/LoginPage';
 import { TournamentFormModal } from './components/tournament/TournamentFormModal';
 import { LoginModal } from './components/auth/LoginModal';
 import { MatchDetailsModal } from './components/matches/MatchDetailsModal';
@@ -260,6 +261,7 @@ const AppContent: React.FC = () => {
           />
           <Route path="/tournaments/:id" element={<TournamentDetailPage />} />
           <Route path="/results" element={<ResultsPage />} />
+          <Route path="/login" element={<LoginPage />} />
 
           {/* Admin Routes */}
           <Route
@@ -271,12 +273,40 @@ const AppContent: React.FC = () => {
             }
           >
             <Route index element={<AdminDashboardPage />} />
-            <Route path="tournaments" element={<AdminTournamentsPage />} />
-            <Route path="teams" element={<AdminTeamsPage />} />
-            <Route path="players" element={<AdminPlayersPage />} />
+            <Route
+              path="tournaments"
+              element={
+                <AdminProtectedRoute requiredRole="tournament_admin">
+                  <AdminTournamentsPage />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path="teams"
+              element={
+                <AdminProtectedRoute requiredRole="tournament_admin">
+                  <AdminTeamsPage />
+                </AdminProtectedRoute>
+              }
+            />
+            <Route
+              path="players"
+              element={
+                <AdminProtectedRoute requiredRole="tournament_admin">
+                  <AdminPlayersPage />
+                </AdminProtectedRoute>
+              }
+            />
             <Route path="matches" element={<AdminMatchesPage />} />
             <Route path="scorers" element={<AdminScorersPage />} />
-            <Route path="settings" element={<AdminSettingsPage />} />
+            <Route
+              path="settings"
+              element={
+                <AdminProtectedRoute requiredRole="super_admin">
+                  <AdminSettingsPage />
+                </AdminProtectedRoute>
+              }
+            />
           </Route>
 
           {/* Fallback */}

@@ -114,15 +114,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [currentUser, setCurrentUser] = useState<AdminUser | null>(() => {
-    try {
-      const storedActive = localStorage.getItem(ACTIVE_USER_STORAGE_KEY);
-      if (storedActive) return JSON.parse(storedActive);
-    } catch {
-      // fallback
+    // In demo mode only, restore previously logged in session if exists in localStorage
+    if (!isSupabaseConfigured()) {
+      try {
+        const storedActive = localStorage.getItem(ACTIVE_USER_STORAGE_KEY);
+        if (storedActive) {
+          const parsed = JSON.parse(storedActive);
+          if (parsed && parsed.id) return parsed;
+        }
+      } catch {
+        // fallback
+      }
     }
-    const superAdmin = INITIAL_AUTHORIZED_USERS.find((u) => u.email === SUPER_ADMIN_EMAIL) || INITIAL_AUTHORIZED_USERS[0];
-    localStorage.setItem(ACTIVE_USER_STORAGE_KEY, JSON.stringify(superAdmin));
-    return superAdmin;
+    // Never auto-authenticate unauthenticated visitors
+    return null;
   });
 
   // Supabase Auth Integration & Session Listener
@@ -140,6 +145,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const { data: { session }, error } = await client.auth.getSession();
         if (error) {
           console.warn('Supabase getSession error:', error.message);
+          setCurrentUser(null);
+          localStorage.removeItem(ACTIVE_USER_STORAGE_KEY);
         } else if (session?.user) {
           // Fetch verified profile from database
           const { data: profile } = await client
@@ -148,7 +155,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             .eq('id', session.user.id)
             .single();
 
-          if (profile) {
+          if (profile && profile.is_active) {
             const adminUser: AdminUser = {
               id: profile.id,
               email: profile.email,
@@ -163,10 +170,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             };
             setCurrentUser(adminUser);
             setAuthBackend('supabase');
+          } else {
+            // Profile not found or user is deactivated
+            setCurrentUser(null);
+            localStorage.removeItem(ACTIVE_USER_STORAGE_KEY);
           }
+        } else {
+          // No active authenticated session
+          setCurrentUser(null);
+          localStorage.removeItem(ACTIVE_USER_STORAGE_KEY);
         }
       } catch (err) {
         console.warn('Auth initialization error, using fallback:', err);
+        setCurrentUser(null);
+        localStorage.removeItem(ACTIVE_USER_STORAGE_KEY);
       } finally {
         setIsLoading(false);
       }
@@ -176,14 +193,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Listen to live Auth state changes (sign in, sign out, token refresh)
     const { data: { subscription } } = client.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
+      if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') && session?.user) {
         const { data: profile } = await client
           .from('profiles')
           .select('*')
           .eq('id', session.user.id)
           .single();
 
-        if (profile) {
+        if (profile && profile.is_active) {
           setCurrentUser({
             id: profile.id,
             email: profile.email,
@@ -197,9 +214,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             contactNumber: profile.phone,
           });
           setAuthBackend('supabase');
+        } else {
+          setCurrentUser(null);
         }
       } else if (event === 'SIGNED_OUT') {
         setCurrentUser(null);
+        localStorage.removeItem(ACTIVE_USER_STORAGE_KEY);
       }
     });
 
@@ -498,16 +518,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    if (isSupabaseConfigured() && supabase) {
-      await supabase.auth.signOut();
+    try {
+      if (isSupabaseConfigured() && supabase) {
+        await supabase.auth.signOut();
+      }
+    } catch (err) {
+      console.warn('Error during Supabase signOut:', err);
     }
     setCurrentUser(null);
+    localStorage.removeItem(ACTIVE_USER_STORAGE_KEY);
   };
 
   const resetUsersToDefault = () => {
     setAuthorizedUsers(INITIAL_AUTHORIZED_USERS);
-    const superAdmin = INITIAL_AUTHORIZED_USERS.find((u) => u.email === SUPER_ADMIN_EMAIL) || INITIAL_AUTHORIZED_USERS[0];
-    setCurrentUser(superAdmin);
+    setCurrentUser(null);
+    localStorage.removeItem(ACTIVE_USER_STORAGE_KEY);
   };
 
   return (

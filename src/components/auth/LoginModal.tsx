@@ -19,7 +19,7 @@ interface LoginModalProps {
 
 export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-  const { signInWithPassword, loginWithEmail, authBackend } = useAuth();
+  const { currentUser, signInWithPassword, loginWithEmail, authBackend } = useAuth();
 
   const [role, setRole] = useState<'scorer' | 'organizer' | 'fan'>('scorer');
   const [email, setEmail] = useState('');
@@ -124,17 +124,30 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
               </div>
 
               <div className="pt-2 flex flex-col gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    onClose();
-                    navigate(role === 'scorer' ? '/admin/scorers' : '/admin');
-                  }}
-                  className="w-full py-2.5 rounded-xl bg-brand-orange text-white font-bold text-sm shadow-card hover:bg-brand-orangeHover transition-colors flex items-center justify-center gap-2"
-                >
-                  <LayoutDashboard className="w-4 h-4" />
-                  <span>Continue to {role === 'scorer' ? 'Scorer Console' : 'Admin Dashboard'}</span>
-                </button>
+                {currentUser?.role === 'viewer' ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      navigate('/live');
+                    }}
+                    className="w-full py-2.5 rounded-xl bg-brand-orange text-white font-bold text-sm shadow-card hover:bg-brand-orangeHover transition-colors flex items-center justify-center gap-2"
+                  >
+                    <span>View Live Scores</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      navigate(currentUser?.role === 'official_scorer' ? '/admin/scorers' : '/admin');
+                    }}
+                    className="w-full py-2.5 rounded-xl bg-brand-orange text-white font-bold text-sm shadow-card hover:bg-brand-orangeHover transition-colors flex items-center justify-center gap-2"
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    <span>Continue to {currentUser?.role === 'official_scorer' ? 'Scorer Console' : 'Admin Dashboard'}</span>
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={handleReset}

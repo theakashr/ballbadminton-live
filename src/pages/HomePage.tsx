@@ -7,6 +7,7 @@ import { tournamentRepository } from '../repositories/tournamentRepository';
 
 // Premium Broadcasting Home Components
 import { HomeBroadcastBanner } from '../components/home/HomeBroadcastBanner';
+import { HomeHeroSection } from '../components/home/HomeHeroSection';
 import { HomeFeaturedLiveMatch } from '../components/home/HomeFeaturedLiveMatch';
 import { HomeCategoryShortcuts } from '../components/home/HomeCategoryShortcuts';
 import { HomeLiveMatchesSection } from '../components/home/HomeLiveMatchesSection';
@@ -102,6 +103,12 @@ export const HomePage: React.FC<HomePageProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         
+        {/* Hero Section: Every Match. Every Point. Live. */}
+        <HomeHeroSection
+          liveCount={liveMatches.length}
+          tournamentsCount={tournaments.length}
+        />
+
         {/* B. Featured Live Match Scoreboard (or Upcoming Spotlight) */}
         <section aria-label="Featured Match Scoreboard">
           <HomeFeaturedLiveMatch

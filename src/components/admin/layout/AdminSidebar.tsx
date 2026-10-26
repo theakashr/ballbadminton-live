@@ -29,29 +29,33 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   onCloseMobile,
   liveMatchesCount = 2,
 }) => {
-  const { currentUser, isSuperAdmin } = useAuth();
+  const { currentUser, isSuperAdmin, isTournamentAdmin, isScorer } = useAuth();
 
-  const navItems = [
+  const allNavItems = [
     {
       to: '/admin',
-      label: 'Dashboard',
+      label: isScorer && !isSuperAdmin && !isTournamentAdmin ? 'Scorer Console' : 'Dashboard',
       icon: LayoutDashboard,
       end: true,
+      roles: ['super_admin', 'tournament_admin', 'official_scorer'],
     },
     {
       to: '/admin/tournaments',
       label: 'Tournaments',
       icon: Trophy,
+      roles: ['super_admin', 'tournament_admin'],
     },
     {
       to: '/admin/teams',
       label: 'Teams',
       icon: Users,
+      roles: ['super_admin', 'tournament_admin'],
     },
     {
       to: '/admin/players',
       label: 'Players',
       icon: UserCheck,
+      roles: ['super_admin', 'tournament_admin'],
     },
     {
       to: '/admin/matches',
@@ -59,19 +63,25 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       icon: CalendarClock,
       badge: liveMatchesCount > 0 ? `${liveMatchesCount} Live` : undefined,
       badgeColor: 'coral',
+      roles: ['super_admin', 'tournament_admin', 'official_scorer'],
     },
     {
       to: '/admin/scorers',
       label: 'Scorers & Umpires',
       icon: ClipboardList,
+      roles: ['super_admin', 'tournament_admin', 'official_scorer'],
     },
     {
       to: '/admin/settings',
       label: 'Platform & Access',
       icon: Settings,
       highlight: isSuperAdmin,
+      roles: ['super_admin'],
     },
   ];
+
+  const currentRole = currentUser?.role || 'viewer';
+  const navItems = allNavItems.filter((item) => item.roles.includes(currentRole));
 
   const content = (
     <aside

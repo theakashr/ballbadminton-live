@@ -23,7 +23,8 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
     authorizedUsers, 
     switchActiveUser, 
     logout,
-    authBackend
+    authBackend,
+    isSuperAdmin
   } = useAuth();
 
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -196,21 +197,24 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onOpenMobileSidebar })
               )}
 
               <div className="pt-2 border-t border-border-neutral mt-2 flex flex-col gap-1">
-                <button
-                  onClick={() => {
-                    setUserDropdownOpen(false);
-                    navigate('/admin/settings');
-                  }}
-                  className="w-full px-2.5 py-1.5 rounded-lg text-left text-xs text-text-primary hover:bg-surface-muted flex items-center gap-2 rounded-lg"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5 text-brand-orange" />
-                  <span>Access & Role Permissions</span>
-                </button>
+                {isSuperAdmin && (
+                  <button
+                    onClick={() => {
+                      setUserDropdownOpen(false);
+                      navigate('/admin/settings');
+                    }}
+                    className="w-full px-2.5 py-1.5 rounded-lg text-left text-xs text-text-primary hover:bg-surface-muted flex items-center gap-2 rounded-lg"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5 text-brand-orange" />
+                    <span>Access & Role Permissions</span>
+                  </button>
+                )}
 
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     setUserDropdownOpen(false);
-                    logout();
+                    await logout();
+                    navigate('/login', { replace: true });
                   }}
                   className="w-full px-2.5 py-1.5 rounded-lg text-left text-xs text-status-live hover:bg-rose-50 flex items-center gap-2 rounded-lg"
                 >
