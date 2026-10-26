@@ -36,6 +36,10 @@ export const HomeSupportingFooter: React.FC = () => {
               Delivering verified court scores, 1st/2nd hand rotation tracking, and live championship brackets.
             </p>
 
+            <p className="text-xs font-semibold text-[#FF851B]">
+              ಕರ್ನಾಟಕ ಹಾಗೂ ರಾಷ್ಟ್ರಮಟ್ಟದ ಪಂದ್ಯಾವಳಿಗಳ ಅಧಿಕೃತ ಲೈವ್ ಸ್ಕೋರ್ ವೇದಿಕೆ.
+            </p>
+
             <div className="flex items-center gap-3 pt-1 text-xs text-[#667085]">
               <span className="px-2 py-0.5 rounded bg-[#FFF1E5] border border-[#FF851B]/30 text-[10px] font-bold text-[#FF851B] uppercase">
                 Official BBFI Format

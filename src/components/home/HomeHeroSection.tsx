@@ -29,6 +29,9 @@ export const HomeHeroSection: React.FC<HomeHeroSectionProps> = ({
                 <span className="w-2 h-2 rounded-full bg-[#FF851B] animate-pulse" />
                 <span>BBFI Official Platform</span>
               </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#FFF1E5] border border-[#FF851B]/30 text-[11px] font-bold text-[#FF851B]">
+                <span>ಕರ್ನಾಟಕ &amp; ರಾಷ್ಟ್ರೀಯ ಪಂದ್ಯಾವಳಿಗಳು</span>
+              </span>
               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#F0F2F6] border border-[#E4E7EC] text-[11px] font-semibold text-[#667085]">
                 <Sparkles className="w-3 h-3 text-[#FF851B]" />
                 <span>29-Point Standard Sets</span>
@@ -42,6 +45,11 @@ export const HomeHeroSection: React.FC<HomeHeroSectionProps> = ({
                 Live.
               </span>
             </h1>
+
+            {/* Kannada Situation-Matching Tagline */}
+            <p className="text-xs sm:text-sm font-bold text-[#FF851B] tracking-wide">
+              ಪ್ರತಿಯೊಂದು ಪಂದ್ಯ • ಪ್ರತಿಯೊಂದು ಅಂಕ • ನೇರ ಪ್ರಸಾರ
+            </p>
 
             {/* Platform Description */}
             <p className="text-xs sm:text-sm md:text-base text-[#667085] leading-relaxed max-w-xl">

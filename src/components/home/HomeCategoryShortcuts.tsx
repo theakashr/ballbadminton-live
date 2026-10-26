@@ -24,6 +24,7 @@ export const HomeCategoryShortcuts: React.FC<HomeCategoryShortcutsProps> = ({
     {
       id: 'live',
       label: 'Live Matches',
+      kannadaLabel: 'ನೇರ ಪಂದ್ಯಗಳು',
       subtitle: liveCount > 0 ? `${liveCount} in play now` : 'Watch realtime feed',
       icon: Radio,
       badge: liveCount > 0 ? `${liveCount} LIVE` : undefined,
@@ -35,6 +36,7 @@ export const HomeCategoryShortcuts: React.FC<HomeCategoryShortcutsProps> = ({
     {
       id: 'upcoming',
       label: 'Upcoming Fixtures',
+      kannadaLabel: 'ವೇಳಾಪಟ್ಟಿ',
       subtitle: upcomingCount > 0 ? `${upcomingCount} scheduled` : 'Order of play',
       icon: Calendar,
       badge: upcomingCount > 0 ? `${upcomingCount} FIXTURES` : undefined,
@@ -52,6 +54,7 @@ export const HomeCategoryShortcuts: React.FC<HomeCategoryShortcutsProps> = ({
     {
       id: 'tournaments',
       label: 'Tournaments',
+      kannadaLabel: 'ಪಂದ್ಯಾವಳಿಗಳು',
       subtitle: tournamentsCount > 0 ? `${tournamentsCount} championships` : 'Draws & pools',
       icon: Trophy,
       badge: tournamentsCount > 0 ? `${tournamentsCount} ACTIVE` : undefined,
@@ -63,6 +66,7 @@ export const HomeCategoryShortcuts: React.FC<HomeCategoryShortcutsProps> = ({
     {
       id: 'results',
       label: 'Recent Results',
+      kannadaLabel: 'ಫಲಿತಾಂಶಗಳು',
       subtitle: resultsCount > 0 ? `${resultsCount} completed` : 'Verified scorecards',
       icon: CheckCircle2,
       badge: resultsCount > 0 ? `${resultsCount} RESULTS` : undefined,
@@ -99,13 +103,18 @@ export const HomeCategoryShortcuts: React.FC<HomeCategoryShortcutsProps> = ({
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-1.5">
                 <h4 className="font-display font-extrabold text-sm sm:text-base text-[#182230] group-hover:text-[#FF851B] transition-colors">
                   {item.label}
                 </h4>
-                <ChevronRight className="w-4 h-4 text-[#98A2B3] group-hover:text-[#FF851B] group-hover:translate-x-0.5 transition-all" />
+                <div className="flex items-center gap-1 shrink-0">
+                  <span className="text-[10px] font-semibold text-[#FF851B] bg-[#FFF1E5] px-1.5 py-0.5 rounded border border-[#FF851B]/25">
+                    {item.kannadaLabel}
+                  </span>
+                  <ChevronRight className="w-3.5 h-3.5 text-[#98A2B3] group-hover:text-[#FF851B] group-hover:translate-x-0.5 transition-all" />
+                </div>
               </div>
-              <p className="text-xs text-[#667085] mt-0.5 line-clamp-1">
+              <p className="text-xs text-[#667085] mt-1 line-clamp-1">
                 {item.subtitle}
               </p>
             </div>

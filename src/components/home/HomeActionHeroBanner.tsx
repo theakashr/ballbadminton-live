@@ -57,6 +57,11 @@ export const HomeActionHeroBanner: React.FC = () => {
               </span>
             </h2>
 
+            {/* Kannada Situation-Matching Tagline */}
+            <p className="text-xs sm:text-sm md:text-base font-bold text-[#FFDC00] tracking-wide">
+              ಆಟದ ರೋಮಾಂಚನ, ಕ್ರೀಡೆಯ ಸಂಭ್ರಮ — ನೇರ ಸ್ಕೋರ್ ನಿಮ್ಮೊಂದಿಗೆ!
+            </p>
+
             {/* Description */}
             <p className="text-sm sm:text-base text-[#F8F5F2]/85 leading-relaxed font-normal pt-1 max-w-xl">
               Stay connected to every tournament, every rally, and every point. Follow your favorite teams with Ball Badminton Live.

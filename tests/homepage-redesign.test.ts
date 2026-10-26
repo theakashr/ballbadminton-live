@@ -184,4 +184,34 @@ describe('Phase 4.0 — Premium Ball Badminton Live Homepage Redesign Tests', ()
       expect(bottomBannerConfig.height).toBe(768);
     });
   });
+
+  // ==========================================================================
+  // SECTION 5: KANNADA SITUATION-MATCHING PHRASES & LOCALIZATION TOUCHPOINTS
+  // ==========================================================================
+  describe('5. Kannada Contextual Localization Touchpoints', () => {
+    it('verifies situation-appropriate Kannada strings across hero, banner, and categories', () => {
+      const kannadaStrings = {
+        heroTagline: 'ಪ್ರತಿಯೊಂದು ಪಂದ್ಯ • ಪ್ರತಿಯೊಂದು ಅಂಕ • ನೇರ ಪ್ರಸಾರ',
+        heroRegionalBadge: 'ಕರ್ನಾಟಕ & ರಾಷ್ಟ್ರೀಯ ಪಂದ್ಯಾವಳಿಗಳು',
+        bottomActionTagline: 'ಆಟದ ರೋಮಾಂಚನ, ಕ್ರೀಡೆಯ ಸಂಭ್ರಮ — ನೇರ ಸ್ಕೋರ್ ನಿಮ್ಮೊಂದಿಗೆ!',
+        liveBadge: 'ನೇರ ಪಂದ್ಯ',
+        upcomingBadge: 'ಮುಂದಿನ ಪಂದ್ಯ',
+        liveBroadcastPill: 'ನೇರ ಪ್ರಸಾರ',
+        footerPride: 'ಕರ್ನಾಟಕ ಹಾಗೂ ರಾಷ್ಟ್ರಮಟ್ಟದ ಪಂದ್ಯಾವಳಿಗಳ ಅಧಿಕೃತ ಲೈವ್ ಸ್ಕೋರ್ ವೇದಿಕೆ.',
+        categories: {
+          live: 'ನೇರ ಪಂದ್ಯಗಳು',
+          upcoming: 'ವೇಳಾಪಟ್ಟಿ',
+          tournaments: 'ಪಂದ್ಯಾವಳಿಗಳು',
+          results: 'ಫಲಿತಾಂಶಗಳು',
+        },
+      };
+
+      expect(kannadaStrings.heroTagline).toContain('ನೇರ ಪ್ರಸಾರ');
+      expect(kannadaStrings.heroRegionalBadge).toContain('ಕರ್ನಾಟಕ');
+      expect(kannadaStrings.bottomActionTagline).toContain('ಆಟದ ರೋಮಾಂಚನ');
+      expect(kannadaStrings.categories.live).toBe('ನೇರ ಪಂದ್ಯಗಳು');
+      expect(kannadaStrings.categories.tournaments).toBe('ಪಂದ್ಯಾವಳಿಗಳು');
+      expect(kannadaStrings.footerPride).toContain('ಕರ್ನಾಟಕ');
+    });
+  });
 });

@@ -82,6 +82,9 @@ export const HomeFeaturedLiveMatch: React.FC<HomeFeaturedLiveMatchProps> = ({
           <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E7EC]">
             <div className="flex items-center gap-2.5">
               <LiveRadarBadge label="FEATURED LIVE MATCH" pulseColor="coral" size="sm" />
+              <span className="px-2 py-0.5 rounded-full bg-rose-50 border border-rose-200 text-[10px] font-bold text-[#D92D20]">
+                ನೇರ ಪಂದ್ಯ
+              </span>
               <span className="text-[#E4E7EC] hidden sm:inline">|</span>
               <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#182230] truncate max-w-[240px] sm:max-w-md">
                 <Trophy className="w-3.5 h-3.5 text-[#FF851B] shrink-0" />
@@ -328,6 +331,9 @@ export const HomeFeaturedLiveMatch: React.FC<HomeFeaturedLiveMatchProps> = ({
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFF1E5] border border-[#B54708]/30 text-[#B54708] text-xs font-bold uppercase tracking-wider">
             <Clock className="w-3.5 h-3.5" />
             <span>Next Match Spotlight</span>
+            <span className="text-[10px] font-bold text-[#FF851B] bg-white px-1.5 py-0.5 rounded border border-[#B54708]/20">
+              ಮುಂದಿನ ಪಂದ್ಯ
+            </span>
           </div>
           <div className="flex items-center gap-2 text-xs text-[#667085]">
             <MapPin className="w-3.5 h-3.5 text-[#FF851B]" />

@@ -29,16 +29,26 @@ export const HomeBroadcastBanner: React.FC<HomeBroadcastBannerProps> = ({
           <div className="flex flex-wrap items-center gap-2.5 sm:gap-3.5">
             {/* Live Indicator */}
             {liveCount > 0 ? (
-              <LiveRadarBadge 
-                label={`${liveCount} ${liveCount === 1 ? 'MATCH' : 'MATCHES'} LIVE`} 
-                pulseColor="coral" 
-                size="sm" 
-              />
+              <div className="flex items-center gap-1.5">
+                <LiveRadarBadge 
+                  label={`${liveCount} ${liveCount === 1 ? 'MATCH' : 'MATCHES'} LIVE`} 
+                  pulseColor="coral" 
+                  size="sm" 
+                />
+                <span className="hidden lg:inline text-[10px] font-bold text-[#D92D20] bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+                  ನೇರ ಪ್ರಸಾರ
+                </span>
+              </div>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F0F2F6] border border-[#E4E7EC] text-[11px] font-bold tracking-wider uppercase text-[#667085]">
-                <span className="w-2 h-2 rounded-full bg-[#667085]" />
-                <span>STANDBY</span>
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F0F2F6] border border-[#E4E7EC] text-[11px] font-bold tracking-wider uppercase text-[#667085]">
+                  <span className="w-2 h-2 rounded-full bg-[#667085]" />
+                  <span>STANDBY</span>
+                </span>
+                <span className="hidden lg:inline text-[10px] font-medium text-[#667085] bg-[#F0F2F6] px-2 py-0.5 rounded-full border border-[#E4E7EC]">
+                  ಮುಂದಿನ ಪಂದ್ಯಗಳಿಗಾಗಿ ನಿರೀಕ್ಷಿಸಿ
+                </span>
+              </div>
             )}
 
             <div className="h-3.5 w-px bg-[#E4E7EC] hidden sm:block" />
