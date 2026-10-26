@@ -1,0 +1,36 @@
+{
+  "short_name": "BallBadminton",
+  "name": "Ball Badminton Live — Federation Scoring & Matches",
+  "description": "Live scoring and tournament management platform for Ball Badminton with real-time court tracking, BBFI rules, and official scoreboards.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "48x48 72x72 96x96 128x128 192x192 256x256 512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#211329",
+  "theme_color": "#211329",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "categories": ["sports", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Live Matches",
+      "url": "/#live-matches",
+      "description": "Watch live games in progress"
+    },
+    {
+      "name": "Tournaments",
+      "url": "/tournaments",
+      "description": "View tournament brackets and fixtures"
+    },
+    {
+      "name": "Official Admin",
+      "url": "/admin",
+      "description": "Court scorer and tournament administration"
+    }
+  ]
+}

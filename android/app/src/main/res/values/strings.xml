@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Ball Badminton Live</string>
+    <string name="title_activity_main">Ball Badminton Live</string>
+    <string name="package_name">org.bbfi.ballbadmintonlive</string>
+    <string name="custom_url_scheme">org.bbfi.ballbadmintonlive</string>
+</resources>

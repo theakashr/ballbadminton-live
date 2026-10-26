@@ -1,0 +1,180 @@
+import React, { useState, useMemo } from 'react';
+import { ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { EmptyState } from './EmptyState';
+
+export interface Column<T> {
+  key: string;
+  header: string;
+  render?: (item: T, index: number) => React.ReactNode;
+  sortable?: boolean;
+  className?: string;
+  headerClassName?: string;
+}
+
+interface DataTableProps<T> {
+  columns: Column<T>[];
+  data: T[];
+  keyExtractor: (item: T) => string;
+  pageSize?: number;
+  emptyTitle?: string;
+  emptyDescription?: string;
+  onRowClick?: (item: T) => void;
+  isLoading?: boolean;
+}
+
+export function DataTable<T extends Record<string, any>>({
+  columns,
+  data,
+  keyExtractor,
+  pageSize = 10,
+  emptyTitle = 'No records found',
+  emptyDescription = 'There are no items matching the current view criteria.',
+  onRowClick,
+}: DataTableProps<T>) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortKey, setSortKey] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+  const handleSort = (key: string) => {
+    if (sortKey === key) {
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else {
+        setSortKey(null);
+        setSortDirection('asc');
+      }
+    } else {
+      setSortKey(key);
+      setSortDirection('asc');
+    }
+  };
+
+  const sortedData = useMemo(() => {
+    if (!sortKey) return data;
+    return [...data].sort((a, b) => {
+      const valA = a[sortKey];
+      const valB = b[sortKey];
+      if (valA === valB) return 0;
+      if (valA === undefined || valA === null) return 1;
+      if (valB === undefined || valB === null) return -1;
+      const comparison = valA < valB ? -1 : 1;
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+  }, [data, sortKey, sortDirection]);
+
+  const totalPages = Math.ceil(sortedData.length / pageSize) || 1;
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return sortedData.slice(start, start + pageSize);
+  }, [sortedData, currentPage, pageSize]);
+
+  if (data.length === 0) {
+    return <EmptyState title={emptyTitle} description={emptyDescription} />;
+  }
+
+  return (
+    <div className="rounded-2xl border border-plum-800 bg-charcoal-900 overflow-hidden shadow-subtle">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-plum-800/80 bg-plum-950/70 text-xs uppercase tracking-wider text-muted-grey font-semibold">
+              {columns.map((col) => {
+                const isSorted = sortKey === col.key;
+                return (
+                  <th
+                    key={col.key}
+                    scope="col"
+                    className={`px-4 py-3.5 whitespace-nowrap ${col.headerClassName || ''}`}
+                  >
+                    {col.sortable ? (
+                      <button
+                        type="button"
+                        onClick={() => handleSort(col.key)}
+                        className="inline-flex items-center gap-1.5 hover:text-soft-white transition-colors"
+                      >
+                        <span>{col.header}</span>
+                        {isSorted ? (
+                          sortDirection === 'asc' ? (
+                            <ArrowUp className="w-3.5 h-3.5 text-brand-orange" />
+                          ) : (
+                            <ArrowDown className="w-3.5 h-3.5 text-brand-orange" />
+                          )
+                        ) : (
+                          <ArrowUpDown className="w-3.5 h-3.5 text-charcoal-600" />
+                        )}
+                      </button>
+                    ) : (
+                      col.header
+                    )}
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-charcoal-800/80">
+            {paginatedData.map((item, idx) => {
+              const globalIndex = (currentPage - 1) * pageSize + idx;
+              return (
+                <tr
+                  key={keyExtractor(item)}
+                  onClick={() => onRowClick?.(item)}
+                  className={`transition-colors ${
+                    onRowClick ? 'cursor-pointer hover:bg-plum-900/30' : 'hover:bg-charcoal-850/50'
+                  }`}
+                >
+                  {columns.map((col) => (
+                    <td
+                      key={col.key}
+                      className={`px-4 py-3.5 text-soft-white/90 ${col.className || ''}`}
+                    >
+                      {col.render
+                        ? col.render(item, globalIndex)
+                        : (item[col.key] !== undefined && item[col.key] !== null)
+                        ? String(item[col.key])
+                        : '—'}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination Footer */}
+      {totalPages > 1 && (
+        <div className="px-4 py-3 border-t border-charcoal-800 bg-charcoal-950/60 flex items-center justify-between text-xs text-muted-grey">
+          <span>
+            Showing <strong className="text-soft-white">{(currentPage - 1) * pageSize + 1}</strong> to{' '}
+            <strong className="text-soft-white">
+              {Math.min(currentPage * pageSize, sortedData.length)}
+            </strong>{' '}
+            of <strong className="text-soft-white">{sortedData.length}</strong> items
+          </span>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+              className="p-1.5 rounded-lg border border-charcoal-700 hover:bg-charcoal-800 disabled:opacity-40 disabled:pointer-events-none text-soft-white transition-colors"
+              aria-label="Previous page"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="px-2 text-soft-white font-medium">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="p-1.5 rounded-lg border border-charcoal-700 hover:bg-charcoal-800 disabled:opacity-40 disabled:pointer-events-none text-soft-white transition-colors"
+              aria-label="Next page"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

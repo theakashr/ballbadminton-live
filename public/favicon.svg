@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background badge -->
+  <rect width="64" height="64" rx="16" fill="#211329" />
+  <!-- Court net line accent -->
+  <path d="M4 32H60" stroke="#FF5B45" stroke-width="2" stroke-dasharray="4 2" opacity="0.4" />
+  <!-- Racket head -->
+  <ellipse cx="28" cy="26" rx="16" ry="19" stroke="#FF851B" stroke-width="3" />
+  <!-- Strings -->
+  <path d="M20 14V38 M28 10V42 M36 14V38" stroke="#B7AFBD" stroke-width="1" opacity="0.6"/>
+  <path d="M14 20H42 M13 26H43 M14 32H42" stroke="#B7AFBD" stroke-width="1" opacity="0.6"/>
+  <!-- Handle -->
+  <line x1="28" y1="45" x2="28" y2="58" stroke="#F8F5F2" stroke-width="3.5" stroke-linecap="round" />
+  <!-- Ball Badminton Official Yellow Wool Ball -->
+  <circle cx="45" cy="41" r="9" fill="#FFDC00" stroke="#FF851B" stroke-width="1.5" />
+  <!-- Ball texture ridges -->
+  <path d="M39 41C42 45 48 45 51 41" stroke="#D4A106" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M40 37C43 34 47 34 50 37" stroke="#D4A106" stroke-width="1.2" stroke-linecap="round"/>
+</svg>
