@@ -80,39 +80,57 @@ export function DataTable<T extends Record<string, any>>({
           const globalIndex = (currentPage - 1) * pageSize + idx;
           const firstCol = columns[0];
           const otherCols = columns.slice(1);
+          const actionCol = otherCols.find(
+            (c) => c.key === 'actions' || c.header.toLowerCase() === 'actions'
+          );
+          const dataCols = otherCols.filter(
+            (c) => c.key !== 'actions' && c.header.toLowerCase() !== 'actions'
+          );
 
           return (
             <div
               key={keyExtractor(item)}
               onClick={() => onRowClick?.(item)}
-              className={`p-4 space-y-2 transition-colors ${
+              className={`p-4 space-y-3 transition-colors ${
                 onRowClick ? 'cursor-pointer active:bg-surface-muted/60' : ''
               }`}
             >
               {/* Primary Header Row (Column 0) */}
-              <div className="flex items-center justify-between gap-2">
-                <div className="font-bold text-sm text-text-primary min-w-0">
+              <div className="flex items-start justify-between gap-2">
+                <div className="font-bold text-sm text-text-primary min-w-0 flex-1">
                   {firstCol.render ? firstCol.render(item, globalIndex) : String(item[firstCol.key] || '—')}
                 </div>
               </div>
 
-              {/* Other Columns as Attribute Grid */}
-              <div className="grid grid-cols-2 gap-2.5 text-xs pt-1">
-                {otherCols.map((col) => (
-                  <div key={col.key} className="space-y-0.5 min-w-0">
-                    <span className="text-[10px] uppercase font-bold text-text-secondary block">
-                      {col.header}
-                    </span>
-                    <div className="text-text-primary font-medium truncate">
-                      {col.render
-                        ? col.render(item, globalIndex)
-                        : (item[col.key] !== undefined && item[col.key] !== null)
-                        ? String(item[col.key])
-                        : '—'}
+              {/* Data Columns as Attribute Grid */}
+              {dataCols.length > 0 && (
+                <div className="grid grid-cols-2 gap-2.5 text-xs pt-0.5">
+                  {dataCols.map((col) => (
+                    <div key={col.key} className="space-y-0.5 min-w-0">
+                      <span className="text-[10px] uppercase font-bold text-text-secondary block">
+                        {col.header}
+                      </span>
+                      <div className="text-text-primary font-medium truncate">
+                        {col.render
+                          ? col.render(item, globalIndex)
+                          : (item[col.key] !== undefined && item[col.key] !== null)
+                          ? String(item[col.key])
+                          : '—'}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Action Column Rendered as Full-Width Mobile Action Bar */}
+              {actionCol && (
+                <div
+                  className="pt-2.5 border-t border-border-neutral/70 flex items-center justify-end gap-2 flex-wrap"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {actionCol.render ? actionCol.render(item, globalIndex) : null}
+                </div>
+              )}
             </div>
           );
         })}

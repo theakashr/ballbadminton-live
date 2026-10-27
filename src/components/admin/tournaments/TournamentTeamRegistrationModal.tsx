@@ -193,13 +193,13 @@ export const TournamentTeamRegistrationModal: React.FC<TournamentTeamRegistratio
   const availableTeams = allTeams.filter((t) => !registeredTeamIds.has(t.id));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 overflow-y-auto pt-safe pb-safe">
       <div className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative w-full max-w-4xl bg-white border border-border-neutral rounded-2xl shadow-elevated overflow-hidden z-10 my-8">
+      <div className="relative w-full max-w-4xl min-h-screen sm:min-h-0 bg-white border-0 sm:border border-border-neutral rounded-none sm:rounded-3xl shadow-elevated overflow-hidden z-10 my-0 sm:my-8 flex flex-col">
         
         {/* Header */}
-        <div className="px-6 py-5 border-b border-border-neutral bg-surface-muted flex items-center justify-between">
+        <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-border-neutral bg-surface-muted flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-brand-soft border border-brand-orange/20 flex items-center justify-center text-brand-orange">
               <Users className="w-5 h-5" />
@@ -208,26 +208,26 @@ export const TournamentTeamRegistrationModal: React.FC<TournamentTeamRegistratio
               <h2 className="text-base font-display font-bold text-text-primary">
                 Tournament Teams &amp; Rosters
               </h2>
-              <p className="text-xs text-text-secondary truncate max-w-lg">
-                {tournament.name} • {registrations.length} Teams Registered (Max: {tournament.maxTeams || 32})
+              <p className="text-xs text-text-secondary truncate max-w-xs sm:max-w-lg">
+                {tournament.name} • {registrations.length} Teams Registered
               </p>
             </div>
           </div>
 
-          <button onClick={onClose} className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors">
+          <button onClick={onClose} className="p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors active:scale-95">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Error Alert */}
         {errorMsg && (
-          <div className="mx-6 mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-status-live text-xs flex items-center gap-2">
+          <div className="mx-4 sm:mx-6 mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-status-live text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
 
-        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[70vh] overflow-y-auto">
+        <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 overflow-y-auto">
           
           {/* LEFT COLUMN: Registered Teams List & Add Form */}
           <div className="space-y-4">
@@ -242,16 +242,16 @@ export const TournamentTeamRegistrationModal: React.FC<TournamentTeamRegistratio
 
             {/* Register New Team Form */}
             {canManageTournaments && (
-              <form onSubmit={handleRegisterTeam} className="p-4 rounded-xl bg-surface-muted border border-border-neutral space-y-3">
+              <form onSubmit={handleRegisterTeam} className="p-4 sm:p-5 rounded-2xl bg-surface-muted border border-border-neutral space-y-3.5">
                 <span className="text-xs font-bold text-text-primary block">Register Team to Tournament</span>
                 
-                <div className="space-y-2 text-xs">
+                <div className="space-y-2.5 text-xs">
                   <div>
-                    <label className="text-text-secondary block mb-1">Select Registered Team</label>
+                    <label className="text-text-secondary block mb-1 font-medium">Select Registered Team</label>
                     <select
                       value={selectedTeamId}
                       onChange={(e) => setSelectedTeamId(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-white border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange text-xs"
                     >
                       {availableTeams.length === 0 ? (
                         <option value="">All existing teams already registered</option>
@@ -265,26 +265,26 @@ export const TournamentTeamRegistrationModal: React.FC<TournamentTeamRegistratio
                     </select>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2.5">
                     <div>
-                      <label className="text-text-secondary block mb-1">Seed Number</label>
+                      <label className="text-text-secondary block mb-1 font-medium">Seed Number</label>
                       <input
                         type="number"
                         min={1}
                         max={64}
                         value={seedNumber}
                         onChange={(e) => setSeedNumber(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 rounded-lg bg-white border border-border-neutral text-text-primary font-mono focus:outline-none focus:border-brand-orange"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-text-primary font-mono focus:outline-none focus:border-brand-orange text-xs"
                       />
                     </div>
                     <div>
-                      <label className="text-text-secondary block mb-1">Group / Pool</label>
+                      <label className="text-text-secondary block mb-1 font-medium">Group / Pool</label>
                       <input
                         type="text"
                         value={groupName}
                         onChange={(e) => setGroupName(e.target.value)}
                         placeholder="e.g. Group A"
-                        className="w-full px-3 py-1.5 rounded-lg bg-white border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange text-xs"
                       />
                     </div>
                   </div>
@@ -293,9 +293,9 @@ export const TournamentTeamRegistrationModal: React.FC<TournamentTeamRegistratio
                 <button
                   type="submit"
                   disabled={availableTeams.length === 0}
-                  className="w-full py-2 rounded-lg bg-brand-orange hover:bg-brand-orangeHover disabled:opacity-40 text-white font-bold text-xs transition-all shadow-sm flex items-center justify-center gap-1.5"
+                  className="w-full py-3 rounded-xl bg-brand-orange hover:bg-brand-orangeHover disabled:opacity-40 text-white font-bold text-xs transition-all shadow-card flex items-center justify-center gap-1.5 active:scale-95"
                 >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="w-4 h-4 stroke-[2.5]" />
                   <span>Confirm Registration</span>
                 </button>
               </form>

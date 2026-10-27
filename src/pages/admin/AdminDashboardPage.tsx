@@ -21,11 +21,13 @@ import {
   Play, 
   Check, 
   X, 
-  FileText
+  FileText,
+  Edit3
 } from 'lucide-react';
 import { StatCard } from '../../components/admin/common/StatCard';
 import { StatusBadge } from '../../components/admin/common/StatusBadge';
 import { LiveScorerConsole } from '../../components/admin/matches/LiveScorerConsole';
+import { QuickScoreUploadModal } from '../../components/admin/matches/QuickScoreUploadModal';
 import { tournamentRepository } from '../../repositories/tournamentRepository';
 import { teamRepository } from '../../repositories/teamRepository';
 import { playerRepository } from '../../repositories/playerRepository';
@@ -50,6 +52,7 @@ export const AdminDashboardPage: React.FC = () => {
   const [scorerTab, setScorerTab] = useState<'all' | 'live' | 'upcoming' | 'completed'>('all');
   const [scoringMatch, setScoringMatch] = useState<Match | null>(null);
   const [verificationMatch, setVerificationMatch] = useState<Match | null>(null);
+  const [quickScoreMatch, setQuickScoreMatch] = useState<Match | null>(null);
 
   useEffect(() => {
     loadData();
@@ -320,11 +323,11 @@ export const AdminDashboardPage: React.FC = () => {
                         </span>
                       )}
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         {isLive && (
                           <button
                             onClick={() => setScoringMatch(m)}
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all active:scale-95"
+                            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all active:scale-95"
                           >
                             <Play className="w-4 h-4 fill-current" />
                             <span>Resume Live Scoring</span>
@@ -334,17 +337,26 @@ export const AdminDashboardPage: React.FC = () => {
                         {isUpcoming && (
                           <button
                             onClick={() => setVerificationMatch(m)}
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all active:scale-95"
+                            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all active:scale-95"
                           >
                             <ClipboardCheck className="w-4 h-4" />
                             <span>Verify Rosters &amp; Start</span>
                           </button>
                         )}
 
+                        <button
+                          onClick={() => setQuickScoreMatch(m)}
+                          className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-surface-muted hover:bg-border-neutral text-xs font-bold text-text-primary border border-border-neutral transition-colors active:scale-95"
+                          title="Upload or Edit Set Scores"
+                        >
+                          <Edit3 className="w-3.5 h-3.5 text-brand-orange" />
+                          <span>Upload Score</span>
+                        </button>
+
                         {m.status === 'completed' && (
                           <button
                             onClick={() => navigate(`/matches/${m.id}`)}
-                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-surface-muted hover:bg-border-neutral text-xs font-semibold text-text-primary border border-border-neutral transition-colors"
+                            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-surface-muted hover:bg-border-neutral text-xs font-semibold text-text-primary border border-border-neutral transition-colors"
                           >
                             <FileText className="w-3.5 h-3.5" />
                             <span>View Final Scorecard</span>
@@ -359,14 +371,14 @@ export const AdminDashboardPage: React.FC = () => {
           )}
         </div>
 
-        {/* Pre-Match Lineup Verification Modal */}
+        {/* Pre-Match Lineup Verification Modal - Mobile Friendly Sheet */}
         {verificationMatch && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 overflow-y-auto pt-safe pb-safe">
             <div
               className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm"
               onClick={() => setVerificationMatch(null)}
             />
-            <div className="relative w-full max-w-lg bg-white border border-border-neutral rounded-2xl shadow-elevated p-6 z-10 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="relative w-full max-w-lg min-h-screen sm:min-h-0 bg-white border-0 sm:border border-border-neutral rounded-none sm:rounded-2xl shadow-elevated p-5 sm:p-6 z-10 space-y-4 my-0 sm:my-8 flex flex-col overflow-y-auto">
               <div className="flex items-center justify-between pb-3 border-b border-border-neutral">
                 <div className="flex items-center gap-2.5">
                   <div className="w-9 h-9 rounded-xl bg-brand-soft border border-brand-orange/30 flex items-center justify-center text-brand-orange">
@@ -480,6 +492,16 @@ export const AdminDashboardPage: React.FC = () => {
             matchId={scoringMatch.id}
             isOpen={Boolean(scoringMatch)}
             onClose={() => setScoringMatch(null)}
+            onMatchUpdated={loadData}
+          />
+        )}
+
+        {/* Quick Score Upload Modal */}
+        {quickScoreMatch && (
+          <QuickScoreUploadModal
+            match={quickScoreMatch}
+            isOpen={Boolean(quickScoreMatch)}
+            onClose={() => setQuickScoreMatch(null)}
             onMatchUpdated={loadData}
           />
         )}
@@ -843,6 +865,22 @@ export const AdminDashboardPage: React.FC = () => {
                   )}
 
                   <button
+                    onClick={() => setScoringMatch(match)}
+                    className="p-2 rounded-xl bg-brand-soft hover:bg-brand-orange/20 text-brand-orange text-xs font-semibold border border-brand-orange/30 transition-colors active:scale-95"
+                    title="Live Court Scoring Console"
+                  >
+                    <Flame className="w-3.5 h-3.5" />
+                  </button>
+
+                  <button
+                    onClick={() => setQuickScoreMatch(match)}
+                    className="p-2 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary text-xs font-semibold border border-border-neutral transition-colors active:scale-95"
+                    title="Upload / Edit Scores"
+                  >
+                    <Edit3 className="w-3.5 h-3.5 text-brand-orange" />
+                  </button>
+
+                  <button
                     onClick={() => navigate(`/admin/matches`)}
                     className="px-3 py-1.5 rounded-lg bg-surface-muted hover:bg-border-neutral text-xs font-semibold text-text-primary border border-border-neutral transition-colors"
                   >
@@ -911,6 +949,26 @@ export const AdminDashboardPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Live Court Scorer Console for Admin */}
+      {scoringMatch && (
+        <LiveScorerConsole
+          matchId={scoringMatch.id}
+          isOpen={Boolean(scoringMatch)}
+          onClose={() => setScoringMatch(null)}
+          onMatchUpdated={loadData}
+        />
+      )}
+
+      {/* Quick Score Upload Modal for Admin */}
+      {quickScoreMatch && (
+        <QuickScoreUploadModal
+          match={quickScoreMatch}
+          isOpen={Boolean(quickScoreMatch)}
+          onClose={() => setQuickScoreMatch(null)}
+          onMatchUpdated={loadData}
+        />
+      )}
     </div>
   );
 };

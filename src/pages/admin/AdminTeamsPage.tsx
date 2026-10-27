@@ -216,22 +216,30 @@ export const AdminTeamsPage: React.FC = () => {
       header: 'Actions',
       className: 'text-right',
       render: (team) => (
-        <div className="flex items-center justify-end gap-1.5">
+        <div className="flex items-center justify-end gap-2 flex-wrap">
           <button
-            onClick={() => setViewingRosterTeam(team)}
-            className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              setViewingRosterTeam(team);
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-muted hover:bg-border-neutral text-xs font-semibold text-text-primary border border-border-neutral transition-colors active:scale-95"
             title="View Squad Roster"
           >
-            <Eye className="w-4 h-4" />
+            <Eye className="w-3.5 h-3.5 text-brand-orange" />
+            <span>View Roster</span>
           </button>
 
           {canManageTeams && (
             <button
-              onClick={() => setDeleteTarget(team)}
-              className="p-1.5 rounded-lg text-text-secondary hover:text-status-live hover:bg-red-50 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setDeleteTarget(team);
+              }}
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-status-live bg-red-50 hover:bg-red-100 border border-red-200 transition-colors active:scale-95"
               title="Delete Team"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Delete</span>
             </button>
           )}
         </div>
@@ -287,30 +295,43 @@ export const AdminTeamsPage: React.FC = () => {
         data={filteredTeams}
         keyExtractor={(t) => t.id}
         pageSize={8}
+        onRowClick={(t) => setViewingRosterTeam(t)}
         emptyTitle="No teams registered"
         emptyDescription="No teams match your search or filter criteria. Use 'Register New Team' to add a club."
       />
 
-      {/* Add Team Modal */}
+      {/* Add Team Modal - Mobile App Bottom Sheet / Full-Screen Friendly */}
       {isAddOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 overflow-y-auto pt-safe pb-safe">
           <div className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm" onClick={() => setIsAddOpen(false)} />
-          <div className="relative w-full max-w-lg bg-white border border-border-neutral rounded-2xl shadow-elevated p-6 z-10 my-8">
-            <div className="flex items-center justify-between pb-4 border-b border-border-neutral mb-5">
+          <div className="relative w-full max-w-lg min-h-screen sm:min-h-0 bg-white border-0 sm:border border-border-neutral rounded-none sm:rounded-3xl shadow-card-hover overflow-hidden z-10 my-0 sm:my-8 flex flex-col">
+            
+            {/* Modal Header */}
+            <div className="px-5 py-4 border-b border-border-neutral bg-surface-muted flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-brand-soft border border-brand-orange/20 flex items-center justify-center text-brand-orange">
+                <div className="w-10 h-10 rounded-xl bg-brand-soft border border-brand-orange/20 flex items-center justify-center text-brand-orange shadow-xs">
                   <Shield className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-display font-bold text-text-primary">
-                  Register New Ball Badminton Team
-                </h3>
+                <div>
+                  <h3 className="text-base font-display font-bold text-text-primary">
+                    Register New Team
+                  </h3>
+                  <p className="text-xs text-text-secondary">
+                    Official state, collegiate, or certified club squad
+                  </p>
+                </div>
               </div>
-              <button onClick={() => setIsAddOpen(false)} className="p-1 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors">
+              <button
+                onClick={() => setIsAddOpen(false)}
+                className="p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-muted active:scale-95 transition-all"
+                aria-label="Close dialog"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateSubmit} className="space-y-4">
+            {/* Form Body */}
+            <form onSubmit={handleCreateSubmit} className="p-5 sm:p-6 space-y-4 flex-1 overflow-y-auto">
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
                   Team Name <span className="text-status-live">*</span>
@@ -319,8 +340,8 @@ export const AdminTeamsPage: React.FC = () => {
                   type="text"
                   value={newTeam.name}
                   onChange={(e) => setNewTeam({ ...newTeam, name: e.target.value })}
-                  placeholder="e.g. Coimbatore Smashers"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
+                  placeholder="e.g. Bengaluru Smashers"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                 />
                 {formErrors.name && <p className="text-xs text-status-live mt-1">{formErrors.name}</p>}
               </div>
@@ -335,29 +356,73 @@ export const AdminTeamsPage: React.FC = () => {
                     maxLength={4}
                     value={newTeam.shortName}
                     onChange={(e) => setNewTeam({ ...newTeam, shortName: e.target.value.toUpperCase() })}
-                    placeholder="CBE"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary uppercase focus:outline-none focus:border-brand-orange"
+                    placeholder="BLR"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-border-neutral text-sm text-text-primary uppercase font-bold focus:outline-none focus:border-brand-orange"
                   />
                   {formErrors.shortName && <p className="text-xs text-status-live mt-1">{formErrors.shortName}</p>}
                 </div>
 
+                {/* Team Badge Preview */}
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
-                    Accent Color
+                    Badge Preview
                   </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="color"
-                      value={newTeam.accentColor}
-                      onChange={(e) => setNewTeam({ ...newTeam, accentColor: e.target.value })}
-                      className="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-0"
-                    />
-                    <span className="text-xs font-mono text-text-secondary">{newTeam.accentColor}</span>
+                  <div className="flex items-center gap-2.5 h-[48px] px-3 rounded-xl bg-surface-muted border border-border-neutral">
+                    <div
+                      className="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs text-white shadow-xs"
+                      style={{ backgroundColor: newTeam.accentColor }}
+                    >
+                      {newTeam.shortName || 'TAG'}
+                    </div>
+                    <span className="text-xs font-mono font-bold text-text-secondary">
+                      {newTeam.accentColor}
+                    </span>
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              {/* Color Presets for Fast Mobile Tap */}
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
+                  Team Accent Color
+                </label>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {[
+                    { color: '#FF851B', label: 'Sports Orange' },
+                    { color: '#2563EB', label: 'Royal Blue' },
+                    { color: '#059669', label: 'Emerald' },
+                    { color: '#DC2626', label: 'Crimson' },
+                    { color: '#7C3AED', label: 'Purple' },
+                    { color: '#0891B2', label: 'Cyan' },
+                    { color: '#D97706', label: 'Amber Gold' },
+                    { color: '#1E293B', label: 'Slate Navy' },
+                  ].map((preset) => (
+                    <button
+                      key={preset.color}
+                      type="button"
+                      onClick={() => setNewTeam({ ...newTeam, accentColor: preset.color })}
+                      className={`w-8 h-8 rounded-xl transition-all shadow-xs ${
+                        newTeam.accentColor.toLowerCase() === preset.color.toLowerCase()
+                          ? 'ring-2 ring-offset-2 ring-brand-orange scale-110'
+                          : 'opacity-85 hover:opacity-100'
+                      }`}
+                      style={{ backgroundColor: preset.color }}
+                      title={preset.label}
+                    />
+                  ))}
+                  <div className="flex items-center ml-1">
+                    <input
+                      type="color"
+                      value={newTeam.accentColor}
+                      onChange={(e) => setNewTeam({ ...newTeam, accentColor: e.target.value })}
+                      className="w-8 h-8 rounded-xl cursor-pointer bg-transparent border-0"
+                      title="Custom Color"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
                     State Association
@@ -365,15 +430,19 @@ export const AdminTeamsPage: React.FC = () => {
                   <select
                     value={newTeam.state}
                     onChange={(e) => setNewTeam({ ...newTeam, state: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                   >
-                    <option value="Tamil Nadu">Tamil Nadu</option>
                     <option value="Karnataka">Karnataka</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
                     <option value="Andhra Pradesh">Andhra Pradesh</option>
                     <option value="Kerala">Kerala</option>
                     <option value="Telangana">Telangana</option>
                     <option value="Puducherry">Puducherry</option>
                     <option value="Maharashtra">Maharashtra</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="All India">All India Public Sector</option>
                   </select>
                 </div>
 
@@ -385,14 +454,14 @@ export const AdminTeamsPage: React.FC = () => {
                     type="text"
                     value={newTeam.city}
                     onChange={(e) => setNewTeam({ ...newTeam, city: e.target.value })}
-                    placeholder="e.g. Coimbatore"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
+                    placeholder="e.g. Mysuru"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                   />
                   {formErrors.city && <p className="text-xs text-status-live mt-1">{formErrors.city}</p>}
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1">
                     Captain Name <span className="text-status-live">*</span>
@@ -402,7 +471,7 @@ export const AdminTeamsPage: React.FC = () => {
                     value={newTeam.captainName}
                     onChange={(e) => setNewTeam({ ...newTeam, captainName: e.target.value })}
                     placeholder="Captain's full name"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                   />
                   {formErrors.captainName && <p className="text-xs text-status-live mt-1">{formErrors.captainName}</p>}
                 </div>
@@ -416,22 +485,23 @@ export const AdminTeamsPage: React.FC = () => {
                     value={newTeam.coachName}
                     onChange={(e) => setNewTeam({ ...newTeam, coachName: e.target.value })}
                     placeholder="Coach name (optional)"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange"
                   />
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-border-neutral flex items-center justify-end gap-3">
+              {/* Sticky Action Footer */}
+              <div className="pt-4 border-t border-border-neutral flex items-center justify-end gap-3 sticky bottom-0 bg-white">
                 <button
                   type="button"
                   onClick={() => setIsAddOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs text-text-secondary hover:text-text-primary border border-border-neutral hover:bg-surface-muted transition-colors"
+                  className="flex-1 sm:flex-none px-4 py-3 rounded-xl text-xs font-bold text-text-secondary hover:text-text-primary border border-border-neutral hover:bg-surface-muted transition-colors text-center"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all"
+                  className="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-card active:scale-95 transition-all text-center"
                 >
                   Register Team
                 </button>
@@ -441,11 +511,11 @@ export const AdminTeamsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Roster View Modal */}
+      {/* Roster View Modal - Mobile App Friendly */}
       {viewingRosterTeam && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 overflow-y-auto pt-safe pb-safe">
           <div className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm" onClick={() => setViewingRosterTeam(null)} />
-          <div className="relative w-full max-w-md bg-white border border-border-neutral rounded-2xl shadow-elevated p-6 z-10 my-8">
+          <div className="relative w-full max-w-md min-h-screen sm:min-h-0 bg-white border-0 sm:border border-border-neutral rounded-none sm:rounded-2xl shadow-elevated p-5 sm:p-6 z-10 my-0 sm:my-8 flex flex-col">
             <div className="flex items-center justify-between pb-4 border-b border-border-neutral mb-4">
               <div className="flex items-center gap-2.5">
                 <div

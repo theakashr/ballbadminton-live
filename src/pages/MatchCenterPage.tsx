@@ -25,6 +25,8 @@ import { Badge } from '../components/common/Badge';
 import { AnimatedScoreDigit } from '../components/common/AnimatedScoreDigit';
 import { LiveRadarBadge } from '../components/common/LiveRadarBadge';
 import { InteractiveCourtView } from '../components/court/InteractiveCourtView';
+import { LiveScorerConsole } from '../components/admin/matches/LiveScorerConsole';
+import { QuickScoreUploadModal } from '../components/admin/matches/QuickScoreUploadModal';
 import { useRealtimeMatch } from '../hooks/useRealtimeMatch';
 import { useAuth } from '../context/AuthContext';
 import { nativeHaptics } from '../lib/nativeBridge';
@@ -49,6 +51,8 @@ export const MatchCenterPage: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [scoreEvents, setScoreEvents] = useState<any[]>([]);
   const [relatedTournamentMatches, setRelatedTournamentMatches] = useState<Match[]>([]);
+  const [isScorerConsoleOpen, setIsScorerConsoleOpen] = useState(false);
+  const [isQuickScoreOpen, setIsQuickScoreOpen] = useState(false);
 
   // Supabase Realtime Subscription
   const { match: realtimeMatch, status: realtimeStatus, isStale } = useRealtimeMatch(id);
@@ -319,6 +323,34 @@ export const MatchCenterPage: React.FC = () => {
                 )}
               </div>
             </div>
+
+            {/* Official Mobile Scorer Action Controls */}
+            {canScoreMatches && (
+              <div className="pt-2 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    nativeHaptics.selection();
+                    setIsScorerConsoleOpen(true);
+                  }}
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white text-xs font-bold shadow-xs active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                >
+                  <Flame className="w-4 h-4 fill-current" />
+                  <span>Court Console</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    nativeHaptics.selection();
+                    setIsQuickScoreOpen(true);
+                  }}
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-surface-muted hover:bg-border-neutral border border-border-neutral text-text-primary text-xs font-bold active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                >
+                  <CheckCircle2 className="w-4 h-4 text-brand-orange" />
+                  <span>Upload Score</span>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Desktop Score Arena (Tablets & Desktops) */}
@@ -809,6 +841,32 @@ export const MatchCenterPage: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Official Live Scorer Console */}
+      {isScorerConsoleOpen && (
+        <LiveScorerConsole
+          matchId={match.id}
+          isOpen={isScorerConsoleOpen}
+          onClose={() => setIsScorerConsoleOpen(false)}
+          onMatchUpdated={() => {
+            const updated = matchRepository.getById(match.id);
+            if (updated) setRelatedTournamentMatches(matchRepository.getAll().filter(m => m.tournamentId === match.tournamentId));
+          }}
+        />
+      )}
+
+      {/* Quick Score Upload Modal */}
+      {isQuickScoreOpen && (
+        <QuickScoreUploadModal
+          match={match}
+          isOpen={isQuickScoreOpen}
+          onClose={() => setIsQuickScoreOpen(false)}
+          onMatchUpdated={() => {
+            const updated = matchRepository.getById(match.id);
+            if (updated) setRelatedTournamentMatches(matchRepository.getAll().filter(m => m.tournamentId === match.tournamentId));
+          }}
+        />
+      )}
 
     </div>
   );

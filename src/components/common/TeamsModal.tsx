@@ -19,40 +19,40 @@ export const TeamsModal: React.FC<TeamsModalProps> = ({ isOpen, onClose }) => {
   const teams = Array.from(teamsMap.values());
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 overflow-y-auto pt-safe pb-safe">
       <div 
         className="fixed inset-0 bg-[#182230]/48 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-3xl bg-white border border-border-neutral rounded-2xl sm:rounded-3xl shadow-card-hover overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200 my-8">
+      <div className="relative w-full max-w-3xl min-h-screen sm:min-h-0 bg-white border-0 sm:border border-border-neutral rounded-none sm:rounded-3xl shadow-card-hover overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200 my-0 sm:my-8 flex flex-col">
         
         {/* Header */}
-        <div className="px-6 py-5 border-b border-border-neutral bg-surface-muted flex items-center justify-between">
+        <div className="px-5 sm:px-6 py-4 sm:py-5 border-b border-border-neutral bg-surface-muted flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-soft border border-brand-orange/30 flex items-center justify-center text-brand-orange">
+            <div className="w-10 h-10 rounded-xl bg-brand-soft border border-brand-orange/30 flex items-center justify-center text-brand-orange shadow-xs">
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-display font-bold text-text-primary">
+              <h3 className="text-base sm:text-lg font-display font-bold text-text-primary">
                 Ball Badminton Teams Directory
               </h3>
               <p className="text-xs text-text-secondary">
-                Active State Associations &amp; Collegiate Fives Squads
+                Active State Associations &amp; Collegiate Squads
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-border-neutral transition-colors"
+            className="p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-border-neutral transition-colors active:scale-95"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Body */}
-        <div className="p-6 max-h-[75vh] overflow-y-auto space-y-4">
+        <div className="p-4 sm:p-6 flex-1 overflow-y-auto space-y-4">
           <div className="p-3 rounded-xl bg-brand-soft border border-brand-orange/30 text-xs text-text-secondary flex items-center gap-2">
             <Shield className="w-4 h-4 text-brand-orange shrink-0" />
             <span>

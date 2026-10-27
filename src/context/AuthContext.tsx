@@ -78,6 +78,7 @@ export interface AuthContextType {
   switchActiveUser: (userIdOrEmail: string) => void;
   loginWithEmail: (email: string) => { success: boolean; error?: string };
   signInWithPassword: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   signUpWithPassword: (email: string, password: string, fullName: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   resetUsersToDefault: () => void;
@@ -297,6 +298,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Demo mode fallback
     return loginWithEmail(email);
+  };
+
+  // Real Supabase Sign-in with Google OAuth
+  const signInWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
+    if (isSupabaseConfigured() && supabase) {
+      const redirectUrl = `${window.location.origin}/admin`;
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+      return { success: true };
+    }
+
+    // Demo mode fallback: authenticate directly as Super Admin
+    switchActiveUser(SUPER_ADMIN_EMAIL);
+    return { success: true };
   };
 
   // Real Supabase User Sign-Up
@@ -549,6 +576,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         switchActiveUser,
         loginWithEmail,
         signInWithPassword,
+        signInWithGoogle,
         signUpWithPassword,
         logout,
         resetUsersToDefault,

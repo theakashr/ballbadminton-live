@@ -7,7 +7,8 @@ import {
   Trash2, 
   Play, 
   CheckCircle,
-  Flame
+  Flame,
+  Edit3
 } from 'lucide-react';
 import { DataTable, type Column } from '../../components/admin/common/DataTable';
 import { SearchAndFilter, type FilterConfig } from '../../components/admin/common/SearchAndFilter';
@@ -15,6 +16,7 @@ import { StatusBadge } from '../../components/admin/common/StatusBadge';
 import { ConfirmDialog } from '../../components/admin/common/ConfirmDialog';
 import { MatchCreationWizard } from '../../components/admin/matches/MatchCreationWizard';
 import { LiveScorerConsole } from '../../components/admin/matches/LiveScorerConsole';
+import { QuickScoreUploadModal } from '../../components/admin/matches/QuickScoreUploadModal';
 import { matchRepository } from '../../repositories/matchRepository';
 import { activityRepository } from '../../repositories/activityRepository';
 import { useAuth } from '../../context/AuthContext';
@@ -35,6 +37,7 @@ export const AdminMatchesPage: React.FC = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Match | null>(null);
   const [scoringModalMatch, setScoringModalMatch] = useState<Match | null>(null);
+  const [quickScoreMatch, setQuickScoreMatch] = useState<Match | null>(null);
 
   const reload = () => {
     setMatches(matchRepository.getAll());
@@ -214,14 +217,23 @@ export const AdminMatchesPage: React.FC = () => {
       header: 'Actions',
       className: 'text-right',
       render: (m) => (
-        <div className="flex items-center justify-end gap-1.5">
+        <div className="flex items-center justify-end gap-1.5 flex-wrap">
           <button
             onClick={() => setScoringModalMatch(m)}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-soft hover:bg-brand-orange/20 text-brand-orange text-xs font-semibold border border-brand-orange/30 transition-colors"
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-brand-soft hover:bg-brand-orange/20 text-brand-orange text-xs font-semibold border border-brand-orange/30 transition-colors active:scale-95"
             title="Live Court Scoring Console"
           >
-            <Flame className="w-3 h-3" />
+            <Flame className="w-3.5 h-3.5" />
             <span>Console</span>
+          </button>
+
+          <button
+            onClick={() => setQuickScoreMatch(m)}
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-surface-muted hover:bg-border-neutral text-text-primary text-xs font-semibold border border-border-neutral transition-colors active:scale-95"
+            title="Upload / Edit Set Scores"
+          >
+            <Edit3 className="w-3.5 h-3.5 text-brand-orange" />
+            <span>Upload Score</span>
           </button>
 
           {canScheduleMatches && (
@@ -229,10 +241,10 @@ export const AdminMatchesPage: React.FC = () => {
               {m.status === 'upcoming' && (
                 <button
                   onClick={() => handleUpdateStatus(m, 'live')}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-status-live text-xs font-semibold border border-red-200 transition-colors"
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-status-live text-xs font-semibold border border-red-200 transition-colors active:scale-95"
                   title="Mark Match as LIVE"
                 >
-                  <Play className="w-3 h-3 fill-current" />
+                  <Play className="w-3.5 h-3.5 fill-current" />
                   <span>Start</span>
                 </button>
               )}
@@ -240,10 +252,10 @@ export const AdminMatchesPage: React.FC = () => {
               {m.status === 'live' && (
                 <button
                   onClick={() => handleUpdateStatus(m, 'completed')}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-status-success text-xs font-semibold border border-emerald-200 transition-colors"
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-status-success text-xs font-semibold border border-emerald-200 transition-colors active:scale-95"
                   title="Mark Match as Completed"
                 >
-                  <CheckCircle className="w-3 h-3" />
+                  <CheckCircle className="w-3.5 h-3.5" />
                   <span>End</span>
                 </button>
               )}
@@ -334,6 +346,16 @@ export const AdminMatchesPage: React.FC = () => {
           matchId={scoringModalMatch.id}
           isOpen={Boolean(scoringModalMatch)}
           onClose={() => setScoringModalMatch(null)}
+          onMatchUpdated={reload}
+        />
+      )}
+
+      {/* Fast Score Upload / Manual Score Editor */}
+      {quickScoreMatch && (
+        <QuickScoreUploadModal
+          match={quickScoreMatch}
+          isOpen={Boolean(quickScoreMatch)}
+          onClose={() => setQuickScoreMatch(null)}
           onMatchUpdated={reload}
         />
       )}

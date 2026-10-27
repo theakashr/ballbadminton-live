@@ -1,25 +1,36 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Trophy, 
   Table, 
   GitFork, 
   Crown, 
-  Medal 
+  Medal,
+  ChevronRight,
+  Flame,
+  LayoutGrid,
+  Columns3
 } from 'lucide-react';
 import { standingsService } from '../../services/standingsService';
+import { nativeHaptics } from '../../lib/nativeBridge';
 import type { TeamStandings, Match } from '../../types';
 
 interface TournamentStandingsAndBracketsProps {
   tournamentId: string;
   tournamentName: string;
+  initialTab?: 'standings' | 'knockout';
 }
 
 export const TournamentStandingsAndBrackets: React.FC<TournamentStandingsAndBracketsProps> = ({
   tournamentId,
   tournamentName,
+  initialTab = 'standings',
 }) => {
-  const [activeTab, setActiveTab] = useState<'standings' | 'knockout'>('standings');
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<'standings' | 'knockout'>(initialTab);
   const [activeGroup, setActiveGroup] = useState<string>('all');
+  const [mobileKnockoutStage, setMobileKnockoutStage] = useState<'qf' | 'sf' | 'final'>('qf');
+  const [mobileViewStyle, setMobileViewStyle] = useState<'stage' | 'tree'>('stage');
   
   const [standingsData, setStandingsData] = useState<{
     overall: TeamStandings[];
@@ -34,17 +45,145 @@ export const TournamentStandingsAndBrackets: React.FC<TournamentStandingsAndBrac
   }>({ quarterFinals: [], semiFinals: [] });
 
   useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
+
+  useEffect(() => {
     const standings = standingsService.calculateStandings(tournamentId);
     setStandingsData(standings);
 
     const tree = standingsService.generateKnockoutTree(tournamentId);
     setKnockoutData(tree);
+
+    // Auto-select the most active stage for mobile
+    if (tree.final && (tree.final.status === 'live' || tree.final.status === 'completed')) {
+      setMobileKnockoutStage('final');
+    } else if (tree.semiFinals.some(m => m.status === 'live' || m.status === 'completed')) {
+      setMobileKnockoutStage('sf');
+    } else {
+      setMobileKnockoutStage('qf');
+    }
   }, [tournamentId]);
 
   const groupKeys = Object.keys(standingsData.groups);
   const displayedStandings = activeGroup === 'all' 
     ? standingsData.overall 
     : (standingsData.groups[activeGroup] || []);
+
+  const handleMatchClick = (matchId: string) => {
+    nativeHaptics.selection();
+    navigate(`/matches/${matchId}`);
+  };
+
+  // Render a single high-quality mobile-friendly match bracket card
+  const renderBracketMatchCard = (m: Match, isFinal: boolean = false) => {
+    const isTeam1Winner = m.status === 'completed' && m.team1SetsWon > m.team2SetsWon;
+    const isTeam2Winner = m.status === 'completed' && m.team2SetsWon > m.team1SetsWon;
+    const isLive = m.status === 'live';
+
+    return (
+      <div
+        key={m.id}
+        onClick={() => handleMatchClick(m.id)}
+        className={`p-3.5 sm:p-4 rounded-2xl border transition-all duration-200 cursor-pointer text-xs active:scale-[0.99] group shadow-sm ${
+          isFinal
+            ? 'bg-amber-500/5 border-brand-orange shadow-card hover:border-brand-orange hover:shadow-card-hover'
+            : isLive
+            ? 'bg-white border-rose-300 ring-1 ring-rose-200 hover:border-rose-400'
+            : 'bg-white border-border-neutral hover:border-brand-orange/60 hover:shadow-card-hover'
+        }`}
+      >
+        {/* Card Header */}
+        <div className="flex items-center justify-between pb-2 mb-2 border-b border-border-neutral/70 text-[10px]">
+          <div className="flex items-center gap-1.5 font-medium text-text-secondary">
+            <span>{m.stage || (isFinal ? 'Championship Final' : 'Match')}</span>
+            <span>•</span>
+            <span className="truncate max-w-[120px]">{m.court}</span>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            {isLive ? (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-50 text-status-live font-bold uppercase tracking-wider text-[9px] border border-rose-200 animate-pulse">
+                <Flame className="w-2.5 h-2.5" />
+                <span>Live</span>
+              </span>
+            ) : m.status === 'completed' ? (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-status-success font-semibold text-[9px] border border-emerald-200">
+                <span>Final</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-muted text-text-secondary font-medium text-[9px]">
+                <span>{m.scheduledTime || 'Scheduled'}</span>
+              </span>
+            )}
+            <ChevronRight className="w-3.5 h-3.5 text-text-secondary/60 group-hover:text-brand-orange transition-colors" />
+          </div>
+        </div>
+
+        {/* Team 1 Row */}
+        <div className={`flex items-center justify-between py-1.5 px-2 rounded-xl transition-colors ${
+          isTeam1Winner ? 'bg-amber-500/10 font-bold' : ''
+        }`}>
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            <span
+              className="w-6 h-6 rounded-lg flex items-center justify-center font-bold text-[10px] text-white shrink-0 shadow-xs"
+              style={{ backgroundColor: m.team1.logoBg || '#182230' }}
+            >
+              {m.team1.shortName}
+            </span>
+            <span className={`truncate text-sm ${isTeam1Winner ? 'text-brand-orange font-extrabold' : 'text-text-primary'}`}>
+              {m.team1.name}
+            </span>
+            {isTeam1Winner && (
+              <Crown className="w-3 h-3 text-brand-orange shrink-0 fill-current" />
+            )}
+          </div>
+          <span className={`font-score text-base ml-2 shrink-0 ${
+            isTeam1Winner ? 'text-brand-orange font-black' : isLive && m.servingTeamId === m.team1.id ? 'text-brand-orange font-bold' : 'text-text-primary font-bold'
+          }`}>
+            {m.team1SetsWon}
+          </span>
+        </div>
+
+        {/* Team 2 Row */}
+        <div className={`flex items-center justify-between py-1.5 px-2 rounded-xl mt-0.5 transition-colors ${
+          isTeam2Winner ? 'bg-amber-500/10 font-bold' : ''
+        }`}>
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            <span
+              className="w-6 h-6 rounded-lg flex items-center justify-center font-bold text-[10px] text-white shrink-0 shadow-xs"
+              style={{ backgroundColor: m.team2.logoBg || '#182230' }}
+            >
+              {m.team2.shortName}
+            </span>
+            <span className={`truncate text-sm ${isTeam2Winner ? 'text-brand-orange font-extrabold' : 'text-text-primary'}`}>
+              {m.team2.name}
+            </span>
+            {isTeam2Winner && (
+              <Crown className="w-3 h-3 text-brand-orange shrink-0 fill-current" />
+            )}
+          </div>
+          <span className={`font-score text-base ml-2 shrink-0 ${
+            isTeam2Winner ? 'text-brand-orange font-black' : isLive && m.servingTeamId === m.team2.id ? 'text-brand-orange font-bold' : 'text-text-primary font-bold'
+          }`}>
+            {m.team2SetsWon}
+          </span>
+        </div>
+
+        {/* Set-by-Set Scores breakdown if recorded */}
+        {m.setScores && m.setScores.length > 0 && (
+          <div className="mt-2 pt-2 border-t border-border-neutral/60 flex items-center gap-2 text-[10px] text-text-secondary font-mono flex-wrap">
+            <span className="text-[9px] uppercase font-bold text-text-secondary tracking-wider">Sets:</span>
+            {m.setScores.map((s, idx) => (
+              <span key={idx} className="px-1.5 py-0.5 rounded bg-surface-muted border border-border-neutral/60">
+                G{idx + 1}: {s.team1Score}-{s.team2Score}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="bg-white border border-border-neutral rounded-2xl p-6 shadow-card text-text-primary space-y-6">
@@ -248,111 +387,208 @@ export const TournamentStandingsAndBrackets: React.FC<TournamentStandingsAndBrac
         <div className="space-y-6">
           {/* Champion Banner if completed */}
           {knockoutData.champion && (
-            <div className="p-4 rounded-2xl bg-brand-soft border border-brand-orange/40 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Crown className="w-8 h-8 text-brand-orange" />
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-brand-soft to-amber-500/10 border-2 border-brand-orange/50 flex items-center justify-between shadow-sm">
+              <div className="flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-2xl bg-brand-orange flex items-center justify-center text-white shadow-md">
+                  <Crown className="w-6 h-6 fill-current" />
+                </div>
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-brand-orange block">
                     Tournament Champion
                   </span>
-                  <span className="text-lg font-display font-extrabold text-text-primary">
-                    {knockoutData.champion.name} ({knockoutData.champion.state})
+                  <span className="text-base sm:text-lg font-display font-black text-text-primary">
+                    {knockoutData.champion.name}
+                  </span>
+                  <span className="text-xs text-text-secondary block">
+                    {knockoutData.champion.city ? `${knockoutData.champion.city}, ` : ''}{knockoutData.champion.state} Association
                   </span>
                 </div>
               </div>
-              <Medal className="w-8 h-8 text-brand-orange" />
+              <Medal className="w-8 h-8 text-brand-orange shrink-0 animate-bounce" />
             </div>
           )}
 
-          {/* Bracket Rail / Grid */}
-          <div className="flex md:grid md:grid-cols-3 overflow-x-auto snap-x snap-mandatory gap-4 pb-3 sm:pb-0 no-scrollbar card-rail">
+          {/* Mobile Stage Selector & View Mode Switcher (< md) */}
+          <div className="md:hidden space-y-3">
+            {/* View Style Switcher (Cards vs Tree) */}
+            <div className="flex items-center justify-between pb-2 border-b border-border-neutral">
+              <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
+                Knockout Rounds
+              </span>
+              <div className="flex items-center p-0.5 rounded-lg bg-surface-muted border border-border-neutral text-[11px]">
+                <button
+                  type="button"
+                  onClick={() => {
+                    nativeHaptics.selection();
+                    setMobileViewStyle('stage');
+                  }}
+                  className={`px-2.5 py-1 rounded-md font-semibold transition-all flex items-center gap-1 ${
+                    mobileViewStyle === 'stage'
+                      ? 'bg-white text-brand-orange shadow-xs font-bold'
+                      : 'text-text-secondary'
+                  }`}
+                >
+                  <LayoutGrid className="w-3 h-3" />
+                  <span>Stage View</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    nativeHaptics.selection();
+                    setMobileViewStyle('tree');
+                  }}
+                  className={`px-2.5 py-1 rounded-md font-semibold transition-all flex items-center gap-1 ${
+                    mobileViewStyle === 'tree'
+                      ? 'bg-white text-brand-orange shadow-xs font-bold'
+                      : 'text-text-secondary'
+                  }`}
+                >
+                  <Columns3 className="w-3 h-3" />
+                  <span>Full Tree</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Stage Selector Pills (when in Stage View) */}
+            {mobileViewStyle === 'stage' && (
+              <div className="flex items-center gap-1.5 p-1 rounded-xl bg-surface-muted border border-border-neutral overflow-x-auto no-scrollbar">
+                <button
+                  type="button"
+                  onClick={() => {
+                    nativeHaptics.selection();
+                    setMobileKnockoutStage('qf');
+                  }}
+                  className={`flex-1 min-w-[95px] py-2 px-2.5 rounded-lg text-xs font-bold text-center transition-all ${
+                    mobileKnockoutStage === 'qf'
+                      ? 'bg-brand-orange text-white shadow-sm'
+                      : 'text-text-secondary hover:text-text-primary'
+                  }`}
+                >
+                  Quarter-Finals ({knockoutData.quarterFinals.length})
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    nativeHaptics.selection();
+                    setMobileKnockoutStage('sf');
+                  }}
+                  className={`flex-1 min-w-[95px] py-2 px-2.5 rounded-lg text-xs font-bold text-center transition-all ${
+                    mobileKnockoutStage === 'sf'
+                      ? 'bg-brand-orange text-white shadow-sm'
+                      : 'text-text-secondary hover:text-text-primary'
+                  }`}
+                >
+                  Semi-Finals ({knockoutData.semiFinals.length})
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    nativeHaptics.selection();
+                    setMobileKnockoutStage('final');
+                  }}
+                  className={`flex-1 min-w-[95px] py-2 px-2.5 rounded-lg text-xs font-bold text-center transition-all ${
+                    mobileKnockoutStage === 'final'
+                      ? 'bg-brand-orange text-white shadow-sm'
+                      : 'text-text-secondary hover:text-text-primary'
+                  }`}
+                >
+                  Grand Final
+                </button>
+              </div>
+            )}
+
+            {/* Mobile Stage Cards Content */}
+            {mobileViewStyle === 'stage' && (
+              <div className="space-y-3 pt-1">
+                {mobileKnockoutStage === 'qf' && (
+                  <>
+                    {knockoutData.quarterFinals.length === 0 ? (
+                      <div className="p-8 rounded-2xl bg-surface-muted border border-border-neutral text-xs text-text-secondary text-center">
+                        Quarter-Final fixtures are being scheduled.
+                      </div>
+                    ) : (
+                      knockoutData.quarterFinals.map((m) => renderBracketMatchCard(m))
+                    )}
+                  </>
+                )}
+
+                {mobileKnockoutStage === 'sf' && (
+                  <>
+                    {knockoutData.semiFinals.length === 0 ? (
+                      <div className="p-8 rounded-2xl bg-surface-muted border border-border-neutral text-xs text-text-secondary text-center">
+                        Semi-Final fixtures awaiting Quarter-Final results.
+                      </div>
+                    ) : (
+                      knockoutData.semiFinals.map((m) => renderBracketMatchCard(m))
+                    )}
+                  </>
+                )}
+
+                {mobileKnockoutStage === 'final' && (
+                  <>
+                    {knockoutData.final ? (
+                      renderBracketMatchCard(knockoutData.final, true)
+                    ) : (
+                      <div className="p-8 rounded-2xl bg-surface-muted border border-border-neutral text-xs text-text-secondary text-center space-y-1">
+                        <Trophy className="w-8 h-8 text-brand-orange mx-auto opacity-70 mb-2" />
+                        <span className="font-bold text-text-primary block">Championship Final</span>
+                        <p>Grand final will be scheduled following the conclusion of Semi-Finals.</p>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Desktop Bracket Rail OR Mobile Tree View */}
+          <div className={`${mobileViewStyle === 'tree' ? 'flex' : 'hidden md:grid'} md:grid-cols-3 overflow-x-auto snap-x snap-mandatory gap-4 pb-3 sm:pb-0 no-scrollbar card-rail`}>
             
             {/* Round 1: Quarter Finals */}
-            <div className="space-y-3 min-w-[260px] sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center">
+            <div className="space-y-3 min-w-[280px] sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center">
               <div className="text-xs font-bold uppercase tracking-wider text-brand-orange pb-2 border-b border-border-neutral flex items-center justify-between">
                 <span>Quarter-Finals</span>
-                <span className="text-[10px] text-text-secondary">4 Fixtures</span>
+                <span className="text-[10px] text-text-secondary font-mono">{knockoutData.quarterFinals.length} Fixtures</span>
               </div>
 
               {knockoutData.quarterFinals.length === 0 ? (
-                <div className="p-4 rounded-xl bg-surface-muted border border-border-neutral text-xs text-text-secondary text-center">
+                <div className="p-6 rounded-2xl bg-surface-muted border border-border-neutral text-xs text-text-secondary text-center">
                   Fixtures being scheduled
                 </div>
               ) : (
-                knockoutData.quarterFinals.map((m) => (
-                  <div key={m.id} className="p-3.5 rounded-xl bg-surface-muted border border-border-neutral hover:border-brand-orange/60 hover:shadow-card-hover transition-all duration-200 cursor-pointer space-y-2 text-xs group">
-                    <div className="flex justify-between text-[10px] text-text-secondary">
-                      <span>{m.court}</span>
-                      <span className="font-semibold text-text-primary">{m.status.toUpperCase()}</span>
-                    </div>
-                    <div className="flex justify-between items-center font-semibold text-text-primary group-hover:text-brand-orange transition-colors">
-                      <span>{m.team1.shortName}</span>
-                      <span className="font-mono text-brand-orange font-bold">{m.team1SetsWon}</span>
-                    </div>
-                    <div className="flex justify-between items-center font-semibold text-text-primary group-hover:text-brand-orangeHover transition-colors">
-                      <span>{m.team2.shortName}</span>
-                      <span className="font-mono text-brand-orangeHover font-bold">{m.team2SetsWon}</span>
-                    </div>
-                  </div>
-                ))
+                knockoutData.quarterFinals.map((m) => renderBracketMatchCard(m))
               )}
             </div>
 
             {/* Round 2: Semi Finals */}
-            <div className="space-y-3 min-w-[260px] sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center">
+            <div className="space-y-3 min-w-[280px] sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center">
               <div className="text-xs font-bold uppercase tracking-wider text-status-warning pb-2 border-b border-border-neutral flex items-center justify-between">
                 <span>Semi-Finals</span>
-                <span className="text-[10px] text-text-secondary">2 Fixtures</span>
+                <span className="text-[10px] text-text-secondary font-mono">{knockoutData.semiFinals.length} Fixtures</span>
               </div>
 
               {knockoutData.semiFinals.length === 0 ? (
-                <div className="p-4 rounded-xl bg-surface-muted border border-border-neutral text-xs text-text-secondary text-center">
+                <div className="p-6 rounded-2xl bg-surface-muted border border-border-neutral text-xs text-text-secondary text-center">
                   Awaiting QF winners
                 </div>
               ) : (
-                knockoutData.semiFinals.map((m) => (
-                  <div key={m.id} className="p-3.5 rounded-xl bg-surface-muted border border-border-neutral hover:border-brand-orange/60 hover:shadow-card-hover transition-all duration-200 cursor-pointer space-y-2 text-xs group">
-                    <div className="flex justify-between text-[10px] text-text-secondary">
-                      <span>{m.stage}</span>
-                      <span className="font-semibold text-text-primary">{m.status.toUpperCase()}</span>
-                    </div>
-                    <div className="flex justify-between items-center font-semibold text-text-primary group-hover:text-brand-orange transition-colors">
-                      <span>{m.team1.name}</span>
-                      <span className="font-mono text-brand-orange font-bold">{m.team1SetsWon}</span>
-                    </div>
-                    <div className="flex justify-between items-center font-semibold text-text-primary group-hover:text-brand-orangeHover transition-colors">
-                      <span>{m.team2.name}</span>
-                      <span className="font-mono text-brand-orangeHover font-bold">{m.team2SetsWon}</span>
-                    </div>
-                  </div>
-                ))
+                knockoutData.semiFinals.map((m) => renderBracketMatchCard(m))
               )}
             </div>
 
             {/* Round 3: Championship Final */}
-            <div className="space-y-3 min-w-[260px] sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center">
+            <div className="space-y-3 min-w-[280px] sm:min-w-0 flex-shrink-0 sm:flex-shrink snap-center">
               <div className="text-xs font-bold uppercase tracking-wider text-status-success pb-2 border-b border-border-neutral flex items-center justify-between">
                 <span>Grand Final</span>
                 <Trophy className="w-3.5 h-3.5 text-brand-orange" />
               </div>
 
               {knockoutData.final ? (
-                <div className="p-4 rounded-xl bg-brand-soft border-2 border-brand-orange shadow-card hover:scale-[1.01] transition-transform duration-200 space-y-2.5 text-xs">
-                  <div className="flex justify-between text-[10px] text-brand-orange font-bold">
-                    <span>BBFI Trophy Match</span>
-                    <span>{knockoutData.final.status.toUpperCase()}</span>
-                  </div>
-                  <div className="flex justify-between items-center font-bold text-text-primary text-sm">
-                    <span className="text-brand-orange">{knockoutData.final.team1.name}</span>
-                    <span className="font-score text-lg text-brand-orange">{knockoutData.final.team1SetsWon}</span>
-                  </div>
-                  <div className="flex justify-between items-center font-bold text-text-primary text-sm">
-                    <span className="text-text-primary">{knockoutData.final.team2.name}</span>
-                    <span className="font-score text-lg text-text-primary">{knockoutData.final.team2SetsWon}</span>
-                  </div>
-                </div>
+                renderBracketMatchCard(knockoutData.final, true)
               ) : (
-                <div className="p-6 rounded-xl bg-surface-muted border border-border-neutral text-xs text-text-secondary text-center">
+                <div className="p-6 rounded-2xl bg-surface-muted border border-border-neutral text-xs text-text-secondary text-center">
                   Championship Final to be scheduled following Semi-Final matches.
                 </div>
               )}

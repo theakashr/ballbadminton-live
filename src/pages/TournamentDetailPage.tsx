@@ -651,6 +651,7 @@ export const TournamentDetailPage: React.FC = () => {
         <TournamentStandingsAndBrackets
           tournamentId={tournament.id}
           tournamentName={tournament.name}
+          initialTab="standings"
         />
       )}
 
@@ -661,6 +662,7 @@ export const TournamentDetailPage: React.FC = () => {
         <TournamentStandingsAndBrackets
           tournamentId={tournament.id}
           tournamentName={tournament.name}
+          initialTab="knockout"
         />
       )}
 

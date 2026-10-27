@@ -119,7 +119,10 @@ export const LiveScorerConsole: React.FC<LiveScorerConsoleProps> = ({
     (currentSetScore.team1Score + currentSetScore.team2Score <= 31);
 
   // Award Point Handler with idempotency & concurrency protection
-  const handleAwardPoint = async (awardedTeamId: string, eventType: 'rally_point' | 'ace' = 'rally_point') => {
+  const handleAwardPoint = async (
+    awardedTeamId: string,
+    eventType: 'rally_point' | 'service_fault' | 'ace' | 'penalty_point' = 'rally_point'
+  ) => {
     if (isSubmitting) return; // Prevent double taps
     if (!isOnline && authBackend === 'supabase') {
       setErrorMessage('Device is offline. Reconnect to Wi-Fi to resume authoritative match scoring.');
@@ -345,12 +348,14 @@ export const LiveScorerConsole: React.FC<LiveScorerConsoleProps> = ({
 
         {/* Change of Ends Alert */}
         {isChangeOfEnds && (
-          <div className="bg-brand-soft border-b border-brand-orange/30 px-6 py-2.5 flex items-center justify-between text-xs text-brand-orange font-bold">
+          <div className="bg-amber-400 text-black border-b-2 border-black px-4 sm:px-6 py-3 flex items-center justify-between text-xs font-black shadow-md animate-pulse">
             <div className="flex items-center gap-2">
-              <ArrowLeftRight className="w-4 h-4" />
-              <span>BBFI RULE: 15 Points Reached — TEAMS MUST CHANGE ENDS NOW</span>
+              <ArrowLeftRight className="w-5 h-5 shrink-0" />
+              <span>BBFI RULE: 15 Points Reached — CHANGE OF ENDS (SWAP COURTS NOW)</span>
             </div>
-            <span className="text-[11px] font-normal text-text-primary">Outdoor Red Clay Regulation</span>
+            <span className="text-[10px] uppercase font-black px-2 py-0.5 rounded bg-black text-white shrink-0">
+              Change Ends
+            </span>
           </div>
         )}
 
@@ -478,38 +483,85 @@ export const LiveScorerConsole: React.FC<LiveScorerConsoleProps> = ({
 
           {/* Point Action Buttons with Spring Tactile Physics */}
           {match.status === 'live' && isAuthorizedToScore ? (
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                disabled={isSubmitting || (!isOnline && authBackend === 'supabase')}
-                onClick={() => handleAwardPoint(match.team1.id, 'rally_point')}
-                className={`tactile-btn py-5 px-6 rounded-2xl disabled:opacity-40 disabled:cursor-not-allowed font-display font-extrabold text-lg shadow-card flex flex-col items-center justify-center ${
-                  isOutdoorMode
-                    ? 'bg-amber-400 hover:bg-amber-300 text-black border-2 border-black'
-                    : 'bg-brand-orange hover:bg-brand-orangeHover text-white'
-                }`}
-              >
-                <span className="text-xl sm:text-2xl">+1 POINT</span>
-                <span className="text-xs font-bold uppercase tracking-wider opacity-90 truncate max-w-full">
-                  {match.team1.shortName}
-                </span>
-              </button>
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                <button
+                  type="button"
+                  disabled={isSubmitting || (!isOnline && authBackend === 'supabase')}
+                  onClick={() => handleAwardPoint(match.team1.id, 'rally_point')}
+                  className={`tactile-btn py-4 sm:py-5 px-4 sm:px-6 rounded-2xl disabled:opacity-40 disabled:cursor-not-allowed font-display font-extrabold shadow-card flex flex-col items-center justify-center active:scale-95 transition-all ${
+                    isOutdoorMode
+                      ? 'bg-amber-400 hover:bg-amber-300 text-black border-2 border-black'
+                      : 'bg-brand-orange hover:bg-brand-orangeHover text-white'
+                  }`}
+                >
+                  <span className="text-xl sm:text-2xl font-black">+1 POINT</span>
+                  <span className="text-xs font-bold uppercase tracking-wider opacity-90 truncate max-w-full">
+                    {match.team1.shortName}
+                  </span>
+                </button>
 
-              <button
-                type="button"
-                disabled={isSubmitting || (!isOnline && authBackend === 'supabase')}
-                onClick={() => handleAwardPoint(match.team2.id, 'rally_point')}
-                className={`tactile-btn py-5 px-6 rounded-2xl disabled:opacity-40 disabled:cursor-not-allowed font-display font-extrabold text-lg shadow-card flex flex-col items-center justify-center ${
-                  isOutdoorMode
-                    ? 'bg-cyan-400 hover:bg-cyan-300 text-black border-2 border-black'
-                    : 'bg-brand-orangeHover hover:bg-amber-700 text-white'
-                }`}
-              >
-                <span className="text-xl sm:text-2xl">+1 POINT</span>
-                <span className="text-xs font-bold uppercase tracking-wider opacity-90 truncate max-w-full">
-                  {match.team2.shortName}
-                </span>
-              </button>
+                <button
+                  type="button"
+                  disabled={isSubmitting || (!isOnline && authBackend === 'supabase')}
+                  onClick={() => handleAwardPoint(match.team2.id, 'rally_point')}
+                  className={`tactile-btn py-4 sm:py-5 px-4 sm:px-6 rounded-2xl disabled:opacity-40 disabled:cursor-not-allowed font-display font-extrabold shadow-card flex flex-col items-center justify-center active:scale-95 transition-all ${
+                    isOutdoorMode
+                      ? 'bg-cyan-400 hover:bg-cyan-300 text-black border-2 border-black'
+                      : 'bg-brand-orangeHover hover:bg-amber-700 text-white'
+                  }`}
+                >
+                  <span className="text-xl sm:text-2xl font-black">+1 POINT</span>
+                  <span className="text-xs font-bold uppercase tracking-wider opacity-90 truncate max-w-full">
+                    {match.team2.shortName}
+                  </span>
+                </button>
+              </div>
+
+              {/* Fast Ace & Fault Quick Event Triggers for Mobile Official Scoring */}
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    disabled={isSubmitting || (!isOnline && authBackend === 'supabase')}
+                    onClick={() => handleAwardPoint(match.team1.id, 'ace')}
+                    className="flex-1 py-2 px-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-brand-orange font-bold border border-brand-orange/30 text-[11px] truncate active:scale-95 transition-all text-center"
+                    title="Record Ace for Team 1"
+                  >
+                    ⚡ Ace ({match.team1.shortName})
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isSubmitting || (!isOnline && authBackend === 'supabase')}
+                    onClick={() => handleAwardPoint(match.team2.id, 'service_fault')}
+                    className="py-2 px-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-status-live font-semibold border border-red-200 text-[11px] truncate active:scale-95 transition-all text-center"
+                    title="Team 1 Service Fault (Point to Team 2)"
+                  >
+                    Fault
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    disabled={isSubmitting || (!isOnline && authBackend === 'supabase')}
+                    onClick={() => handleAwardPoint(match.team1.id, 'service_fault')}
+                    className="py-2 px-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-status-live font-semibold border border-red-200 text-[11px] truncate active:scale-95 transition-all text-center"
+                    title="Team 2 Service Fault (Point to Team 1)"
+                  >
+                    Fault
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isSubmitting || (!isOnline && authBackend === 'supabase')}
+                    onClick={() => handleAwardPoint(match.team2.id, 'ace')}
+                    className="flex-1 py-2 px-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-brand-orange font-bold border border-brand-orange/30 text-[11px] truncate active:scale-95 transition-all text-center"
+                    title="Record Ace for Team 2"
+                  >
+                    ⚡ Ace ({match.team2.shortName})
+                  </button>
+                </div>
+              </div>
             </div>
           ) : match.status !== 'live' ? (
             <div className="p-4 rounded-2xl bg-surface-muted border border-border-neutral text-center">
