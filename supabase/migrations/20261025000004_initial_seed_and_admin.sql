@@ -7,47 +7,70 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 DECLARE
     v_role user_role := 'viewer';
+    v_designation TEXT := 'Spectator / Official';
 BEGIN
-    -- Explicit designated Super Admin provisioning requires verified email confirmation
-    IF LOWER(NEW.email) = 'akashakashr505@gmail.com' AND (NEW.email_confirmed_at IS NOT NULL OR NEW.confirmed_at IS NOT NULL) THEN
+    IF LOWER(NEW.email) = 'akashakashr505@gmail.com' THEN
         v_role := 'super_admin';
+        v_designation := 'Platform Super Admin & Owner';
     END IF;
 
-    INSERT INTO public.profiles (
-        id,
-        email,
-        full_name,
-        role,
-        designation,
-        is_active
-    ) VALUES (
-        NEW.id,
-        NEW.email,
-        COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email, '@', 1)),
-        v_role,
-        CASE WHEN LOWER(NEW.email) = 'akashakashr505@gmail.com' AND (NEW.email_confirmed_at IS NOT NULL OR NEW.confirmed_at IS NOT NULL)
-             THEN 'Platform Super Admin & Owner' 
-             ELSE 'Spectator / Official' 
-        END,
-        TRUE
-    )
-    ON CONFLICT (id) DO UPDATE
-    SET email = EXCLUDED.email,
-        role = CASE 
-            WHEN LOWER(EXCLUDED.email) = 'akashakashr505@gmail.com' AND (NEW.email_confirmed_at IS NOT NULL OR NEW.confirmed_at IS NOT NULL) 
-            THEN 'super_admin'::user_role 
-            ELSE public.profiles.role 
-        END,
-        updated_at = timezone('utc'::text, now());
+    -- Upsert matching existing email or id to prevent unique constraint conflicts
+    IF EXISTS (SELECT 1 FROM public.profiles WHERE LOWER(email) = LOWER(NEW.email)) THEN
+        UPDATE public.profiles
+        SET id = NEW.id,
+            email = NEW.email,
+            full_name = COALESCE(NEW.raw_user_meta_data->>'full_name', profiles.full_name, split_part(NEW.email, '@', 1)),
+            role = CASE 
+                WHEN LOWER(NEW.email) = 'akashakashr505@gmail.com' THEN 'super_admin'::user_role 
+                ELSE public.profiles.role 
+            END,
+            designation = CASE 
+                WHEN LOWER(NEW.email) = 'akashakashr505@gmail.com' THEN 'Platform Super Admin & Owner' 
+                ELSE public.profiles.designation 
+            END,
+            is_active = TRUE,
+            updated_at = timezone('utc'::text, now())
+        WHERE LOWER(email) = LOWER(NEW.email);
+    ELSE
+        INSERT INTO public.profiles (
+            id,
+            email,
+            full_name,
+            role,
+            designation,
+            is_active
+        ) VALUES (
+            NEW.id,
+            NEW.email,
+            COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email, '@', 1)),
+            v_role,
+            v_designation,
+            TRUE
+        )
+        ON CONFLICT (id) DO UPDATE
+        SET email = EXCLUDED.email,
+            role = CASE 
+                WHEN LOWER(EXCLUDED.email) = 'akashakashr505@gmail.com' THEN 'super_admin'::user_role 
+                ELSE public.profiles.role 
+            END,
+            designation = CASE 
+                WHEN LOWER(EXCLUDED.email) = 'akashakashr505@gmail.com' THEN 'Platform Super Admin & Owner' 
+                ELSE public.profiles.designation 
+            END,
+            updated_at = timezone('utc'::text, now());
+    END IF;
 
+    RETURN NEW;
+EXCEPTION WHEN OTHERS THEN
+    RAISE WARNING 'handle_new_user error: %', SQLERRM;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, auth, pg_temp;
 
--- Bind Trigger to auth.users
+-- Bind Trigger ONLY on INSERT (prevents crashing during login token updates)
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
-    AFTER INSERT OR UPDATE ON auth.users
+    AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- 2. Explicit Trusted Bootstrap Procedure for Super Administrator

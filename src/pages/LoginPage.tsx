@@ -11,10 +11,152 @@ import {
   Lock,
   Mail,
   CheckCircle2,
-  Key
+  Key,
+  Copy,
+  Check
 } from 'lucide-react';
 import { useAuth, SUPER_ADMIN_EMAIL } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
+
+interface AuthErrorHelpProps {
+  errorMsg: string;
+  inputEmail?: string;
+}
+
+const AuthErrorHelp: React.FC<AuthErrorHelpProps> = ({ errorMsg, inputEmail }) => {
+  const [copied, setCopied] = useState(false);
+  const targetEmail = (inputEmail && inputEmail.trim()) || SUPER_ADMIN_EMAIL;
+  const isInvalidCreds = errorMsg.toLowerCase().includes('invalid') || errorMsg.toLowerCase().includes('credential');
+  const isRateLimit = errorMsg.toLowerCase().includes('rate limit');
+  const isNotConfirmed = errorMsg.toLowerCase().includes('not confirmed');
+  const isGrantingUser = errorMsg.toLowerCase().includes('granting user');
+
+  const copySql = (sql: string) => {
+    navigator.clipboard.writeText(sql);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const sqlResetQuery = `-- 1. Drop trigger if blocking login
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
+-- 2. Set new password & confirm email for Super Admin (Replace 'YourNewPassword123' with your password)
+UPDATE auth.users
+SET 
+  encrypted_password = extensions.crypt('YourNewPassword123', extensions.gen_salt('bf')),
+  email_confirmed_at = COALESCE(email_confirmed_at, now()),
+  updated_at = now()
+WHERE LOWER(email) = '${targetEmail.toLowerCase()}';
+
+-- 3. Ensure profile is super_admin and active
+INSERT INTO public.profiles (id, email, full_name, role, designation, is_active)
+SELECT id, email, COALESCE(raw_user_meta_data->>'full_name', 'Super Admin'), 'super_admin'::user_role, 'Platform Super Admin & Owner', TRUE
+FROM auth.users
+WHERE LOWER(email) = '${targetEmail.toLowerCase()}'
+ON CONFLICT (id) DO UPDATE
+SET role = 'super_admin'::user_role, designation = 'Platform Super Admin & Owner', is_active = TRUE;`;
+
+  return (
+    <div className="space-y-2.5">
+      <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-status-live flex items-start gap-2">
+        <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+        <div className="space-y-1">
+          <span className="font-bold block">{errorMsg}</span>
+          {isInvalidCreds && (
+            <p className="text-[11px] opacity-90 leading-relaxed">
+              The email or password does not match what is stored in Supabase. If you haven't set your password yet or forgot it (e.g. due to previous email rate limits), you can set your password directly via SQL or use Google Sign In.
+            </p>
+          )}
+          {isRateLimit && (
+            <p className="text-[11px] opacity-90 leading-relaxed">
+              Supabase restricts built-in email sending to a few emails per hour on default SMTP. You do not need an email — you can set your password instantly in your Supabase Dashboard or via SQL.
+            </p>
+          )}
+          {isNotConfirmed && (
+            <p className="text-[11px] opacity-90 leading-relaxed">
+              Supabase requires email confirmation before signing in. You can mark your email as confirmed in 1 click in your Supabase Dashboard.
+            </p>
+          )}
+          {isGrantingUser && (
+            <p className="text-[11px] opacity-90 leading-relaxed">
+              A legacy trigger on auth.users encountered an error during login token generation. You can remove the conflicting trigger in 1 click via the SQL Editor.
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* SQL Resolution Helper for Invalid Credentials, Granting User, or Rate Limits */}
+      {(isInvalidCreds || isGrantingUser || isRateLimit) && (
+        <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300 text-xs text-amber-950 space-y-2.5 shadow-xs">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 font-bold text-amber-950">
+              <Sparkles className="w-4 h-4 text-brand-orange shrink-0" />
+              <span>{isInvalidCreds ? 'Reset / Set Password via SQL Editor (10s):' : 'Fix in Supabase SQL Editor (10s):'}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => copySql(sqlResetQuery)}
+              className="text-[10px] font-semibold text-brand-orange hover:text-brand-orangeHover px-2 py-0.5 rounded bg-white border border-brand-orange/30 shadow-2xs flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3 h-3 text-emerald-600" />
+                  <span className="text-emerald-700 font-bold">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3" />
+                  <span>Copy SQL</span>
+                </>
+              )}
+            </button>
+          </div>
+          <p className="text-[11px] text-amber-900 leading-relaxed">
+            Open{' '}
+            <a
+              href="https://supabase.com/dashboard/project/yrlavkouxglogrrkjchf/sql/new"
+              target="_blank"
+              rel="noreferrer"
+              className="font-bold underline text-brand-orange hover:text-brand-orangeHover"
+            >
+              Supabase SQL Editor
+            </a>{' '}
+            and run this script to set your password directly (replace <code className="bg-amber-100 px-1 rounded font-bold">YourNewPassword123</code> with your chosen password):
+          </p>
+          <pre className="p-2.5 rounded bg-amber-100/70 text-[10px] font-mono overflow-x-auto text-amber-950 select-all max-h-36">
+            {sqlResetQuery}
+          </pre>
+        </div>
+      )}
+
+      {/* Unconfirmed Email Fix */}
+      {isNotConfirmed && (
+        <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300 text-xs text-amber-950 space-y-2 shadow-xs">
+          <div className="flex items-center gap-1.5 font-bold text-amber-950">
+            <Sparkles className="w-4 h-4 text-brand-orange shrink-0" />
+            <span>Instant 1-Click Fix in Supabase:</span>
+          </div>
+          <ol className="list-decimal pl-4 space-y-1.5 text-[11px] text-amber-900 leading-relaxed">
+            <li>
+              Open{' '}
+              <a
+                href="https://supabase.com/dashboard/project/yrlavkouxglogrrkjchf/auth/users"
+                target="_blank"
+                rel="noreferrer"
+                className="font-bold underline text-brand-orange hover:text-brand-orangeHover"
+              >
+                Supabase Dashboard → Users
+              </a>
+            </li>
+            <li>Click the <strong>···</strong> menu next to <strong>{targetEmail}</strong></li>
+            <li>Click <strong>Confirm email</strong>.</li>
+            <li>Return here and click <em>Sign In to Official Console</em> to enter!</li>
+          </ol>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -337,86 +479,7 @@ export const LoginPage: React.FC = () => {
               </div>
 
               {errorMsg && (
-                <div className="space-y-2">
-                  <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-status-live flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                    <div className="space-y-1">
-                      <span className="font-bold block">{errorMsg}</span>
-                      {errorMsg.toLowerCase().includes('rate limit') && (
-                        <p className="text-[11px] opacity-90 leading-relaxed">
-                          Supabase restricts built-in email sending to a few emails per hour on default SMTP. You do not need an email — you can set your password instantly in your Supabase Dashboard.
-                        </p>
-                      )}
-                      {errorMsg.toLowerCase().includes('not confirmed') && (
-                        <p className="text-[11px] opacity-90 leading-relaxed">
-                          Supabase requires email confirmation before signing in. You can mark your email as confirmed in 1 click in your Supabase Dashboard.
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {errorMsg.toLowerCase().includes('not confirmed') && (
-                    <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300 text-xs text-amber-950 space-y-2 shadow-xs">
-                      <div className="flex items-center gap-1.5 font-bold text-amber-950">
-                        <Sparkles className="w-4 h-4 text-brand-orange shrink-0" />
-                        <span>Instant 1-Click Fix in Supabase:</span>
-                      </div>
-                      <ol className="list-decimal pl-4 space-y-1.5 text-[11px] text-amber-900 leading-relaxed">
-                        <li>
-                          Open{' '}
-                          <a
-                            href="https://supabase.com/dashboard/project/yrlavkouxglogrrkjchf/auth/users"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="font-bold underline text-brand-orange hover:text-brand-orangeHover"
-                          >
-                            Supabase Dashboard → Users
-                          </a>
-                        </li>
-                        <li>
-                          Click the <strong>···</strong> menu next to <strong>{inputEmail || SUPER_ADMIN_EMAIL}</strong>
-                        </li>
-                        <li>
-                          Click <strong>Confirm email</strong>.
-                        </li>
-                        <li>
-                          Return here and click <em>Sign In to Official Console</em> to enter!
-                        </li>
-                      </ol>
-                    </div>
-                  )}
-
-                  {errorMsg.toLowerCase().includes('rate limit') && (
-                    <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300 text-xs text-amber-950 space-y-2 shadow-xs">
-                      <div className="flex items-center gap-1.5 font-bold text-amber-950">
-                        <Sparkles className="w-4 h-4 text-brand-orange shrink-0" />
-                        <span>Instant Bypass (Takes 10 Seconds):</span>
-                      </div>
-                      <ol className="list-decimal pl-4 space-y-1.5 text-[11px] text-amber-900 leading-relaxed">
-                        <li>
-                          Open{' '}
-                          <a
-                            href="https://supabase.com/dashboard/project/yrlavkouxglogrrkjchf/auth/users"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="font-bold underline text-brand-orange hover:text-brand-orangeHover"
-                          >
-                            Supabase Dashboard → Users
-                          </a>
-                        </li>
-                        <li>
-                          Click the <strong>···</strong> menu next to <strong>{SUPER_ADMIN_EMAIL}</strong>
-                        </li>
-                        <li>
-                          Click <strong>Change password</strong>, enter your new password, and click Save.
-                        </li>
-                        <li>
-                          Return here, click <em>Back to Regular Sign In</em>, and enter your new password!
-                        </li>
-                      </ol>
-                    </div>
-                  )}
-                </div>
+                <AuthErrorHelp errorMsg={errorMsg} inputEmail={inputEmail} />
               )}
 
               {successMsg && (
@@ -461,86 +524,7 @@ export const LoginPage: React.FC = () => {
               </div>
 
               {errorMsg && (
-                <div className="space-y-2">
-                  <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-status-live flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                    <div className="space-y-1">
-                      <span className="font-bold block">{errorMsg}</span>
-                      {errorMsg.toLowerCase().includes('rate limit') && (
-                        <p className="text-[11px] opacity-90 leading-relaxed">
-                          Supabase restricts built-in email sending to a few emails per hour on default SMTP. You do not need an email — you can set your password instantly in your Supabase Dashboard.
-                        </p>
-                      )}
-                      {errorMsg.toLowerCase().includes('not confirmed') && (
-                        <p className="text-[11px] opacity-90 leading-relaxed">
-                          Supabase requires email confirmation before signing in. You can mark your email as confirmed in 1 click in your Supabase Dashboard.
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {errorMsg.toLowerCase().includes('not confirmed') && (
-                    <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300 text-xs text-amber-950 space-y-2 shadow-xs">
-                      <div className="flex items-center gap-1.5 font-bold text-amber-950">
-                        <Sparkles className="w-4 h-4 text-brand-orange shrink-0" />
-                        <span>Instant 1-Click Fix in Supabase:</span>
-                      </div>
-                      <ol className="list-decimal pl-4 space-y-1.5 text-[11px] text-amber-900 leading-relaxed">
-                        <li>
-                          Open{' '}
-                          <a
-                            href="https://supabase.com/dashboard/project/yrlavkouxglogrrkjchf/auth/users"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="font-bold underline text-brand-orange hover:text-brand-orangeHover"
-                          >
-                            Supabase Dashboard → Users
-                          </a>
-                        </li>
-                        <li>
-                          Click the <strong>···</strong> menu next to <strong>{inputEmail || SUPER_ADMIN_EMAIL}</strong>
-                        </li>
-                        <li>
-                          Click <strong>Confirm email</strong>.
-                        </li>
-                        <li>
-                          Return here and click <em>Sign In to Official Console</em> to enter!
-                        </li>
-                      </ol>
-                    </div>
-                  )}
-
-                  {errorMsg.toLowerCase().includes('rate limit') && (
-                    <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300 text-xs text-amber-950 space-y-2 shadow-xs">
-                      <div className="flex items-center gap-1.5 font-bold text-amber-950">
-                        <Sparkles className="w-4 h-4 text-brand-orange shrink-0" />
-                        <span>Instant Bypass (Takes 10 Seconds):</span>
-                      </div>
-                      <ol className="list-decimal pl-4 space-y-1.5 text-[11px] text-amber-900 leading-relaxed">
-                        <li>
-                          Open{' '}
-                          <a
-                            href="https://supabase.com/dashboard/project/yrlavkouxglogrrkjchf/auth/users"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="font-bold underline text-brand-orange hover:text-brand-orangeHover"
-                          >
-                            Supabase Dashboard → Users
-                          </a>
-                        </li>
-                        <li>
-                          Click the <strong>···</strong> menu next to <strong>{SUPER_ADMIN_EMAIL}</strong>
-                        </li>
-                        <li>
-                          Click <strong>Change password</strong>, enter your new password, and click Save.
-                        </li>
-                        <li>
-                          Return here, click <em>Back to Regular Sign In</em>, and enter your new password!
-                        </li>
-                      </ol>
-                    </div>
-                  )}
-                </div>
+                <AuthErrorHelp errorMsg={errorMsg} inputEmail={inputEmail} />
               )}
 
               {successMsg && (
@@ -660,86 +644,7 @@ export const LoginPage: React.FC = () => {
               )}
 
               {errorMsg && (
-                <div className="space-y-2">
-                  <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-status-live flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                    <div className="space-y-1">
-                      <span className="font-bold block">{errorMsg}</span>
-                      {errorMsg.toLowerCase().includes('rate limit') && (
-                        <p className="text-[11px] opacity-90 leading-relaxed">
-                          Supabase restricts built-in email sending to a few emails per hour on default SMTP. You do not need an email — you can set your password instantly in your Supabase Dashboard.
-                        </p>
-                      )}
-                      {errorMsg.toLowerCase().includes('not confirmed') && (
-                        <p className="text-[11px] opacity-90 leading-relaxed">
-                          Supabase requires email confirmation before signing in. You can mark your email as confirmed in 1 click in your Supabase Dashboard.
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {errorMsg.toLowerCase().includes('not confirmed') && (
-                    <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300 text-xs text-amber-950 space-y-2 shadow-xs">
-                      <div className="flex items-center gap-1.5 font-bold text-amber-950">
-                        <Sparkles className="w-4 h-4 text-brand-orange shrink-0" />
-                        <span>Instant 1-Click Fix in Supabase:</span>
-                      </div>
-                      <ol className="list-decimal pl-4 space-y-1.5 text-[11px] text-amber-900 leading-relaxed">
-                        <li>
-                          Open{' '}
-                          <a
-                            href="https://supabase.com/dashboard/project/yrlavkouxglogrrkjchf/auth/users"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="font-bold underline text-brand-orange hover:text-brand-orangeHover"
-                          >
-                            Supabase Dashboard → Users
-                          </a>
-                        </li>
-                        <li>
-                          Click the <strong>···</strong> menu next to <strong>{inputEmail || SUPER_ADMIN_EMAIL}</strong>
-                        </li>
-                        <li>
-                          Click <strong>Confirm email</strong>.
-                        </li>
-                        <li>
-                          Return here and click <em>Sign In to Official Console</em> to enter!
-                        </li>
-                      </ol>
-                    </div>
-                  )}
-
-                  {errorMsg.toLowerCase().includes('rate limit') && (
-                    <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-300 text-xs text-amber-950 space-y-2 shadow-xs">
-                      <div className="flex items-center gap-1.5 font-bold text-amber-950">
-                        <Sparkles className="w-4 h-4 text-brand-orange shrink-0" />
-                        <span>Instant Bypass (Takes 10 Seconds):</span>
-                      </div>
-                      <ol className="list-decimal pl-4 space-y-1.5 text-[11px] text-amber-900 leading-relaxed">
-                        <li>
-                          Open{' '}
-                          <a
-                            href="https://supabase.com/dashboard/project/yrlavkouxglogrrkjchf/auth/users"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="font-bold underline text-brand-orange hover:text-brand-orangeHover"
-                          >
-                            Supabase Dashboard → Users
-                          </a>
-                        </li>
-                        <li>
-                          Click the <strong>···</strong> menu next to <strong>{SUPER_ADMIN_EMAIL}</strong>
-                        </li>
-                        <li>
-                          Click <strong>Change password</strong>, enter your new password, and click Save.
-                        </li>
-                        <li>
-                          Return here, click <em>Back to Regular Sign In</em>, and enter your new password!
-                        </li>
-                      </ol>
-                    </div>
-                  )}
-                </div>
+                <AuthErrorHelp errorMsg={errorMsg} inputEmail={inputEmail} />
               )}
 
               {successMsg && (
