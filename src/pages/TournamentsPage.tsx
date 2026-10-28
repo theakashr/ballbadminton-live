@@ -49,8 +49,16 @@ export const TournamentsPage: React.FC<TournamentsPageProps> = ({
     };
 
     fetchTournaments();
+
+    const handleTournamentCreated = () => {
+      fetchTournaments();
+    };
+
+    window.addEventListener('bbfi:tournament-created', handleTournamentCreated);
+
     return () => {
       isMounted = false;
+      window.removeEventListener('bbfi:tournament-created', handleTournamentCreated);
     };
   }, []);
 

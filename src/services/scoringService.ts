@@ -139,11 +139,12 @@ export const scoringService = {
       };
     }
 
-    const currentSetIndex = match.currentSet - 1;
+    const currentSet = match.currentSet || 1;
+    const currentSetIndex = currentSet - 1;
     const scores = [...match.setScores];
     if (!scores[currentSetIndex]) {
       scores[currentSetIndex] = {
-        gameNumber: match.currentSet,
+        gameNumber: currentSet,
         team1Score: 0,
         team2Score: 0,
         isCompleted: false,
@@ -200,7 +201,8 @@ export const scoringService = {
       if (winnerId === match.team1.id) team1Sets++;
       else team2Sets++;
 
-      const setsNeeded = Math.floor(3 / 2) + 1; // Best of 3 requires 2 sets
+      const bestOfSets = match.bestOfSets || match.configSnapshot?.best_of_sets || 3;
+      const setsNeeded = bestOfSets === 1 ? 1 : Math.floor(bestOfSets / 2) + 1;
       if (team1Sets >= setsNeeded || team2Sets >= setsNeeded) {
         matchCompleted = true;
       } else {

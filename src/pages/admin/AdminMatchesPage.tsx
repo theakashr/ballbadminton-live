@@ -8,7 +8,8 @@ import {
   Play, 
   CheckCircle,
   Flame,
-  Edit3
+  Edit3,
+  Shield
 } from 'lucide-react';
 import { DataTable, type Column } from '../../components/admin/common/DataTable';
 import { SearchAndFilter, type FilterConfig } from '../../components/admin/common/SearchAndFilter';
@@ -83,8 +84,14 @@ export const AdminMatchesPage: React.FC = () => {
     },
   ];
 
+  const canCreateMatch = canScheduleMatches || Boolean(currentUser?.assignedTournaments && currentUser.assignedTournaments.length > 0);
+
   const filteredMatches = useMemo(() => {
     return matches.filter((m) => {
+      // Scoped RBAC: if user is not super_admin and has assignedTournaments, only show their tournament fixtures
+      if (currentUser?.role !== 'super_admin' && currentUser?.assignedTournaments && currentUser.assignedTournaments.length > 0) {
+        if (!currentUser.assignedTournaments.includes(m.tournamentId)) return false;
+      }
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const matchT1 = m.team1.name.toLowerCase().includes(q);
@@ -97,7 +104,7 @@ export const AdminMatchesPage: React.FC = () => {
       if (stageFilter && m.stage !== stageFilter) return false;
       return true;
     });
-  }, [matches, searchQuery, statusFilter, stageFilter]);
+  }, [matches, searchQuery, statusFilter, stageFilter, currentUser]);
 
   const handleUpdateStatus = (match: Match, newStatus: MatchStatus) => {
     try {
@@ -236,7 +243,7 @@ export const AdminMatchesPage: React.FC = () => {
             <span>Upload Score</span>
           </button>
 
-          {canScheduleMatches && (
+          {(canScheduleMatches || (currentUser?.assignedTournaments && currentUser.assignedTournaments.includes(m.tournamentId))) && (
             <>
               {m.status === 'upcoming' && (
                 <button
@@ -289,7 +296,7 @@ export const AdminMatchesPage: React.FC = () => {
           </p>
         </div>
 
-        {canScheduleMatches && (
+        {canCreateMatch && (
           <button
             onClick={() => setIsAddOpen(true)}
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeHover text-white font-bold text-xs shadow-sm transition-all active:scale-95"
@@ -299,6 +306,21 @@ export const AdminMatchesPage: React.FC = () => {
           </button>
         )}
       </div>
+
+      {/* Scoped Tournament Fixtures RBAC Notice */}
+      {currentUser?.role !== 'super_admin' && currentUser?.assignedTournaments && currentUser.assignedTournaments.length > 0 && (
+        <div className="p-3.5 rounded-2xl bg-brand-soft border border-brand-orange/30 flex items-center justify-between text-xs text-brand-orange font-medium">
+          <div className="flex items-center gap-2">
+            <Shield className="w-4 h-4 stroke-[2.5] shrink-0" />
+            <span>
+              <strong>Delegated Tournament Fixtures:</strong> Displaying matches strictly for your <strong>{currentUser.assignedTournaments.length}</strong> assigned tournament(s). You are authorized to schedule matches and upload live scores.
+            </span>
+          </div>
+          <span className="text-[10px] uppercase font-bold bg-white text-brand-orange px-2 py-0.5 rounded border border-brand-orange/20 shrink-0">
+            Scoped Access
+          </span>
+        </div>
+      )}
 
       <div className="p-4 rounded-2xl bg-white border border-border-neutral shadow-card">
         <SearchAndFilter

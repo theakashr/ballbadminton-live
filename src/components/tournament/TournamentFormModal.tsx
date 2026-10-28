@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   X, 
   Trophy, 
   CheckCircle, 
   AlertCircle,
   Sparkles,
-  Info
+  Info,
+  ArrowRight
 } from 'lucide-react';
-import { tournamentRepository } from '../../repositories/tournamentRepository';
+import { dataService } from '../../services/dataService';
 import type { NewTournamentFormData } from '../../types';
 
 interface TournamentFormModalProps {
@@ -21,11 +23,13 @@ export const TournamentFormModal: React.FC<TournamentFormModalProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<NewTournamentFormData>({
     name: '',
     organizer: '',
     category: "Men's Open 5s",
     format: '5s',
+    matchFormat: 'Best of 3 Sets (29 Points per set)',
     startDate: '',
     endDate: '',
     city: '',
@@ -37,6 +41,8 @@ export const TournamentFormModal: React.FC<TournamentFormModalProps> = ({
 
   const [errors, setErrors] = useState<Partial<Record<keyof NewTournamentFormData, string>>>({});
   const [submittedData, setSubmittedData] = useState<NewTournamentFormData | null>(null);
+  const [createdTournamentId, setCreatedTournamentId] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
@@ -85,15 +91,17 @@ export const TournamentFormModal: React.FC<TournamentFormModalProps> = ({
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
+      setIsSubmitting(true);
       try {
-        tournamentRepository.create({
+        const created = await dataService.createTournament({
           name: formData.name,
           organizer: formData.organizer,
           category: formData.category,
           format: formData.format,
+          matchFormat: formData.matchFormat || 'Best of 3 Sets (29 Points per set)',
           startDate: formData.startDate,
           endDate: formData.endDate,
           city: formData.city,
@@ -103,12 +111,15 @@ export const TournamentFormModal: React.FC<TournamentFormModalProps> = ({
           contactEmail: formData.contactEmail,
           status: 'upcoming',
         });
+        setCreatedTournamentId(created.id);
+        setSubmittedData(formData);
+        if (onSuccess) {
+          onSuccess(formData);
+        }
       } catch (err) {
-        console.warn('Tournament repo create error:', err);
-      }
-      setSubmittedData(formData);
-      if (onSuccess) {
-        onSuccess(formData);
+        console.warn('Tournament create error:', err);
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -219,20 +230,28 @@ export const TournamentFormModal: React.FC<TournamentFormModalProps> = ({
                 </div>
               </div>
 
-              <div className="flex items-center justify-center gap-3 pt-2">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2">
                 <button
                   type="button"
-                  onClick={handleReset}
-                  className="px-4 py-2.5 rounded-xl text-xs font-semibold border border-border-neutral text-text-primary hover:bg-surface-muted transition-colors"
+                  onClick={() => {
+                    onClose();
+                    if (createdTournamentId) {
+                      navigate(`/tournaments/${createdTournamentId}`);
+                    } else {
+                      navigate('/tournaments');
+                    }
+                  }}
+                  className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-bold bg-brand-orange hover:bg-brand-orangeHover text-white shadow-card transition-all flex items-center justify-center gap-1.5"
                 >
-                  Configure Another
+                  <span>View Tournament Page</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
                 <button
                   type="button"
-                  onClick={onClose}
-                  className="px-6 py-2.5 rounded-xl text-xs font-bold bg-brand-orange hover:bg-brand-orangeHover text-white transition-colors"
+                  onClick={handleReset}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-semibold border border-border-neutral text-text-primary hover:bg-surface-muted transition-colors"
                 >
-                  Return to Dashboard
+                  Configure Another
                 </button>
               </div>
             </div>
@@ -348,6 +367,26 @@ export const TournamentFormModal: React.FC<TournamentFormModalProps> = ({
                     <option value="Doubles">Doubles (2 Players - 29 Pts)</option>
                     <option value="Mixed">Mixed Fives (3 Men + 2 Women)</option>
                   </select>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-text-primary mb-1.5">
+                    Match Winning Format (Group &amp; Knockout)
+                  </label>
+                  <select
+                    value={formData.matchFormat}
+                    onChange={(e) => setFormData({ ...formData, matchFormat: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
+                  >
+                    <option value="1 Set (29 Points - Group Stage Format)">1 Single Set (29 Points - Fast Group/League Stage)</option>
+                    <option value="1 Set (35 Points - Group Stage Format)">1 Single Set (35 Points - Invitational Group Stage)</option>
+                    <option value="Best of 3 Sets (29 Points per set)">Best of 3 Sets (29 Points per set - Official Standard)</option>
+                    <option value="Best of 3 Sets (35 Points per set)">Best of 3 Sets (35 Points per set - Invitational)</option>
+                    <option value="Best of 5 Sets (29 Points per set)">Best of 5 Sets (29 Points per set - Finals Option)</option>
+                  </select>
+                  <span className="text-[11px] text-text-secondary mt-1 block">
+                    Matches in group stages can be configured as 1 single set of 29 points for rapid qualifying.
+                  </span>
                 </div>
               </div>
 
@@ -484,9 +523,10 @@ export const TournamentFormModal: React.FC<TournamentFormModalProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-xl text-sm font-bold bg-brand-orange hover:bg-brand-orangeHover text-white shadow-card transition-all active:scale-95"
+                  disabled={isSubmitting}
+                  className="px-6 py-2.5 rounded-xl text-sm font-bold bg-brand-orange hover:bg-brand-orangeHover disabled:opacity-50 text-white shadow-card transition-all active:scale-95"
                 >
-                  Validate &amp; Initialize Tournament
+                  {isSubmitting ? 'Creating Tournament...' : 'Validate & Initialize Tournament'}
                 </button>
               </div>
 

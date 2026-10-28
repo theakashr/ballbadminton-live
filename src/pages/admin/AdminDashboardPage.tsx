@@ -56,13 +56,19 @@ export const AdminDashboardPage: React.FC = () => {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [currentUser]);
 
   const loadData = () => {
-    setTournaments(tournamentRepository.getAll());
+    let allTournaments = tournamentRepository.getAll();
+    let allMatches = matchRepository.getAll();
+    if (currentUser?.role !== 'super_admin' && currentUser?.assignedTournaments && currentUser.assignedTournaments.length > 0) {
+      allTournaments = allTournaments.filter((t) => currentUser.assignedTournaments?.includes(t.id));
+      allMatches = allMatches.filter((m) => currentUser.assignedTournaments?.includes(m.tournamentId));
+    }
+    setTournaments(allTournaments);
     setTeamsCount(teamRepository.getAll().length);
     setPlayersCount(playerRepository.getAll().length);
-    setMatches(matchRepository.getAll());
+    setMatches(allMatches);
     setActivities(activityRepository.getAll());
   };
 
@@ -73,7 +79,14 @@ export const AdminDashboardPage: React.FC = () => {
   // Filter matches assigned to the active scorer
   const isMatchAssignedToCurrentScorer = (match: Match) => {
     if (!currentUser) return false;
-    if (isSuperAdmin || isTournamentAdmin) return true;
+    if (isSuperAdmin) return true;
+
+    // Scoped assigned tournament check: strictly restrict to assigned tournaments if defined
+    if (currentUser.assignedTournaments && currentUser.assignedTournaments.length > 0) {
+      return currentUser.assignedTournaments.includes(match.tournamentId);
+    }
+
+    if (isTournamentAdmin) return true;
     
     // 1. Direct match scorer email match
     if (match.scorerEmail && match.scorerEmail.toLowerCase() === currentUser.email.toLowerCase()) {
@@ -89,11 +102,6 @@ export const AdminDashboardPage: React.FC = () => {
     // 3. Fallback for demo matches when user is demo umpire
     if (currentUser.email === 'ramachandra.umpire@bbfi.org' && (match.id === 'match-live-01' || match.id === 'match-up-01')) {
       return true;
-    }
-
-    // 4. Matches within scoped assigned tournaments if unassigned
-    if (currentUser.assignedTournaments && currentUser.assignedTournaments.includes(match.tournamentId)) {
-      return !match.scorerEmail;
     }
 
     return false;

@@ -81,6 +81,7 @@ export interface Match {
   servingTeamId?: string;
   servingHand?: 1 | 2; // In Ball Badminton: 1st Hand or 2nd Hand
   maxPointsPerSet: number; // Ball Badminton is traditionally played to 29 or 35 points
+  bestOfSets?: number; // 1 (Group / League 29-pt), 3 (Standard BBFI Championship), or 5
   venue: string;
   city: string;
   notes?: string;
@@ -154,6 +155,7 @@ export interface NewTournamentFormData {
   organizer: string;
   category: string;
   format: '5s' | 'Doubles' | 'Mixed';
+  matchFormat?: string;
   startDate: string;
   endDate: string;
   city: string;

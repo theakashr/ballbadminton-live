@@ -5,6 +5,8 @@ import { teamRepository } from '../src/repositories/teamRepository';
 import { tournamentTeamRepository } from '../src/repositories/tournamentTeamRepository';
 import { matchRepository } from '../src/repositories/matchRepository';
 import { scorerRepository } from '../src/repositories/scorerRepository';
+import { scoringService } from '../src/services/scoringService';
+import { dataService } from '../src/services/dataService';
 import { SUPER_ADMIN_EMAIL, INITIAL_AUTHORIZED_USERS } from '../src/context/AuthContext';
 import type { Match, AdminUser, UserRole } from '../src/types';
 
@@ -384,6 +386,129 @@ describe('PHASE 5.2 — Complete Mobile-First Ball Badminton Live Platform Tests
       expect(retrieved).toBeDefined();
       expect(retrieved?.city).toBe('Bengaluru');
       expect(retrieved?.format).toBe('5s');
+    });
+  });
+
+  // ==========================================================================
+  // SECTION 6: SCOPED TOURNAMENT ACCESS & DELEGATION INTEGRITY
+  // ==========================================================================
+  describe('6. Scoped Tournament Access Delegation & Privileges', () => {
+    const TOURNAMENT_A = 'tourn-state-cup-a';
+    const TOURNAMENT_B = 'tourn-state-cup-b';
+
+    const delegatedUser: AdminUser = {
+      id: 'user-delegated-official-01',
+      email: 'organizer.cupa@tnbba.org',
+      name: 'Cup A Field Director',
+      role: 'tournament_admin',
+      grantedBy: SUPER_ADMIN_EMAIL,
+      grantedAt: new Date().toISOString(),
+      isActive: true,
+      assignedTournaments: [TOURNAMENT_A],
+    };
+
+    it('strictly confines visible tournaments to assigned tournaments only', () => {
+      const allTournaments = [
+        { id: TOURNAMENT_A, name: 'State Cup A' },
+        { id: TOURNAMENT_B, name: 'State Cup B' },
+      ];
+
+      const visible = allTournaments.filter((t) => {
+        if (delegatedUser.role !== 'super_admin' && delegatedUser.assignedTournaments && delegatedUser.assignedTournaments.length > 0) {
+          return delegatedUser.assignedTournaments.includes(t.id);
+        }
+        return true;
+      });
+
+      expect(visible.length).toBe(1);
+      expect(visible[0].id).toBe(TOURNAMENT_A);
+      expect(visible.find((t) => t.id === TOURNAMENT_B)).toBeUndefined();
+    });
+
+    it('strictly confines visible match fixtures to assigned tournaments', () => {
+      const matches = [
+        { id: 'match-a1', tournamentId: TOURNAMENT_A, team1: { name: 'A1' }, team2: { name: 'A2' } },
+        { id: 'match-b1', tournamentId: TOURNAMENT_B, team1: { name: 'B1' }, team2: { name: 'B2' } },
+      ];
+
+      const filtered = matches.filter((m) => {
+        if (delegatedUser.role !== 'super_admin' && delegatedUser.assignedTournaments && delegatedUser.assignedTournaments.length > 0) {
+          return delegatedUser.assignedTournaments.includes(m.tournamentId);
+        }
+        return true;
+      });
+
+      expect(filtered.length).toBe(1);
+      expect(filtered[0].id).toBe('match-a1');
+    });
+
+    it('authorizes delegated user to schedule matches and upload scores for assigned tournament', () => {
+      const canSchedule = Boolean(
+        delegatedUser.role === 'super_admin' ||
+        delegatedUser.assignedTournaments && delegatedUser.assignedTournaments.length > 0
+      );
+      expect(canSchedule).toBe(true);
+
+      const canManageMatchA = Boolean(
+        delegatedUser.role === 'super_admin' ||
+        delegatedUser.assignedTournaments?.includes(TOURNAMENT_A)
+      );
+      expect(canManageMatchA).toBe(true);
+
+      const canManageMatchB = Boolean(
+        delegatedUser.role === 'super_admin' ||
+        delegatedUser.assignedTournaments?.includes(TOURNAMENT_B)
+      );
+      expect(canManageMatchB).toBe(false);
+    });
+  });
+
+  // ==========================================================================
+  // SECTION 7: 1-SET (29-POINT) GROUP / LEAGUE STAGE MATCH SCORING
+  // ==========================================================================
+  describe('7. 1-Set (29-Point) Group / League Match Winning Rule', () => {
+    it('finishes match immediately 1-0 upon winning 1 set (29 points with 2-point lead)', async () => {
+      const oneSetMatch = matchRepository.create({
+        tournamentId: 'tourn-70-senior-nat',
+        tournamentName: '70th Senior National Championship',
+        court: 'Court 1',
+        category: "Men's Open 5s",
+        stage: 'Group Stage',
+        team1: { id: 'team-delhi', name: 'Delhi', shortName: 'DEL', state: 'Delhi', logoBg: '#3B82F6' },
+        team2: { id: 'team-punjab', name: 'Punjab', shortName: 'PUN', state: 'Punjab', logoBg: '#EF4444' },
+        scheduledTime: '09:00 AM',
+        date: '2026-11-12',
+        bestOfSets: 1, // 1-set match!
+        maxPointsPerSet: 29,
+        status: 'live',
+        currentSet: 1,
+        team1SetsWon: 0,
+        team2SetsWon: 0,
+        servingTeamId: 'team-delhi',
+        servingHand: 1,
+        setScores: [
+          { gameNumber: 1, team1Score: 28, team2Score: 24, isCompleted: false },
+        ],
+      });
+
+      expect(oneSetMatch.bestOfSets).toBe(1);
+
+      // Score 29th point for Delhi
+      const res = await scoringService.recordPoint({
+        matchId: oneSetMatch.id,
+        awardedTeamId: 'team-delhi',
+      });
+
+      expect(res.success).toBe(true);
+      expect(res.data?.gameWon).toBe(true);
+      expect(res.data?.matchCompleted).toBe(true); // Must finish match immediately on 1st set win!
+      expect(res.data?.team1SetsWon).toBe(1);
+      expect(res.data?.team2SetsWon).toBe(0);
+
+      const updated = matchRepository.getById(oneSetMatch.id);
+      expect(updated?.status).toBe('completed');
+      expect(updated?.team1SetsWon).toBe(1);
+      expect(updated?.team2SetsWon).toBe(0);
     });
   });
 });

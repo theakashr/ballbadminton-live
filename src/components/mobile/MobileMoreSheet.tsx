@@ -10,12 +10,10 @@ import {
   ShieldCheck, 
   Smartphone, 
   Wifi, 
-  ChevronRight,
   Sun,
   Moon,
   Download,
   Radio,
-  Lock,
   LogOut
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -171,10 +169,10 @@ export const MobileMoreSheet: React.FC<MobileMoreSheetProps> = ({
               </button>
             ) : (
               <button
-                onClick={() => handleAction(onOpenLogin)}
+                onClick={() => handleNavigate('/login')}
                 className="px-3.5 py-1.5 rounded-xl bg-[#FF851B] text-white font-bold text-xs shadow-sm hover:bg-[#E96F0B] active:scale-95"
               >
-                Sign In
+                Admin Login
               </button>
             )}
           </div>
@@ -219,31 +217,39 @@ export const MobileMoreSheet: React.FC<MobileMoreSheetProps> = ({
               </div>
             </div>
           ) : !currentUser ? (
-            /* Sign in Prompt for Official Umpires */
-            <div className="p-4 rounded-2xl bg-[#F0F2F6] border border-[#E4E7EC]">
+            /* Sign in Prompt for Official Umpires & Super Admins */
+            <div className="p-4 rounded-2xl bg-[#FFF1E5] border border-[#FF851B]/30 shadow-xs">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-xl bg-[#FFF1E5] text-[#FF851B]">
-                    <Lock className="w-4 h-4" />
+                  <div className="p-2 rounded-xl bg-[#FF851B] text-white">
+                    <ShieldCheck className="w-4 h-4 stroke-[2.5]" />
                   </div>
                   <div>
                     <h3 className="font-display font-extrabold text-sm text-[#182230]">
-                      Federation Scorer Sign In
+                      Super Admin &amp; Official Portal
                     </h3>
                     <span className="text-xs text-[#667085]">
-                      Certified umpires and tournament directors
+                      Manage tournaments, assign scorers &amp; live scores
                     </span>
                   </div>
                 </div>
               </div>
 
-              <button
-                onClick={() => handleAction(onOpenLogin)}
-                className="w-full mt-2 py-2.5 px-4 rounded-xl bg-[#FF851B] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm hover:bg-[#E96F0B] active:scale-95 transition-transform"
-              >
-                <span>Official Scorer Sign In</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
+              <div className="grid grid-cols-2 gap-2 mt-3">
+                <button
+                  onClick={() => handleNavigate('/login')}
+                  className="w-full py-2.5 px-3 rounded-xl bg-[#FF851B] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm hover:bg-[#E96F0B] active:scale-95 transition-transform"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>Admin Login</span>
+                </button>
+                <button
+                  onClick={() => handleAction(onOpenLogin)}
+                  className="w-full py-2.5 px-3 rounded-xl bg-white border border-[#E4E7EC] text-[#182230] font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-[#F0F2F6] active:scale-95 transition-transform"
+                >
+                  <span>Quick Scorer ID</span>
+                </button>
+              </div>
             </div>
           ) : null}
 

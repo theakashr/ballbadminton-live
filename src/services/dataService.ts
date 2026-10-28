@@ -150,9 +150,10 @@ export const mapSupabaseTournamentToDomain = (row: any): AdminTournament => {
 
 export const dataService = {
   /**
-   * Fetches tournaments: queries Supabase first, falls back to repository if empty/error.
+   * Fetches tournaments: queries Supabase and merges with local repository to guarantee newly created tournaments always show.
    */
   async getTournaments(): Promise<AdminTournament[]> {
+    const localTournaments = tournamentRepository.getAll();
     if (isSupabaseConfigured() && supabase) {
       try {
         const { data, error } = await withTimeout(
@@ -163,14 +164,21 @@ export const dataService = {
             .order('start_date', { ascending: false })
         );
 
-        if (!error && Array.isArray(data) && data.length > 0) {
-          return data.map(mapSupabaseTournamentToDomain);
+        if (!error && Array.isArray(data)) {
+          const remote = data.map(mapSupabaseTournamentToDomain);
+          // Seamless merge: prioritize remote, prepend newly created local tournaments
+          const remoteIds = new Set(remote.map((r) => r.id));
+          const remoteNames = new Set(remote.map((r) => r.name.toLowerCase().trim()));
+          const localOnly = localTournaments.filter(
+            (l) => !remoteIds.has(l.id) && !remoteNames.has(l.name.toLowerCase().trim())
+          );
+          return [...localOnly, ...remote];
         }
       } catch (err) {
         console.warn('Supabase getTournaments fallback:', err);
       }
     }
-    return tournamentRepository.getAll();
+    return localTournaments;
   },
 
   /**
@@ -195,6 +203,50 @@ export const dataService = {
       }
     }
     return tournamentRepository.getById(id);
+  },
+
+  /**
+   * Creates a tournament across local repository and Supabase cloud.
+   */
+  async createTournament(
+    tournamentData: Omit<AdminTournament, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }
+  ): Promise<AdminTournament> {
+    // 1. Create in local repository first for instantaneous availability
+    const created = tournamentRepository.create(tournamentData);
+
+    // 2. If Supabase is connected, sync to cloud database
+    if (isSupabaseConfigured() && supabase) {
+      try {
+        await supabase.from('tournaments').insert({
+          name: created.name,
+          description: created.description || '',
+          organizer: created.organizer,
+          venue: created.venue,
+          city: created.city,
+          start_date: created.startDate,
+          end_date: created.endDate,
+          format: created.format || '5s',
+          match_format: created.matchFormat || 'Best of 3 Sets (29 Points per set)',
+          category: created.category || "Men's Open 5s",
+          max_teams: created.totalTeams || created.maxTeams || 24,
+          courts_count: created.courtsCount || 4,
+          status: created.status || 'upcoming',
+          visibility: created.visibility || 'public',
+          registration_status: created.registrationStatus || 'open',
+          contact_email: created.contactEmail,
+          contact_phone: created.contactPhone,
+        });
+      } catch (cloudErr) {
+        console.warn('Could not sync tournament to Supabase:', cloudErr);
+      }
+    }
+
+    // 3. Emit global event so all pages and views update in real-time
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('bbfi:tournament-created', { detail: created }));
+    }
+
+    return created;
   },
 
   /**

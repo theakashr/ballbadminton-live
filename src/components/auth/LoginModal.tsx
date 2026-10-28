@@ -8,7 +8,8 @@ import {
   CheckCircle, 
   KeyRound, 
   Info,
-  LayoutDashboard
+  LayoutDashboard,
+  ShieldCheck
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -297,9 +298,20 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                 </button>
               </div>
 
-              <div className="text-center">
-                <span className="text-[11px] text-text-secondary">
-                  Demo hint: Use any demo email and 6+ character password.
+              <div className="pt-2 border-t border-border-neutral text-center space-y-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    navigate('/login');
+                  }}
+                  className="w-full py-2 px-3 rounded-xl bg-brand-soft border border-brand-orange/30 text-brand-orange hover:bg-brand-orange hover:text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>Open Full Super Admin Login Portal →</span>
+                </button>
+                <span className="text-[11px] text-text-secondary block">
+                  Password reset, Google sign in, and permission settings
                 </span>
               </div>
 

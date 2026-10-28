@@ -505,9 +505,11 @@ export const TournamentForm: React.FC<TournamentFormProps> = ({
                 onChange={(e) => setFormData({ ...formData, matchFormat: e.target.value })}
                 className="w-full px-4 py-2.5 rounded-xl bg-white border border-border-neutral text-sm text-text-primary focus:outline-none focus:border-brand-orange transition-colors"
               >
-                <option value="Best of 3 Sets (29 Points per set)">Best of 3 Sets (29 Points - Standard)</option>
+                <option value="1 Set (29 Points - Group Stage Format)">1 Single Set (29 Points - Group / League Stage)</option>
+                <option value="1 Set (35 Points - Group Stage Format)">1 Single Set (35 Points - Invitational Group Stage)</option>
+                <option value="Best of 3 Sets (29 Points per set)">Best of 3 Sets (29 Points - Standard BBFI)</option>
                 <option value="Best of 3 Sets (35 Points per set)">Best of 3 Sets (35 Points - Invitational)</option>
-                <option value="Single Set 35 Points Knockout">Single Set 35 Points (Knockout Qualifier)</option>
+                <option value="Best of 5 Sets (29 Points per set)">Best of 5 Sets (29 Points - Championship Finals)</option>
               </select>
             </div>
           </div>

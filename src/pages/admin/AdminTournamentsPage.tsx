@@ -11,7 +11,8 @@ import {
   MapPin, 
   Calendar, 
   X,
-  Users
+  Users,
+  Shield
 } from 'lucide-react';
 import { DataTable, type Column } from '../../components/admin/common/DataTable';
 import { SearchAndFilter, type FilterConfig } from '../../components/admin/common/SearchAndFilter';
@@ -21,6 +22,7 @@ import { ConfirmDialog } from '../../components/admin/common/ConfirmDialog';
 import { TournamentTeamRegistrationModal } from '../../components/admin/tournaments/TournamentTeamRegistrationModal';
 import { tournamentRepository } from '../../repositories/tournamentRepository';
 import { activityRepository } from '../../repositories/activityRepository';
+import { dataService } from '../../services/dataService';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import type { AdminTournament } from '../../types';
@@ -57,8 +59,9 @@ export const AdminTournamentsPage: React.FC = () => {
   });
 
   // Load from repository
-  const reload = () => {
-    setTournaments(tournamentRepository.getAll());
+  const reload = async () => {
+    const list = await dataService.getTournaments();
+    setTournaments(list);
   };
 
   useEffect(() => {
@@ -130,6 +133,10 @@ export const AdminTournamentsPage: React.FC = () => {
   // Filtered tournament records
   const filteredTournaments = useMemo(() => {
     return tournaments.filter((t) => {
+      // Scoped RBAC: if user is not super_admin and has assignedTournaments, only show their tournaments
+      if (currentUser?.role !== 'super_admin' && currentUser?.assignedTournaments && currentUser.assignedTournaments.length > 0) {
+        if (!currentUser.assignedTournaments.includes(t.id)) return false;
+      }
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const matchesName = t.name.toLowerCase().includes(q);
@@ -143,10 +150,10 @@ export const AdminTournamentsPage: React.FC = () => {
       if (regFilter && t.registrationStatus !== regFilter) return false;
       return true;
     });
-  }, [tournaments, searchQuery, statusFilter, formatFilter, regFilter]);
+  }, [tournaments, searchQuery, statusFilter, formatFilter, regFilter, currentUser]);
 
   // Form submit handler (Create / Edit)
-  const handleFormSubmit = (data: TournamentFormData) => {
+  const handleFormSubmit = async (data: TournamentFormData) => {
     try {
       if (editingTournament) {
         // Edit existing
@@ -161,8 +168,8 @@ export const AdminTournamentsPage: React.FC = () => {
         });
         toast.success('Tournament Updated', `"${updated.name}" has been successfully updated.`);
       } else {
-        // Create new
-        const created = tournamentRepository.create({
+        // Create new via dataService to sync local & cloud
+        const created = await dataService.createTournament({
           ...data,
           totalTeams: data.totalTeams ?? data.maxTeams ?? 0,
         });
@@ -177,7 +184,7 @@ export const AdminTournamentsPage: React.FC = () => {
         toast.success('Tournament Created', `"${created.name}" is now published.`);
       }
 
-      reload();
+      await reload();
       setIsFormOpen(false);
       setEditingTournament(null);
     } catch (err: any) {
@@ -436,6 +443,21 @@ export const AdminTournamentsPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Scoped Tournament RBAC Notice */}
+      {currentUser?.role !== 'super_admin' && currentUser?.assignedTournaments && currentUser.assignedTournaments.length > 0 && (
+        <div className="p-3.5 rounded-2xl bg-brand-soft border border-brand-orange/30 flex items-center justify-between text-xs text-brand-orange font-medium">
+          <div className="flex items-center gap-2">
+            <Shield className="w-4 h-4 stroke-[2.5] shrink-0" />
+            <span>
+              <strong>Delegated Tournament Access:</strong> Your official credentials are authorized to manage <strong>{currentUser.assignedTournaments.length}</strong> assigned tournament(s).
+            </span>
+          </div>
+          <span className="text-[10px] uppercase font-bold bg-white text-brand-orange px-2 py-0.5 rounded border border-brand-orange/20 shrink-0">
+            Scoped Access
+          </span>
+        </div>
+      )}
 
       {/* Search and Filters */}
       <div className="p-4 rounded-2xl bg-white border border-border-neutral shadow-card">

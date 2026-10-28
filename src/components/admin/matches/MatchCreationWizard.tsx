@@ -66,7 +66,10 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      const allTourns = tournamentRepository.getAll();
+      let allTourns = tournamentRepository.getAll();
+      if (currentUser?.role !== 'super_admin' && currentUser?.assignedTournaments && currentUser.assignedTournaments.length > 0) {
+        allTourns = allTourns.filter((t) => currentUser.assignedTournaments?.includes(t.id));
+      }
       setTournaments(allTourns);
       if (allTourns.length > 0) {
         setSelectedTournament(allTourns[0]);
@@ -307,6 +310,7 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
       team2SetsWon: 0,
       setScores: [],
       maxPointsPerSet: pointsPerSet,
+      bestOfSets,
       venue: selectedTournament.venue,
       city: selectedTournament.city,
       referee: scorer ? `${scorer.name} (${scorer.cert || 'BBFI Official'})` : 'B. Ramachandra (BBFI Grade A)',
@@ -610,8 +614,9 @@ export const MatchCreationWizard: React.FC<MatchCreationWizardProps> = ({
                     onChange={(e) => setBestOfSets(Number(e.target.value))}
                     className="w-full px-3 py-2 rounded-lg bg-white border border-border-neutral text-text-primary font-bold"
                   >
-                    <option value={3}>Best of 3 Sets</option>
-                    <option value={5}>Best of 5 Sets</option>
+                    <option value={1}>1 Set (Group Stage / League 29-Pt Match)</option>
+                    <option value={3}>Best of 3 Sets (BBFI Standard)</option>
+                    <option value={5}>Best of 5 Sets (Finals Option)</option>
                   </select>
                 </div>
 

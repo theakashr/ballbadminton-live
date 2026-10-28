@@ -32,6 +32,7 @@ export const QuickScoreUploadModal: React.FC<QuickScoreUploadModalProps> = ({
 
   const [status, setStatus] = useState<MatchStatus>('completed');
   const [currentSet, setCurrentSet] = useState<number>(2);
+  const [matchSetFormat, setMatchSetFormat] = useState<'1_set' | 'best_of_3'>('best_of_3');
 
   // Set scores state
   const [set1Team1, setSet1Team1] = useState<number>(29);
@@ -52,6 +53,13 @@ export const QuickScoreUploadModal: React.FC<QuickScoreUploadModalProps> = ({
     if (isOpen && match) {
       setStatus(match.status === 'upcoming' ? 'completed' : match.status);
       setCurrentSet(match.currentSet || 2);
+
+      const isSingleSetStage = 
+        match.bestOfSets === 1 || 
+        match.configSnapshot?.best_of_sets === 1 ||
+        match.stage === 'Group Stage' || 
+        match.stage === 'Super 8 League';
+      setMatchSetFormat(isSingleSetStage ? '1_set' : 'best_of_3');
 
       const s1 = match.setScores?.[0];
       const s2 = match.setScores?.[1];
@@ -81,7 +89,7 @@ export const QuickScoreUploadModal: React.FC<QuickScoreUploadModalProps> = ({
         // If sets 1 & 2 are tied, automatically enable set 3
         const s1T1Won = (s1?.team1Score || 29) > (s1?.team2Score || 24);
         const s2T1Won = (s2?.team1Score || 24) > (s2?.team2Score || 29);
-        setIncludeSet3(s1T1Won !== s2T1Won);
+        setIncludeSet3(!isSingleSetStage && s1T1Won !== s2T1Won);
         setSet3Team1(29);
         setSet3Team2(26);
       }
@@ -104,15 +112,20 @@ export const QuickScoreUploadModal: React.FC<QuickScoreUploadModalProps> = ({
   let t1SetsWon = 0;
   let t2SetsWon = 0;
 
-  if (set1Team1 > set1Team2) t1SetsWon += 1;
-  else if (set1Team2 > set1Team1) t2SetsWon += 1;
+  if (matchSetFormat === '1_set') {
+    if (set1Team1 > set1Team2) t1SetsWon = 1;
+    else if (set1Team2 > set1Team1) t2SetsWon = 1;
+  } else {
+    if (set1Team1 > set1Team2) t1SetsWon += 1;
+    else if (set1Team2 > set1Team1) t2SetsWon += 1;
 
-  if (set2Team1 > set2Team2) t1SetsWon += 1;
-  else if (set2Team2 > set2Team1) t2SetsWon += 1;
+    if (set2Team1 > set2Team2) t1SetsWon += 1;
+    else if (set2Team2 > set2Team1) t2SetsWon += 1;
 
-  if (includeSet3) {
-    if (set3Team1 > set3Team2) t1SetsWon += 1;
-    else if (set3Team2 > set3Team1) t2SetsWon += 1;
+    if (includeSet3) {
+      if (set3Team1 > set3Team2) t1SetsWon += 1;
+      else if (set3Team2 > set3Team1) t2SetsWon += 1;
+    }
   }
 
   const determinedWinner = t1SetsWon > t2SetsWon ? match.team1 : t2SetsWon > t1SetsWon ? match.team2 : null;
@@ -135,43 +148,61 @@ export const QuickScoreUploadModal: React.FC<QuickScoreUploadModalProps> = ({
     try {
       // Validate scores
       if (set1Team1 === set1Team2) {
-        throw new Error('Set 1 cannot end in a draw under BBFI rules.');
-      }
-      if (set2Team1 === set2Team2) {
-        throw new Error('Set 2 cannot end in a draw under BBFI rules.');
-      }
-      if (includeSet3 && set3Team1 === set3Team2) {
-        throw new Error('Set 3 cannot end in a draw under BBFI rules.');
+        throw new Error('Set 1 cannot end in a draw under BBFI 29-point rules.');
       }
 
-      // Check if Set 3 is required
-      const isTiedAfterTwoSets = (set1Team1 > set1Team2) !== (set2Team1 > set2Team2);
-      if (isTiedAfterTwoSets && !includeSet3 && status === 'completed') {
-        throw new Error('Matches tied at 1-1 sets require a 3rd deciding set to complete.');
-      }
+      let compiledSetScores: GameScore[] = [];
 
-      const compiledSetScores: GameScore[] = [
-        {
-          gameNumber: 1,
-          team1Score: set1Team1,
-          team2Score: set1Team2,
-          isCompleted: true,
-        },
-        {
-          gameNumber: 2,
-          team1Score: set2Team1,
-          team2Score: set2Team2,
-          isCompleted: true,
-        },
-      ];
+      if (matchSetFormat === '1_set') {
+        compiledSetScores = [
+          {
+            gameNumber: 1,
+            team1Score: set1Team1,
+            team2Score: set1Team2,
+            isCompleted: status === 'completed',
+            winnerTeamId: determinedWinner?.id,
+          },
+        ];
+      } else {
+        if (set2Team1 === set2Team2) {
+          throw new Error('Set 2 cannot end in a draw under BBFI rules.');
+        }
+        if (includeSet3 && set3Team1 === set3Team2) {
+          throw new Error('Set 3 cannot end in a draw under BBFI rules.');
+        }
 
-      if (includeSet3) {
-        compiledSetScores.push({
-          gameNumber: 3,
-          team1Score: set3Team1,
-          team2Score: set3Team2,
-          isCompleted: status === 'completed',
-        });
+        // Check if Set 3 is required
+        const isTiedAfterTwoSets = (set1Team1 > set1Team2) !== (set2Team1 > set2Team2);
+        if (isTiedAfterTwoSets && !includeSet3 && status === 'completed') {
+          throw new Error('Matches tied at 1-1 sets require a 3rd deciding set to complete.');
+        }
+
+        compiledSetScores = [
+          {
+            gameNumber: 1,
+            team1Score: set1Team1,
+            team2Score: set1Team2,
+            isCompleted: true,
+            winnerTeamId: set1Team1 > set1Team2 ? match.team1.id : match.team2.id,
+          },
+          {
+            gameNumber: 2,
+            team1Score: set2Team1,
+            team2Score: set2Team2,
+            isCompleted: true,
+            winnerTeamId: set2Team1 > set2Team2 ? match.team1.id : match.team2.id,
+          },
+        ];
+
+        if (includeSet3) {
+          compiledSetScores.push({
+            gameNumber: 3,
+            team1Score: set3Team1,
+            team2Score: set3Team2,
+            isCompleted: status === 'completed',
+            winnerTeamId: set3Team1 > set3Team2 ? match.team1.id : match.team2.id,
+          });
+        }
       }
 
       // Update match record
@@ -180,7 +211,8 @@ export const QuickScoreUploadModal: React.FC<QuickScoreUploadModalProps> = ({
         team1SetsWon: t1SetsWon,
         team2SetsWon: t2SetsWon,
         setScores: compiledSetScores,
-        currentSet: includeSet3 ? 3 : currentSet,
+        currentSet: matchSetFormat === '1_set' ? 1 : (includeSet3 ? 3 : currentSet),
+        bestOfSets: matchSetFormat === '1_set' ? 1 : (includeSet3 ? 3 : 3),
       });
 
       // Log official activity
@@ -284,6 +316,49 @@ export const QuickScoreUploadModal: React.FC<QuickScoreUploadModalProps> = ({
                   {s.label}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Match Winning Rule Format: 1 Set (29 Pts) vs Best of 3 */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-text-primary">
+                Match Rule Format
+              </label>
+              <span className="text-[11px] text-brand-orange font-semibold">
+                {matchSetFormat === '1_set' ? '1 Single Set to 29 Pts (Group Stage Format)' : 'Best of 3 Sets (Standard BBFI)'}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  nativeHaptics.selection();
+                  setMatchSetFormat('1_set');
+                  setIncludeSet3(false);
+                }}
+                className={`py-2 px-3 rounded-xl text-xs font-bold transition-all border flex items-center justify-center gap-1.5 ${
+                  matchSetFormat === '1_set'
+                    ? 'bg-brand-orange text-white border-brand-orange shadow-sm'
+                    : 'bg-surface-muted text-text-secondary hover:text-text-primary border-border-neutral'
+                }`}
+              >
+                <span>1 Set (29 Pts - Group Stage)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  nativeHaptics.selection();
+                  setMatchSetFormat('best_of_3');
+                }}
+                className={`py-2 px-3 rounded-xl text-xs font-bold transition-all border flex items-center justify-center gap-1.5 ${
+                  matchSetFormat === 'best_of_3'
+                    ? 'bg-brand-orange text-white border-brand-orange shadow-sm'
+                    : 'bg-surface-muted text-text-secondary hover:text-text-primary border-border-neutral'
+                }`}
+              >
+                <span>Best of 3 Sets (BBFI Standard)</span>
+              </button>
             </div>
           </div>
 
@@ -393,165 +468,170 @@ export const QuickScoreUploadModal: React.FC<QuickScoreUploadModalProps> = ({
             </div>
           </div>
 
-          {/* SET 2 SCORES */}
-          <div className="p-4 rounded-2xl bg-white border border-border-neutral shadow-xs space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-border-neutral text-xs font-bold text-text-primary">
-              <span>Set 2 (Target: {match.maxPointsPerSet || 29} pts)</span>
-              <span className="text-brand-orange font-mono">
-                {set2Team1 > set2Team2 ? `${match.team1.shortName} Won` : set2Team2 > set2Team1 ? `${match.team2.shortName} Won` : 'Tied'}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              {/* Team 1 Set 2 */}
-              <div className="space-y-1.5 text-center">
-                <span className="text-xs font-semibold text-text-secondary block truncate">
-                  {match.team1.shortName} Score
-                </span>
-                <div className="flex items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleScoreAdjust(setSet2Team1, -1)}
-                    className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
-                  >
-                    <Minus className="w-4 h-4" />
-                  </button>
-                  <input
-                    type="number"
-                    value={set2Team1}
-                    onChange={(e) => setSet2Team1(Math.max(0, Number(e.target.value)))}
-                    className="w-16 h-10 text-center font-score text-xl font-black rounded-xl bg-surface-muted border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleScoreAdjust(setSet2Team1, 1)}
-                    className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Team 2 Set 2 */}
-              <div className="space-y-1.5 text-center">
-                <span className="text-xs font-semibold text-text-secondary block truncate">
-                  {match.team2.shortName} Score
-                </span>
-                <div className="flex items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleScoreAdjust(setSet2Team2, -1)}
-                    className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
-                  >
-                    <Minus className="w-4 h-4" />
-                  </button>
-                  <input
-                    type="number"
-                    value={set2Team2}
-                    onChange={(e) => setSet2Team2(Math.max(0, Number(e.target.value)))}
-                    className="w-16 h-10 text-center font-score text-xl font-black rounded-xl bg-surface-muted border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleScoreAdjust(setSet2Team2, 1)}
-                    className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* SET 3 DECIDER TOGGLE & SCORES */}
-          <div className="p-4 rounded-2xl bg-white border border-border-neutral shadow-xs space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-border-neutral">
-              <label className="flex items-center gap-2 text-xs font-bold text-text-primary cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={includeSet3}
-                  onChange={(e) => {
-                    nativeHaptics.selection();
-                    setIncludeSet3(e.target.checked);
-                  }}
-                  className="w-4 h-4 rounded text-brand-orange focus:ring-brand-orange"
-                />
-                <span>Include Deciding Set 3</span>
-              </label>
-
-              {includeSet3 && (
-                <span className="text-brand-orange font-mono text-xs font-bold">
-                  {set3Team1 > set3Team2 ? `${match.team1.shortName} Won` : set3Team2 > set3Team1 ? `${match.team2.shortName} Won` : 'Tied'}
-                </span>
-              )}
-            </div>
-
-            {includeSet3 ? (
-              <div className="grid grid-cols-2 gap-4 pt-1">
-                {/* Team 1 Set 3 */}
-                <div className="space-y-1.5 text-center">
-                  <span className="text-xs font-semibold text-text-secondary block truncate">
-                    {match.team1.shortName} Score
+          {/* SET 2 & 3 (Only in Best of 3 mode) */}
+          {matchSetFormat === 'best_of_3' && (
+            <>
+              {/* SET 2 SCORES */}
+              <div className="p-4 rounded-2xl bg-white border border-border-neutral shadow-xs space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-border-neutral text-xs font-bold text-text-primary">
+                  <span>Set 2 (Target: {match.maxPointsPerSet || 29} pts)</span>
+                  <span className="text-brand-orange font-mono">
+                    {set2Team1 > set2Team2 ? `${match.team1.shortName} Won` : set2Team2 > set2Team1 ? `${match.team2.shortName} Won` : 'Tied'}
                   </span>
-                  <div className="flex items-center justify-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleScoreAdjust(setSet3Team1, -1)}
-                      className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
-                    >
-                      <Minus className="w-4 h-4" />
-                    </button>
-                    <input
-                      type="number"
-                      value={set3Team1}
-                      onChange={(e) => setSet3Team1(Math.max(0, Number(e.target.value)))}
-                      className="w-16 h-10 text-center font-score text-xl font-black rounded-xl bg-surface-muted border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleScoreAdjust(setSet3Team1, 1)}
-                      className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Team 1 Set 2 */}
+                  <div className="space-y-1.5 text-center">
+                    <span className="text-xs font-semibold text-text-secondary block truncate">
+                      {match.team1.shortName} Score
+                    </span>
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleScoreAdjust(setSet2Team1, -1)}
+                        className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </button>
+                      <input
+                        type="number"
+                        value={set2Team1}
+                        onChange={(e) => setSet2Team1(Math.max(0, Number(e.target.value)))}
+                        className="w-16 h-10 text-center font-score text-xl font-black rounded-xl bg-surface-muted border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleScoreAdjust(setSet2Team1, 1)}
+                        className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
 
-                {/* Team 2 Set 3 */}
-                <div className="space-y-1.5 text-center">
-                  <span className="text-xs font-semibold text-text-secondary block truncate">
-                    {match.team2.shortName} Score
-                  </span>
-                  <div className="flex items-center justify-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleScoreAdjust(setSet3Team2, -1)}
-                      className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
-                    >
-                      <Minus className="w-4 h-4" />
-                    </button>
-                    <input
-                      type="number"
-                      value={set3Team2}
-                      onChange={(e) => setSet3Team2(Math.max(0, Number(e.target.value)))}
-                      className="w-16 h-10 text-center font-score text-xl font-black rounded-xl bg-surface-muted border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleScoreAdjust(setSet3Team2, 1)}
-                      className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
+                  {/* Team 2 Set 2 */}
+                  <div className="space-y-1.5 text-center">
+                    <span className="text-xs font-semibold text-text-secondary block truncate">
+                      {match.team2.shortName} Score
+                    </span>
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleScoreAdjust(setSet2Team2, -1)}
+                        className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </button>
+                      <input
+                        type="number"
+                        value={set2Team2}
+                        onChange={(e) => setSet2Team2(Math.max(0, Number(e.target.value)))}
+                        className="w-16 h-10 text-center font-score text-xl font-black rounded-xl bg-surface-muted border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleScoreAdjust(setSet2Team2, 1)}
+                        className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            ) : (
-              <p className="text-[11px] text-text-secondary">
-                Match concluded in 2 straight sets ({t1SetsWon === 2 ? match.team1.shortName : match.team2.shortName} 2-0 victory). Enable checkbox if a 3rd set was contested.
-              </p>
-            )}
-          </div>
+
+              {/* SET 3 DECIDER TOGGLE & SCORES */}
+              <div className="p-4 rounded-2xl bg-white border border-border-neutral shadow-xs space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-border-neutral">
+                  <label className="flex items-center gap-2 text-xs font-bold text-text-primary cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={includeSet3}
+                      onChange={(e) => {
+                        nativeHaptics.selection();
+                        setIncludeSet3(e.target.checked);
+                      }}
+                      className="w-4 h-4 rounded text-brand-orange focus:ring-brand-orange"
+                    />
+                    <span>Include Deciding Set 3</span>
+                  </label>
+
+                  {includeSet3 && (
+                    <span className="text-brand-orange font-mono text-xs font-bold">
+                      {set3Team1 > set3Team2 ? `${match.team1.shortName} Won` : set3Team2 > set3Team1 ? `${match.team2.shortName} Won` : 'Tied'}
+                    </span>
+                  )}
+                </div>
+
+                {includeSet3 ? (
+                  <div className="grid grid-cols-2 gap-4 pt-1">
+                    {/* Team 1 Set 3 */}
+                    <div className="space-y-1.5 text-center">
+                      <span className="text-xs font-semibold text-text-secondary block truncate">
+                        {match.team1.shortName} Score
+                      </span>
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleScoreAdjust(setSet3Team1, -1)}
+                          className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
+                        >
+                          <Minus className="w-4 h-4" />
+                        </button>
+                        <input
+                          type="number"
+                          value={set3Team1}
+                          onChange={(e) => setSet3Team1(Math.max(0, Number(e.target.value)))}
+                          className="w-16 h-10 text-center font-score text-xl font-black rounded-xl bg-surface-muted border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleScoreAdjust(setSet3Team1, 1)}
+                          className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Team 2 Set 3 */}
+                    <div className="space-y-1.5 text-center">
+                      <span className="text-xs font-semibold text-text-secondary block truncate">
+                        {match.team2.shortName} Score
+                      </span>
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleScoreAdjust(setSet3Team2, -1)}
+                          className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
+                        >
+                          <Minus className="w-4 h-4" />
+                        </button>
+                        <input
+                          type="number"
+                          value={set3Team2}
+                          onChange={(e) => setSet3Team2(Math.max(0, Number(e.target.value)))}
+                          className="w-16 h-10 text-center font-score text-xl font-black rounded-xl bg-surface-muted border border-border-neutral text-text-primary focus:outline-none focus:border-brand-orange"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleScoreAdjust(setSet3Team2, 1)}
+                          className="w-9 h-9 rounded-xl bg-surface-muted hover:bg-border-neutral text-text-primary flex items-center justify-center active:scale-95 font-bold"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-[11px] text-text-secondary">
+                    Match concluded in 2 straight sets ({t1SetsWon === 2 ? match.team1.shortName : match.team2.shortName} 2-0 victory). Enable checkbox if a 3rd set was contested.
+                  </p>
+                )}
+              </div>
+            </>
+          )}
 
           {/* Winner Confirmation Banner */}
           {determinedWinner && (

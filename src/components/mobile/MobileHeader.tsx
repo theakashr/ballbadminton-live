@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { User, ShieldCheck, PlusCircle } from 'lucide-react';
+import { ShieldCheck, PlusCircle } from 'lucide-react';
 import { ThemeToggle } from '../common/ThemeToggle';
 import { useAuth } from '../../context/AuthContext';
 import { nativeHaptics } from '../../lib/nativeBridge';
 
 interface MobileHeaderProps {
-  onOpenLogin: () => void;
+  onOpenLogin?: () => void;
   onCreateTournament: () => void;
 }
 
 export const MobileHeader: React.FC<MobileHeaderProps> = ({
-  onOpenLogin,
+  onOpenLogin: _onOpenLogin,
   onCreateTournament,
 }) => {
   const { currentUser, isSuperAdmin, isTournamentAdmin, isScorer } = useAuth();
@@ -71,26 +71,27 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
           {/* Role Aware Auth / Admin Button */}
           {currentUser ? (
             <Link
-              to="/admin"
+              to={hasAdminRole ? '/admin' : '/login'}
               onClick={() => nativeHaptics.selection()}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FFF1E5] border border-[#FF851B]/30 text-xs font-semibold text-[#FF851B] active:scale-95 transition-all"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FFF1E5] border border-[#FF851B]/40 text-xs font-bold text-[#FF851B] active:scale-95 transition-all shadow-xs"
             >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span className="max-w-[80px] truncate">
-                {hasAdminRole ? 'Portal' : 'Account'}
+              <ShieldCheck className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span className="max-w-[85px] truncate">
+                {hasAdminRole ? 'Admin' : 'Account'}
               </span>
             </Link>
           ) : (
-            <button
-              onClick={() => {
-                nativeHaptics.impact('light');
-                onOpenLogin();
-              }}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#F0F2F6] border border-[#E4E7EC] text-xs font-medium text-[#182230] hover:bg-[#E4E7EC] active:scale-95 transition-all"
-            >
-              <User className="w-3.5 h-3.5 text-[#667085]" />
-              <span>Login</span>
-            </button>
+            <div className="flex items-center gap-1">
+              <Link
+                to="/login"
+                onClick={() => nativeHaptics.selection()}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#FFF1E5] border border-[#FF851B]/40 text-xs font-bold text-[#FF851B] hover:bg-[#FF851B] hover:text-white active:scale-95 transition-all shadow-xs"
+                title="Super Admin & Official Scorer Login"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Admin Login</span>
+              </Link>
+            </div>
           )}
         </div>
       </div>
